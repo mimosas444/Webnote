@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WebNote - Mon Espace</title>
+    <title>WebNote - Mon Espace Privé</title>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -12,213 +12,109 @@
         :root {
             --bg: #09090b;
             --surface: #18181b;
+            --surface-hover: #27272a;
             --border: rgba(255, 255, 255, 0.08);
             --accent: #3b82f6;
             --accent-glow: rgba(59, 130, 246, 0.4);
             --text-main: #ffffff;
             --text-dim: #a1a1aa;
-            /* Glass effect variables */
-            --glass-bg: rgba(20, 20, 23, 0.6);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-blur: 20px;
+            --glass: rgba(24, 24, 27, 0.7);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         body {
             background-color: var(--bg);
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 20%);
+            background-image: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
             color: var(--text-main);
             min-height: 100vh;
-            padding: 2rem;
             display: flex;
             justify-content: center;
+            padding: 20px;
             overflow-x: hidden;
         }
 
-        /* --- LAYOUT GRID --- */
         .app-grid {
             display: grid;
             grid-template-columns: 320px 1fr;
             gap: 25px;
             width: 100%;
             max-width: 1200px;
-            animation: fadeIn 0.6s ease-out;
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- CARDS COMMON STYLE --- */
         .glass-card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(var(--glass-blur));
-            -webkit-backdrop-filter: blur(var(--glass-blur));
+            background: var(--glass);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: 24px;
             padding: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        /* --- LEFT SIDEBAR --- */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            height: fit-content;
-        }
+        /* --- SIDEBAR --- */
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
 
-        /* Profil Compact */
-        .profile-header {
-            text-align: center;
-        }
-        .avatar-circle {
-            width: 80px; height: 80px;
-            background: linear-gradient(135deg, var(--accent), #2563eb);
-            border-radius: 50%;
-            margin: 0 auto 15px;
+        .profile-section { text-align: center; }
+        .avatar-box {
+            width: 70px; height: 70px;
+            background: linear-gradient(135deg, var(--accent), #1d4ed8);
+            border-radius: 20px; margin: 0 auto 15px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 2rem; color: white;
-            box-shadow: 0 0 20px var(--accent-glow);
+            font-size: 1.8rem; box-shadow: 0 8px 20px var(--accent-glow);
         }
-        .user-name { font-size: 1.2rem; font-weight: 700; }
-        .user-email { font-size: 0.8rem; color: var(--text-dim); }
 
-        /* Widget Temps */
-        .time-widget {
-            text-align: center;
-            padding: 20px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 16px;
+        .nav-menu { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+        .nav-item {
+            padding: 12px 15px; border-radius: 12px;
+            color: var(--text-dim); text-decoration: none;
+            display: flex; align-items: center; gap: 12px;
+            transition: 0.3s; font-size: 0.9rem; font-weight: 500;
         }
-        .clock-big { font-size: 2.5rem; font-weight: 700; line-height: 1; letter-spacing: -1px; }
-        .date-small { color: var(--accent); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; margin-top: 5px; }
+        .nav-item:hover { background: var(--surface-hover); color: var(--text-main); }
+        .nav-item.active { background: rgba(59, 130, 246, 0.1); color: var(--accent); }
 
-        /* Widget Objectifs */
-        .goals-widget {
-            background: rgba(255,255,255,0.03);
-            border-radius: 16px;
-            padding: 20px;
-        }
-        .goals-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .goals-title { font-size: 0.9rem; font-weight: 600; color: var(--text-dim); }
-        
-        .goals-counter {
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .goal-btn {
-            width: 35px; height: 35px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text-main);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .goal-btn:hover { background: var(--accent); border-color: var(--accent); }
-        .goal-number { font-size: 2rem; font-weight: 700; }
-
-        /* Boutons Action */
-        .action-btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text-dim);
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            transition: 0.2s;
-            font-weight: 500;
-        }
-        .action-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-main); }
-        .btn-danger:hover { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
+        /* Widget Stats */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .stat-card { background: var(--surface); padding: 15px; border-radius: 16px; border: 1px solid var(--border); text-align: center; }
+        .stat-val { display: block; font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+        .stat-label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; }
 
         /* --- MAIN CONTENT --- */
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
+        .main-content { display: flex; flex-direction: column; gap: 25px; }
 
-        /* Bloc Note (Remplacement Photos) */
-        .notepad-container {
-            flex: 1;
-            min-height: 300px;
-            display: flex;
-            flex-direction: column;
-        }
-        .notepad-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-        }
-        .notepad-title { font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
-        .save-indicator { font-size: 0.8rem; color: var(--accent); opacity: 0; transition: opacity 0.5s; }
-        
+        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .clock-mini { font-size: 1.2rem; font-weight: 700; }
+        .weather-pill { background: var(--surface); padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); }
+
+        /* Notepad */
+        .notepad { flex: 1; display: flex; flex-direction: column; min-height: 400px; }
+        .notepad-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
         #cloudNote {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            font-size: 1rem;
-            line-height: 1.6;
-            resize: none;
-            outline: none;
+            flex: 1; background: transparent; border: none; color: var(--text-main);
+            font-size: 1rem; line-height: 1.7; resize: none; outline: none;
         }
-        #cloudNote::placeholder { color: rgba(255,255,255,0.2); }
 
-        /* Calendrier Stylé */
-        .calendar-section {
-            display: flex;
-            flex-direction: column;
+        /* Calendar */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 15px; }
+        .day-label { font-size: 0.7rem; color: var(--text-dim); text-align: center; padding-bottom: 10px; font-weight: 700; }
+        .day {
+            aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+            font-size: 0.85rem; border-radius: 10px; cursor: default; transition: 0.2s;
         }
-        .calendar-header {
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
-        }
-        .month-year { font-size: 1.2rem; font-weight: 700; text-transform: capitalize; }
-        
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 10px;
-            text-align: center;
-        }
-        .day-name {
-            font-size: 0.8rem; color: var(--text-dim); font-weight: 600; margin-bottom: 10px;
-        }
-        .calendar-day {
-            aspect-ratio: 1;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            color: var(--text-dim);
-            transition: 0.2s;
-            border: 1px solid transparent;
-        }
-        .calendar-day:hover { background: rgba(255,255,255,0.05); color: var(--text-main); }
-        
-        .calendar-day.today {
-            background: var(--accent);
-            color: white;
-            box-shadow: 0 0 15px var(--accent-glow);
-            font-weight: 700;
-        }
-        .calendar-day.empty { pointer-events: none; }
+        .day.today { background: var(--accent); color: white; font-weight: 700; box-shadow: 0 4px 12px var(--accent-glow); }
+        .day:not(.empty):hover { background: var(--surface-hover); }
 
-        /* Responsive */
+        /* Progress Bar */
+        .progress-container { width: 100%; height: 6px; background: var(--surface); border-radius: 10px; margin-top: 10px; overflow: hidden; }
+        .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: 1s ease; }
+
         @media (max-width: 900px) {
             .app-grid { grid-template-columns: 1fr; }
-            .sidebar { flex-direction: row; flex-wrap: wrap; }
-            .glass-card.sidebar-card { flex: 1; min-width: 250px; }
-        }
-        @media (max-width: 600px) {
-            body { padding: 1rem; }
-            .sidebar { flex-direction: column; }
+            .sidebar { order: 2; }
         }
     </style>
 </head>
@@ -227,84 +123,82 @@
     <div class="app-grid">
         
         <aside class="sidebar">
-            <div class="glass-card sidebar-card profile-header">
-                <div class="avatar-circle">
-                    <i class="fas fa-user"></i>
-                </div>
-                <h2 class="user-name" id="displayName">Chargement...</h2>
-                <p class="user-email" id="displayEmail">...</p>
+            <div class="glass-card profile-section">
+                <div class="avatar-box"><i class="fas fa-crown"></i></div>
+                <h2 id="displayName" style="font-size: 1.1rem; font-weight: 700;">Chargement...</h2>
+                <p id="displayEmail" style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 15px;">...</p>
                 
-                <div style="margin-top: 20px;">
-                    <button class="action-btn" onclick="window.location.href='dashboard.html'">
-                        <i class="fas fa-arrow-left"></i> Dashboard
-                    </button>
-                    <button class="action-btn btn-danger" onclick="logout()" style="margin-top: 10px;">
-                        <i class="fas fa-sign-out-alt"></i> Déconnexion
-                    </button>
+                <div class="nav-menu">
+                    <a href="dashboard.html" class="nav-item"><i class="fas fa-comment-dots"></i> Chat Public</a>
+                    <a href="#" class="nav-item active"><i class="fas fa-user-shield"></i> Espace Privé</a>
+                    <div class="nav-item" onclick="logout()" style="color: #ef4444; cursor: pointer;"><i class="fas fa-power-off"></i> Déconnexion</div>
                 </div>
             </div>
 
-            <div class="glass-card sidebar-card">
-                <div class="time-widget">
-                    <div class="clock-big" id="liveClock">00:00</div>
-                    <div class="date-small" id="liveDate">...</div>
+            <div class="glass-card">
+                <h3 style="font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 15px;">Productivité</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-val" id="goalsCount">0</span>
+                        <span class="stat-label">Objectifs</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-val" id="wordCount">0</span>
+                        <span class="stat-label">Mots</span>
+                    </div>
                 </div>
-                
-                <div class="goals-widget" style="margin-top: 20px;">
-                    <div class="goals-header">
-                        <span class="goals-title"><i class="fas fa-trophy" style="color:#fbbf24;"></i> Objectifs atteints</span>
+                <div style="margin-top: 20px;">
+                    <div style="display:flex; justify-content:space-between; font-size: 0.75rem; margin-bottom: 5px;">
+                        <span>Niveau de focus</span>
+                        <span id="progressPercent">0%</span>
                     </div>
-                    <div class="goals-counter">
-                        <button class="goal-btn" onclick="updateGoals(-1)"><i class="fas fa-minus"></i></button>
-                        <span class="goal-number" id="goalsCount">0</span>
-                        <button class="goal-btn" onclick="updateGoals(1)"><i class="fas fa-plus"></i></button>
-                    </div>
+                    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+                </div>
+                <div style="display:flex; gap: 10px; margin-top: 20px;">
+                    <button class="nav-item" style="flex:1; justify-content:center; background: var(--surface);" onclick="updateGoals(-1)"><i class="fas fa-minus"></i></button>
+                    <button class="nav-item" style="flex:1; justify-content:center; background: var(--accent); color: white;" onclick="updateGoals(1)"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
         </aside>
 
         <main class="main-content">
-            
-            <div class="glass-card notepad-container">
+            <div class="header-bar">
+                <div class="weather-pill">
+                    <i id="wIcon" class="fas fa-sun"></i>
+                    <span id="liveDate">...</span>
+                </div>
+                <div class="clock-mini" id="liveClock">00:00</div>
+            </div>
+
+            <div class="glass-card notepad">
                 <div class="notepad-header">
-                    <div class="notepad-title">
-                        <i class="fas fa-pen-fancy" style="color: var(--accent);"></i> Mon Bloc Note Cloud
+                    <div style="font-weight: 700; font-size: 1rem;">
+                        <i class="fas fa-file-signature" style="color: var(--accent); margin-right: 10px;"></i>
+                        Journal Personnel
                     </div>
-                    <div id="saveStatus" class="save-indicator"><i class="fas fa-check"></i> Sauvegardé</div>
+                    <div id="saveStatus" style="font-size: 0.7rem; color: var(--accent); opacity: 0;"><i class="fas fa-cloud-upload-alt"></i> Synchronisé</div>
                 </div>
-                <textarea id="cloudNote" placeholder="Écrivez vos pensées, idées ou tâches ici... (Sauvegarde automatique)"></textarea>
+                <textarea id="cloudNote" placeholder="Commencez à écrire votre journée..."></textarea>
             </div>
 
-            <div class="glass-card calendar-section">
-                <div class="calendar-header">
-                    <span class="month-year" id="calendarMonth">Mois Année</span>
-                    <div style="display:flex; gap:10px;">
-                        <i class="far fa-calendar-alt" style="color: var(--text-dim);"></i>
-                    </div>
+            <div class="glass-card">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 id="calendarMonth" style="font-size: 0.9rem; font-weight: 700; text-transform: capitalize;">Mois</h3>
+                    <i class="far fa-calendar-check" style="color: var(--accent);"></i>
                 </div>
-                
-                <div class="calendar-grid">
-                    <div class="day-name">Lun</div>
-                    <div class="day-name">Mar</div>
-                    <div class="day-name">Mer</div>
-                    <div class="day-name">Jeu</div>
-                    <div class="day-name">Ven</div>
-                    <div class="day-name">Sam</div>
-                    <div class="day-name">Dim</div>
-                    </div>
-                <div class="calendar-grid" id="daysContainer"></div>
+                <div class="calendar-grid" id="calendarContainer">
+                    <div class="day-label">L</div><div class="day-label">M</div><div class="day-label">M</div>
+                    <div class="day-label">J</div><div class="day-label">V</div><div class="day-label">S</div><div class="day-label">D</div>
+                </div>
             </div>
-
         </main>
-
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // CONFIGURATION (Ta clé)
         const firebaseConfig = {
             apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
             authDomain: "webnote-9ea1e.firebaseapp.com",
@@ -321,128 +215,86 @@
         let currentUser = null;
         let typingTimer;
 
-        // --- 1. AUTHENTIFICATION ---
+        // --- AUTH & DATA ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
-                initUI(user);
-                loadUserData(user.uid);
+                document.getElementById('displayName').innerText = user.displayName || "Utilisateur";
+                document.getElementById('displayEmail').innerText = user.email;
+                syncData();
             } else {
                 window.location.href = "index.html";
             }
         });
 
-        function initUI(user) {
-            document.getElementById('displayName').innerText = localStorage.getItem('webnote_username') || "Utilisateur";
-            document.getElementById('displayEmail').innerText = user.email;
-        }
-
-        window.logout = () => {
-            signOut(auth).then(() => window.location.href = "index.html");
-        };
-
-        // --- 2. GESTION DU TEMPS & CALENDRIER ---
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('liveClock').innerText = now.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
-            document.getElementById('liveDate').innerText = now.toLocaleDateString('fr-FR', {weekday: 'long', day: 'numeric', month: 'long'});
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        function generateCalendar() {
-            const date = new Date();
-            const year = date.getFullYear();
-            const month = date.getMonth();
-            const today = date.getDate();
-
-            document.getElementById('calendarMonth').innerText = date.toLocaleDateString('fr-FR', {month: 'long', year: 'numeric'});
-
-            const firstDay = new Date(year, month, 1).getDay(); // 0 = Dimanche
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            
-            const container = document.getElementById('daysContainer');
-            container.innerHTML = "";
-
-            // Ajustement pour commencer Lundi (Lundi=1 ... Dimanche=7)
-            let startSpace = firstDay === 0 ? 6 : firstDay - 1;
-
-            // Espaces vides
-            for(let i=0; i<startSpace; i++) {
-                container.innerHTML += `<div class="calendar-day empty"></div>`;
-            }
-
-            // Jours
-            for(let i=1; i<=daysInMonth; i++) {
-                const isToday = i === today ? 'today' : '';
-                container.innerHTML += `<div class="calendar-day ${isToday}">${i}</div>`;
-            }
-        }
-        generateCalendar();
-
-        // --- 3. LOGIQUE DONNÉES (Note & Objectifs) ---
-        
-        // Charger les données (Note + Goals)
-        function loadUserData(uid) {
-            const userDocRef = doc(db, "user_profiles", uid);
-
-            // Écoute en temps réel
-            onSnapshot(userDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    
-                    // Update Note seulement si l'utilisateur ne tape pas (pour éviter les conflits)
+        function syncData() {
+            onSnapshot(doc(db, "user_profiles", currentUser.uid), (snap) => {
+                if (snap.exists()) {
+                    const data = snap.data();
                     if(document.activeElement !== document.getElementById('cloudNote')) {
                         document.getElementById('cloudNote').value = data.note || "";
+                        updateWordCount(data.note || "");
                     }
+                    const goals = data.goals || 0;
+                    document.getElementById('goalsCount').innerText = goals;
                     
-                    // Update Objectifs
-                    document.getElementById('goalsCount').innerText = data.goals || 0;
+                    // Barre de progression (max 10 objectifs pour l'exemple)
+                    const percent = Math.min((goals / 10) * 100, 100);
+                    document.getElementById('progressBar').style.width = percent + "%";
+                    document.getElementById('progressPercent').innerText = Math.round(percent) + "%";
                 }
             });
         }
 
-        // Sauvegarde de la Note (Auto-save avec délai)
-        const noteInput = document.getElementById('cloudNote');
-        const saveStatus = document.getElementById('saveStatus');
-
-        noteInput.addEventListener('input', () => {
-            saveStatus.style.opacity = '0'; // Cache "Sauvegardé"
+        // --- AUTO-SAVE LOGIC ---
+        const noteArea = document.getElementById('cloudNote');
+        noteArea.addEventListener('input', () => {
+            updateWordCount(noteArea.value);
+            document.getElementById('saveStatus').style.opacity = "0";
             clearTimeout(typingTimer);
-            typingTimer = setTimeout(() => {
-                saveData({ note: noteInput.value });
-            }, 1000); // Sauvegarde après 1 seconde d'inactivité
+            typingTimer = setTimeout(async () => {
+                await setDoc(doc(db, "user_profiles", currentUser.uid), { note: noteArea.value }, { merge: true });
+                document.getElementById('saveStatus').style.opacity = "1";
+            }, 1500);
         });
 
-        // Fonction Globale de Sauvegarde (Merge)
-        async function saveData(dataToUpdate) {
-            if(!currentUser) return;
-            const userDocRef = doc(db, "user_profiles", currentUser.uid);
-            
-            try {
-                await setDoc(userDocRef, dataToUpdate, { merge: true });
-                // Feedback visuel pour la note
-                if(dataToUpdate.note !== undefined) {
-                    saveStatus.style.opacity = '1';
-                }
-            } catch (e) {
-                console.error("Erreur save:", e);
-            }
+        function updateWordCount(text) {
+            const count = text.trim() ? text.trim().split(/\s+/).length : 0;
+            document.getElementById('wordCount').innerText = count;
         }
 
-        // Gestion des Objectifs (Exposed to window)
-        window.updateGoals = async (change) => {
-            const currentVal = parseInt(document.getElementById('goalsCount').innerText);
-            let newVal = currentVal + change;
-            if(newVal < 0) newVal = 0;
-            
-            // Mise à jour locale immédiate pour la fluidité
-            document.getElementById('goalsCount').innerText = newVal;
-            
-            // Sauvegarde DB
-            saveData({ goals: newVal });
+        window.updateGoals = async (val) => {
+            const current = parseInt(document.getElementById('goalsCount').innerText);
+            const next = Math.max(0, current + val);
+            await setDoc(doc(db, "user_profiles", currentUser.uid), { goals: next }, { merge: true });
         };
 
+        // --- UI UTILS ---
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('liveClock').innerText = now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+            document.getElementById('liveDate').innerText = now.toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
+            const h = now.getHours();
+            document.getElementById('wIcon').className = (h > 6 && h < 19) ? "fas fa-sun" : "fas fa-moon";
+        }
+        setInterval(updateTime, 1000); updateTime();
+
+        function buildCalendar() {
+            const now = new Date();
+            document.getElementById('calendarMonth').innerText = now.toLocaleDateString('fr-FR', {month:'long', year:'numeric'});
+            const first = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+            const days = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+            const container = document.getElementById('calendarContainer');
+            const offset = first === 0 ? 6 : first - 1;
+            for(let i=0; i<offset; i++) container.innerHTML += `<div class="day empty"></div>`;
+            for(let i=1; i<=days; i++) {
+                const isToday = i === now.getDate() ? 'today' : '';
+                container.innerHTML += `<div class="day ${isToday}">${i}</div>`;
+            }
+        }
+        buildCalendar();
+
+        window.logout = () => signOut(auth);
     </script>
 </body>
-              </html>
+</html>

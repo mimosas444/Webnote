@@ -14,7 +14,7 @@
       --transition-speed: 0.5s;
     }
 
-    /* --- THÈMES JOUR / NUIT (Variables dynamiques) --- */
+    /* --- THÈMES JOUR / NUIT --- */
     body.is-day {
       --bg-gradient: linear-gradient(135deg, #a5f3fc 0%, #3b82f6 100%);
       --glass-bg: rgba(255, 255, 255, 0.65);
@@ -33,7 +33,7 @@
       --text-color: #f8fafc;
       --text-muted: #94a3b8;
       --input-bg: rgba(15, 23, 42, 0.6);
-      --accent-color: #6366f1; /* Indigo vibrant */
+      --accent-color: #6366f1;
       --shadow-color: rgba(0, 0, 0, 0.4);
     }
 
@@ -51,7 +51,6 @@
       position: relative;
     }
 
-    /* --- ELEMENT CELESTE (Lune/Soleil) --- */
     .celestial-body {
       position: absolute;
       top: 5%;
@@ -63,180 +62,82 @@
       transition: all 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
     }
 
-    /* Style Soleil */
     body.is-day .celestial-body {
       background: radial-gradient(circle at 30% 30%, #fde047, #f59e0b);
-      box-shadow: 0 0 60px rgba(251, 191, 36, 0.6), inset -10px -10px 20px rgba(245, 158, 11, 0.5);
+      box-shadow: 0 0 60px rgba(251, 191, 36, 0.6);
       animation: pulse-sun 4s infinite ease-in-out;
     }
 
-    /* Style Lune */
     body.is-night .celestial-body {
       background: radial-gradient(circle at 30% 30%, #e2e8f0, #94a3b8);
-      box-shadow: 0 0 40px rgba(148, 163, 184, 0.3), inset -10px -10px 20px rgba(15, 23, 42, 0.8);
-    }
-    /* Cratères de la lune */
-    body.is-night .celestial-body::before {
-      content: ''; position: absolute; top: 20%; left: 25%; width: 20px; height: 20px;
-      background: rgba(0,0,0,0.1); border-radius: 50%;
-      box-shadow: 40px 10px 0 -5px rgba(0,0,0,0.1), 20px 40px 0 -8px rgba(0,0,0,0.1);
+      box-shadow: 0 0 40px rgba(148, 163, 184, 0.3);
     }
 
     @keyframes pulse-sun {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 50px rgba(251, 191, 36, 0.6); }
-      50% { transform: scale(1.05); box-shadow: 0 0 80px rgba(251, 191, 36, 0.8); }
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
 
-    /* --- BACKGROUND ANIMÉ (Étoiles / Nuages) --- */
     .bg-decor { position: absolute; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
     
-    /* Étoiles (visibles seulement la nuit) */
-    .star {
-      position: absolute; background: white; border-radius: 50%; opacity: 0;
-      transition: opacity 1s;
-    }
+    .star { position: absolute; background: white; border-radius: 50%; opacity: 0; transition: opacity 1s; }
     body.is-night .star { opacity: 0.6; animation: twinkle 3s infinite ease-in-out; }
-
     @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
 
-    /* Nuages (visibles seulement le jour) */
-    .cloud {
-      position: absolute; background: rgba(255,255,255,0.4); border-radius: 50px;
-      filter: blur(20px); opacity: 0; transition: opacity 1s;
-    }
+    .cloud { position: absolute; background: rgba(255,255,255,0.4); border-radius: 50px; filter: blur(20px); opacity: 0; transition: opacity 1s; }
     body.is-day .cloud { opacity: 1; animation: floatCloud 20s infinite linear; }
-
     @keyframes floatCloud { from { transform: translateX(-100px); } to { transform: translateX(100vw); } }
 
-    /* --- CARTE PRINCIPALE --- */
     .login-card {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      max-width: 440px;
-      padding: 3rem 2.5rem;
-      background: var(--glass-bg);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 1px solid var(--glass-border);
-      border-radius: 24px;
+      position: relative; z-index: 10; width: 100%; max-width: 440px; padding: 3rem 2.5rem;
+      background: var(--glass-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border); border-radius: 24px;
       box-shadow: 0 25px 50px -12px var(--shadow-color);
-      transform: translateY(20px);
-      animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    @keyframes slideUp { to { transform: translateY(0); opacity: 1; } }
-
-    /* En-tête de la carte */
     .header-section { margin-bottom: 2rem; text-align: center; }
-    
-    .brand-logo {
-      font-size: 1.8rem; font-weight: 800; letter-spacing: -1px;
-      color: var(--text-color); margin-bottom: 0.5rem;
-      display: inline-flex; align-items: center; gap: 10px;
-    }
+    .brand-logo { font-size: 1.8rem; font-weight: 800; color: var(--text-color); display: inline-flex; align-items: center; gap: 10px; }
     .brand-logo i { color: var(--accent-color); }
-
-    .greeting-title {
-      font-size: 1.1rem; color: var(--text-color); font-weight: 600;
-      margin-bottom: 0.2rem;
-    }
-    
+    .greeting-title { font-size: 1.1rem; color: var(--text-color); font-weight: 600; }
     .greeting-sub { font-size: 0.9rem; color: var(--text-muted); }
 
-    /* Formulaire */
     .input-wrapper { position: relative; margin-bottom: 1.2rem; }
-
     .input-wrapper input {
-      width: 100%;
-      padding: 16px 45px 16px 20px;
-      background: var(--input-bg);
-      border: 2px solid transparent;
-      border-radius: 14px;
-      color: var(--text-color);
-      font-size: 0.95rem;
-      font-weight: 500;
-      outline: none;
-      transition: all 0.3s ease;
+      width: 100%; padding: 16px 45px 16px 20px; background: var(--input-bg);
+      border: 2px solid transparent; border-radius: 14px; color: var(--text-color);
+      outline: none; transition: 0.3s; font-family: inherit;
     }
-    
-    .input-wrapper input:focus {
-      border-color: var(--accent-color);
-      background: var(--glass-bg);
-      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-    }
-    
-    .input-wrapper input::placeholder { color: var(--text-muted); opacity: 0.7; }
+    .input-wrapper input:focus { border-color: var(--accent-color); }
+    .input-icon { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); cursor: pointer; }
 
-    .input-icon {
-      position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
-      color: var(--text-muted); font-size: 1.1rem; cursor: pointer; transition: 0.2s;
-    }
-    .input-icon:hover { color: var(--accent-color); }
-
-    /* Boutons */
     .btn-primary {
-      width: 100%; padding: 16px; margin-top: 10px;
-      background: var(--accent-color); color: #fff;
-      border: none; border-radius: 14px;
-      font-size: 1rem; font-weight: 700;
-      cursor: pointer; transition: all 0.3s;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%; padding: 16px; background: var(--accent-color); color: #fff;
+      border: none; border-radius: 14px; font-weight: 700; cursor: pointer; transition: 0.3s;
     }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
-      filter: brightness(1.1);
-    }
+    .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-    .divider {
-      margin: 1.5rem 0; display: flex; align-items: center; color: var(--text-muted);
-      font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
-    }
-    .divider::before, .divider::after {
-      content: ''; flex: 1; height: 1px; background: var(--glass-border); margin: 0 15px;
-    }
+    .divider { margin: 1.5rem 0; display: flex; align-items: center; color: var(--text-muted); font-size: 0.8rem; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--glass-border); margin: 0 15px; }
 
     .btn-google {
-      width: 100%; padding: 14px;
-      background: #fff; color: #1e293b;
-      border: 1px solid #e2e8f0; border-radius: 14px;
-      font-weight: 600; display: flex; align-items: center; justify-content: center;
-      gap: 10px; cursor: pointer; transition: 0.2s;
+      width: 100%; padding: 14px; background: #fff; color: #1e293b; border: 1px solid #e2e8f0;
+      border-radius: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; transition: 0.2s;
     }
-    .btn-google:hover { background: #f8fafc; border-color: #cbd5e1; }
+    .btn-google:hover { background: #f8fafc; }
 
-    /* Footer */
-    .card-footer {
-      margin-top: 2rem; text-align: center; font-size: 0.9rem; color: var(--text-muted);
-    }
-    .card-footer a {
-      color: var(--accent-color); text-decoration: none; font-weight: 700; cursor: pointer;
-    }
-    .card-footer a:hover { text-decoration: underline; }
+    .card-footer { margin-top: 2rem; text-align: center; font-size: 0.9rem; color: var(--text-muted); }
+    .card-footer a { color: var(--accent-color); text-decoration: none; font-weight: 700; cursor: pointer; }
 
-    /* Error & Loader */
-    .error-box {
-      background: rgba(239, 68, 68, 0.15); color: #ef4444;
-      padding: 10px; border-radius: 10px; font-size: 0.85rem; font-weight: 500;
-      margin-bottom: 1rem; display: none; text-align: center;
-      border: 1px solid rgba(239, 68, 68, 0.2);
-    }
-    .loader {
-      width: 20px; height: 20px; border: 3px solid #fff; 
-      border-bottom-color: transparent; border-radius: 50%;
-      animation: spin 1s linear infinite; display: none; margin: 0 auto;
-    }
+    .error-box { background: rgba(239, 68, 68, 0.15); color: #ef4444; padding: 10px; border-radius: 10px; margin-bottom: 1rem; display: none; text-align: center; border: 1px solid rgba(239, 68, 68, 0.2); }
+    .loader { width: 20px; height: 20px; border: 3px solid #fff; border-bottom-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; display: none; margin: 0 auto; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
   </style>
 </head>
-<body class="is-night"> <div class="bg-decor" id="bgDecor"></div>
-
+<body class="is-night">
+  <div class="bg-decor" id="bgDecor"></div>
   <div class="celestial-body"></div>
 
   <div class="login-card">
-    
     <div class="header-section">
       <div class="brand-logo"><i class="fas fa-layer-group"></i> WebNote</div>
       <h2 class="greeting-title" id="time-greeting">Bonsoir</h2>
@@ -246,10 +147,14 @@
     <div class="error-box" id="error-message"></div>
 
     <form id="auth-form" onsubmit="return false;">
+      <div class="input-wrapper" id="username-wrapper" style="display: none;">
+        <input type="text" id="username" placeholder="Choisissez un pseudo">
+        <i class="fas fa-user input-icon"></i>
+      </div>
       
       <div class="input-wrapper">
-        <input type="email" id="email" placeholder="Adresse e-mail" required autocomplete="email">
-        <i class="fas fa-envelope input-icon" style="pointer-events: none;"></i>
+        <input type="email" id="email" placeholder="Adresse e-mail" required>
+        <i class="fas fa-envelope input-icon"></i>
       </div>
       
       <div class="input-wrapper">
@@ -261,13 +166,12 @@
         <span class="btn-text">Se connecter</span>
         <div class="loader"></div>
       </button>
-
     </form>
 
     <div class="divider">ou continuer avec</div>
-
+    
     <button id="google-btn" class="btn-google">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="20" alt="G">
+      <i class="fab fa-google" style="color: #4285F4; font-size: 1.2rem;"></i>
       Google
     </button>
 
@@ -275,19 +179,12 @@
       <span id="switch-text">Pas encore de compte ?</span>
       <a id="toggle-mode">Créer un compte</a>
     </div>
-
   </div>
 
   <script type="module">
-    // --- FIREBASE CONFIGURATION (Identique à ton code) ---
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { 
-      getAuth, 
-      createUserWithEmailAndPassword, 
-      signInWithEmailAndPassword, 
-      GoogleAuthProvider, 
-      signInWithPopup 
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
@@ -300,169 +197,103 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
     const googleProvider = new GoogleAuthProvider();
 
-    // --- LOGIQUE JOUR / NUIT & SALUTATIONS ---
+    // Gestion Thème Jour/Nuit automatique
     function initTimeTheme() {
       const hour = new Date().getHours();
       const body = document.body;
       const greetingEl = document.getElementById('time-greeting');
-      const bgDecor = document.getElementById('bgDecor');
-      
-      // Nettoyage décor
-      bgDecor.innerHTML = '';
-
       if (hour >= 6 && hour < 18) {
-        // --- MODE JOUR ---
-        body.classList.remove('is-night');
-        body.classList.add('is-day');
-        
-        // Salutation
-        if (hour < 12) greetingEl.innerText = "Bonjour !";
-        else greetingEl.innerText = "Bon après-midi !";
-
-        // Génération de nuages
-        for (let i = 0; i < 3; i++) {
-            const cloud = document.createElement('div');
-            cloud.className = 'cloud';
-            cloud.style.width = (100 + Math.random() * 200) + 'px';
-            cloud.style.height = (40 + Math.random() * 60) + 'px';
-            cloud.style.top = (10 + Math.random() * 60) + '%';
-            cloud.style.animationDuration = (20 + Math.random() * 20) + 's';
-            bgDecor.appendChild(cloud);
-        }
-
+        body.classList.replace('is-night', 'is-day');
+        greetingEl.innerText = hour < 12 ? "Bonjour !" : "Bon après-midi !";
       } else {
-        // --- MODE NUIT ---
-        body.classList.remove('is-day');
-        body.classList.add('is-night');
+        body.classList.replace('is-day', 'is-night');
         greetingEl.innerText = "Bonsoir !";
-
-        // Génération d'étoiles
-        for (let i = 0; i < 50; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.width = (2 + Math.random() * 3) + 'px';
-            star.style.height = star.style.width;
-            star.style.top = Math.random() * 100 + '%';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 3 + 's';
-            bgDecor.appendChild(star);
-        }
       }
     }
-
-    // Lancer au chargement
     initTimeTheme();
 
-
-    // --- LOGIQUE D'INTERFACE (Similaire à avant mais adaptée) ---
     const ui = {
       email: document.getElementById('email'),
       pass: document.getElementById('password'),
-      eye: document.getElementById('toggle-password'),
+      username: document.getElementById('username'),
+      userWrap: document.getElementById('username-wrapper'),
       submit: document.getElementById('submit-btn'),
-      google: document.getElementById('google-btn'),
       toggleMode: document.getElementById('toggle-mode'),
-      subtitle: document.getElementById('page-subtitle'),
       btnText: document.querySelector('.btn-text'),
       loader: document.querySelector('.loader'),
       error: document.getElementById('error-message'),
-      switchText: document.getElementById('switch-text')
+      eye: document.getElementById('toggle-password')
     };
 
     let isLoginMode = true;
 
+    // Toggle entre Connexion et Inscription
+    ui.toggleMode.addEventListener('click', () => {
+      isLoginMode = !isLoginMode;
+      ui.userWrap.style.display = isLoginMode ? 'none' : 'block';
+      ui.btnText.textContent = isLoginMode ? "Se connecter" : "S'inscrire";
+      document.getElementById('switch-text').textContent = isLoginMode ? "Pas encore de compte ?" : "Déjà inscrit ?";
+      ui.toggleMode.textContent = isLoginMode ? "Créer un compte" : "Se connecter";
+    });
+
+    // Toggle visibilité mot de passe
     ui.eye.addEventListener('click', () => {
-      const type = ui.pass.getAttribute('type') === 'password' ? 'text' : 'password';
-      ui.pass.setAttribute('type', type);
+      const type = ui.pass.type === 'password' ? 'text' : 'password';
+      ui.pass.type = type;
       ui.eye.classList.toggle('fa-eye');
       ui.eye.classList.toggle('fa-eye-slash');
     });
 
-    ui.toggleMode.addEventListener('click', () => {
-      isLoginMode = !isLoginMode;
-      ui.error.style.display = 'none';
-      
-      if (isLoginMode) {
-        ui.subtitle.textContent = "Connectez-vous à votre espace.";
-        ui.btnText.textContent = "Se connecter";
-        ui.switchText.textContent = "Pas encore de compte ?";
-        ui.toggleMode.textContent = "Créer un compte";
-      } else {
-        ui.subtitle.textContent = "Rejoignez WebNote gratuitement.";
-        ui.btnText.textContent = "S'inscrire";
-        ui.switchText.textContent = "Déjà inscrit ?";
-        ui.toggleMode.textContent = "Se connecter";
-      }
-    });
+    // Enregistrement dans Firestore
+    async function saveUserToFirestore(user, customName) {
+      await setDoc(doc(db, "users", user.uid), {
+        username: customName || user.displayName || "Anonyme",
+        email: user.email,
+        createdAt: serverTimestamp(),
+        theme: "dark"
+      }, { merge: true });
+    }
 
-    ui.submit.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const email = ui.email.value;
-      const password = ui.pass.value;
-
-      if (!email || !password) {
-        showError("Merci de remplir tous les champs.");
-        return;
-      }
-
+    // Soumission Formulaire
+    ui.submit.addEventListener('click', async () => {
       setLoading(true);
-
       try {
         if (isLoginMode) {
-          await signInWithEmailAndPassword(auth, email, password);
+          await signInWithEmailAndPassword(auth, ui.email.value, ui.pass.value);
         } else {
-          await createUserWithEmailAndPassword(auth, email, password);
+          const res = await createUserWithEmailAndPassword(auth, ui.email.value, ui.pass.value);
+          await updateProfile(res.user, { displayName: ui.username.value });
+          await saveUserToFirestore(res.user, ui.username.value);
         }
         window.location.href = "dashboard.html";
-      } catch (error) {
+      } catch (err) {
         setLoading(false);
-        handleError(error);
+        showError("Erreur : " + err.message);
       }
     });
 
-    ui.google.addEventListener('click', async () => {
+    // Google Login
+    document.getElementById('google-btn').addEventListener('click', async () => {
       try {
-        await signInWithPopup(auth, googleProvider);
+        const res = await signInWithPopup(auth, googleProvider);
+        await saveUserToFirestore(res.user);
         window.location.href = "dashboard.html";
-      } catch (error) {
-        handleError(error);
-      }
+      } catch (err) { showError(err.message); }
     });
 
-    function setLoading(isLoading) {
-      if (isLoading) {
-        ui.btnText.style.display = 'none';
-        ui.loader.style.display = 'block';
-        ui.submit.disabled = true;
-        ui.submit.style.opacity = '0.7';
-      } else {
-        ui.btnText.style.display = 'block';
-        ui.loader.style.display = 'none';
-        ui.submit.disabled = false;
-        ui.submit.style.opacity = '1';
-      }
+    function setLoading(show) {
+      ui.loader.style.display = show ? 'block' : 'none';
+      ui.btnText.style.display = show ? 'none' : 'block';
+      ui.submit.disabled = show;
     }
 
     function showError(msg) {
-        ui.error.style.display = 'block';
-        ui.error.textContent = msg;
-    }
-
-    function handleError(error) {
-      console.error(error);
       ui.error.style.display = 'block';
-      let msg = "Une erreur est survenue.";
-      
-      if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') msg = "Identifiants incorrects.";
-      else if (error.code === 'auth/user-not-found') msg = "Aucun compte trouvé.";
-      else if (error.code === 'auth/email-already-in-use') msg = "Cet email est déjà utilisé.";
-      else if (error.code === 'auth/weak-password') msg = "Mot de passe trop faible.";
-      
       ui.error.textContent = msg;
     }
-
   </script>
 </body>
-  </html>
+</html>

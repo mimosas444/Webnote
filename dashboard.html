@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>WebNote - Dashboard Pro</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
+
     <style>
         :root {
-            /* --- THEME COLORS (Inspiré de ta page de référence) --- */
+            /* --- THEME COULEURS (Basé sur ton exemple préféré) --- */
             --bg-dark: #09090b;
-            --bg-gradient: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #09090b 100%);
+            --bg-gradient: radial-gradient(circle at 50% 0%, #1e1b4b, #09090b 70%);
             
             --accent-color: #6366f1;
             --accent-glow: rgba(99, 102, 241, 0.4);
@@ -23,19 +23,20 @@
             --glass-blur: blur(25px);
 
             --text-main: #f8fafc;
-            --text-dim: #94a3b8;
+            --text-muted: #94a3b8;
             
             --msg-me-bg: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
             --msg-other-bg: rgba(30, 41, 59, 0.7);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
-            background-color: var(--bg-dark);
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-dark);
             background-image: var(--bg-gradient);
             color: var(--text-main);
-            height: 100dvh;
+            height: 100vh;
             display: flex;
             justify-content: center;
             overflow: hidden;
@@ -47,124 +48,164 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            background: rgba(11, 15, 26, 0.2);
+            background: rgba(9, 9, 11, 0.3);
             border-left: 1px solid var(--glass-border);
             border-right: 1px solid var(--glass-border);
         }
 
         /* --- HEADER --- */
         header {
-            height: 70px; padding: 0 20px;
+            height: 75px;
+            padding: 0 25px;
             background: rgba(9, 9, 11, 0.7);
-            backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--glass-border);
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             z-index: 100;
         }
 
-        .brand { font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-        .brand i { background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .brand h1 { 
+            font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; 
+            background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .user-pill {
+            display: flex; align-items: center; gap: 12px;
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            padding: 6px 6px 6px 16px; border-radius: 40px; cursor: pointer;
+            transition: 0.3s;
+        }
+        .user-pill:hover { background: rgba(255, 255, 255, 0.1); }
+
+        .avatar-small {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; color: white; border: 2px solid rgba(255,255,255,0.1);
+        }
 
         /* --- CHAT AREA --- */
         .chat-container {
-            flex: 1; overflow-y: auto;
-            padding: 20px 20px 140px 20px;
-            display: flex; flex-direction: column; gap: 18px;
-            scroll-behavior: smooth;
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 25px 130px 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
-        .chat-container::-webkit-scrollbar { width: 4px; }
-        .chat-container::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
 
-        .message { max-width: 80%; animation: msgSlide 0.3s ease-out; }
-        @keyframes msgSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+        .message { max-width: 80%; animation: popIn 0.3s ease-out; }
+        @keyframes popIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .message.mine { align-self: flex-end; }
 
         .msg-bubble {
-            padding: 12px 18px; border-radius: 20px;
-            background: var(--msg-other-bg); border: 1px solid var(--glass-border);
-            font-size: 0.95rem; line-height: 1.5; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            position: relative;
+            padding: 12px 18px;
+            border-radius: 20px;
+            background: var(--msg-other-bg);
+            border: 1px solid var(--glass-border);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         .message.mine .msg-bubble {
-            background: var(--msg-me-bg); border: none; color: white;
+            background: var(--msg-me-bg);
+            border: none;
+            color: white;
             box-shadow: 0 8px 25px rgba(99, 102, 241, 0.25);
             border-bottom-right-radius: 4px;
         }
 
-        .msg-info { font-size: 0.7rem; color: var(--text-dim); margin-bottom: 4px; padding-left: 8px; }
-        .message.mine .msg-info { text-align: right; padding-right: 8px; }
+        .msg-info { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px; padding: 0 8px; }
 
-        /* --- NOUVELLE BARRE DE SAISIE STYLE "PAGEREF" --- */
+        /* --- NOUVELLE BARRE DE SAISIE (STYLE DOCK) --- */
         .footer-dock {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            padding: 0 15px 15px 15px;
-            background: linear-gradient(to top, var(--bg-dark) 40%, transparent);
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
             z-index: 1000;
         }
 
         .input-wrapper {
             background: rgba(30, 30, 35, 0.85);
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
-            border-radius: 26px;
+            border-radius: 24px;
             padding: 6px;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-            position: relative;
-            max-width: 800px;
-            margin: 0 auto;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
         }
 
-        .input-wrapper:focus-within { border-color: var(--accent-color); }
-
         textarea {
-            flex: 1; background: transparent; border: none; color: white;
-            padding: 12px 10px; font-size: 1rem; outline: none; resize: none;
-            max-height: 150px; line-height: 1.4;
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 12px 15px;
+            font-size: 1rem;
+            outline: none;
+            resize: none;
+            max-height: 150px;
+            font-family: inherit;
         }
 
         .send-btn {
-            width: 44px; height: 44px; border-radius: 50%; border: none;
-            background: var(--accent-gradient); color: white; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.2s; box-shadow: 0 0 15px var(--accent-glow);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: var(--accent-gradient);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 15px var(--accent-glow);
         }
-        .send-btn:hover { transform: scale(1.1); }
+        .send-btn:hover { transform: scale(1.1) rotate(-10deg); }
 
-        /* --- TYPING & REPLY STYLE --- */
-        .typing-status {
-            position: absolute; top: -28px; left: 20px;
-            font-size: 0.75rem; color: var(--accent-color);
-            font-weight: 700; opacity: 0; transition: 0.3s;
-            text-shadow: 0 0 10px var(--accent-glow);
+        .typing-indicator {
+            position: absolute;
+            top: -30px;
+            left: 20px;
+            font-size: 0.8rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s;
+            text-shadow: 0 0 10px rgba(99,102,241,0.5);
         }
-
-        .reply-preview {
-            position: absolute; top: -55px; left: 0; right: 0;
-            background: rgba(30, 41, 59, 0.95); padding: 10px 15px;
-            border-radius: 18px; border: 1px solid var(--accent-color);
-            font-size: 0.85rem; display: none; align-items: center;
-            justify-content: space-between; animation: slideIn 0.2s ease;
-        }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } }
 
         /* --- DROPDOWN --- */
         .dropdown-content {
-            display: none; position: absolute; top: 65px; left: 20px;
-            background: var(--glass-bg); backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border); border-radius: 20px;
-            min-width: 200px; padding: 8px; z-index: 2000;
+            display: none;
+            position: absolute;
+            top: 70px; left: 20px;
+            background: rgba(15, 15, 20, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            min-width: 220px;
+            padding: 10px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            z-index: 200;
         }
-        .dropdown-content.show { display: block; animation: fadeIn 0.2s; }
+        .dropdown-content.show { display: block; animation: popIn 0.2s ease; }
         .dropdown-content a, .dropdown-content div {
-            padding: 12px; color: white; text-decoration: none;
-            display: flex; align-items: center; gap: 12px; border-radius: 12px; cursor: pointer;
+            padding: 12px; color: var(--text-main);
+            text-decoration: none; display: flex; align-items: center; gap: 12px;
+            border-radius: 12px; cursor: pointer; transition: 0.2s;
         }
-        .dropdown-content div:hover, .dropdown-content a:hover { background: rgba(255,255,255,0.1); }
+        .dropdown-content div:hover, .dropdown-content a:hover { background: var(--glass-bg); }
 
     </style>
 </head>
@@ -173,20 +214,21 @@
     <div class="main-app">
         <header>
             <div style="display: flex; align-items: center; gap: 15px;">
-                <button onclick="toggleMenu()" style="background:none; border:none; color:white; cursor:pointer;">
-                    <i class="fas fa-bars-staggered fa-lg"></i>
+                <button onclick="toggleMenu()" style="background:none; border:none; color:white; cursor:pointer; font-size:1.4rem;">
+                    <i class="fas fa-bars-staggered"></i>
                 </button>
-                <div class="brand"><i class="fas fa-meteor"></i> WebNote<span>.</span></div>
+                <div class="brand"><h1>WebNote<span>.</span></h1></div>
             </div>
             
             <div id="myDropdown" class="dropdown-content">
                 <a href="perso.html"><i class="fas fa-fingerprint"></i> Espace Privé</a>
-                <div onclick="signOut(auth)" style="color:#ff4d4d;"><i class="fas fa-power-off"></i> Quitter</div>
+                <div onclick="changeUsername()"><i class="fas fa-user-edit"></i> Nouveau Pseudo</div>
+                <div onclick="signOut(auth)" style="color:#ef4444;"><i class="fas fa-power-off"></i> Quitter</div>
             </div>
 
-            <div style="text-align: right;">
-                <div id="clock" style="font-weight: 800; font-size: 1rem;">00:00</div>
-                <div id="dateText" style="font-size: 0.7rem; color: var(--text-dim);">...</div>
+            <div class="user-pill" onclick="window.location.href='perso.html'">
+                <span id="header-name" style="font-size:0.9rem; font-weight:600;">Chargement...</span>
+                <div class="avatar-small" id="header-avatar">U</div>
             </div>
         </header>
 
@@ -194,17 +236,9 @@
             </div>
 
         <div class="footer-dock">
+            <div id="typingLabel" class="typing-indicator">Quelqu'un écrit...</div>
             <div class="input-wrapper">
-                <div class="typing-status" id="typing-indicator">
-                    <i class="fas fa-pen-nib"></i> <span id="typing-text">Quelqu'un écrit...</span>
-                </div>
-                
-                <div class="reply-preview" id="reply-bar">
-                    <span><i class="fas fa-reply"></i> Réponse à <b id="reply-user-name">...</b></span>
-                    <i class="fas fa-times" onclick="cancelReply()" style="cursor:pointer; padding:5px;"></i>
-                </div>
-
-                <button style="background:none; border:none; color:var(--text-dim); padding-left:10px;"><i class="fas fa-plus-circle fa-lg"></i></button>
+                <button style="background:none; border:none; color:var(--text-muted); padding:0 10px;"><i class="fas fa-plus-circle fa-lg"></i></button>
                 <textarea id="msgInput" rows="1" placeholder="Écrire un message..."></textarea>
                 <button class="send-btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
             </div>
@@ -216,7 +250,7 @@
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Ta config Firebase
+        // Ta config Firebase (Reste identique)
         const firebaseConfig = {
             apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
             authDomain: "webnote-9ea1e.firebaseapp.com",
@@ -231,11 +265,13 @@
         const db = getFirestore(app);
 
         let userProfile = null;
-        let typingTimer = null;
+        let typingTimer;
 
         onAuthStateChanged(auth, (user) => {
             if (user) { 
                 userProfile = user; 
+                document.getElementById('header-name').innerText = user.displayName || "Utilisateur";
+                document.getElementById('header-avatar').innerText = (user.displayName || "U").charAt(0).toUpperCase();
                 loadMessages(); 
                 listenTyping();
             } else { 
@@ -246,7 +282,7 @@
         const input = document.getElementById('msgInput');
         const sendBtn = document.getElementById('sendBtn');
 
-        // --- ENVOI ---
+        // --- ENVOI MESSAGE ---
         async function send() {
             if (!input.value.trim()) return;
             const text = input.value;
@@ -256,18 +292,17 @@
             await addDoc(collection(db, "messages"), {
                 content: text,
                 senderId: userProfile.uid,
-                senderName: userProfile.displayName || userProfile.email.split('@')[0],
+                senderName: userProfile.displayName || "Anonyme",
                 createdAt: serverTimestamp()
             });
-            
-            // Effacer l'indicateur de frappe après envoi
-            deleteDoc(doc(db, "typing_status", userProfile.uid));
+            // Stop typing status
+            await deleteDoc(doc(db, "typing_status", userProfile.uid));
         }
 
         sendBtn.onclick = send;
         input.onkeydown = (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } };
 
-        // --- CHARGEMENT ---
+        // --- CHARGEMENT MESSAGES ---
         function loadMessages() {
             const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
             onSnapshot(q, (snap) => {
@@ -288,44 +323,41 @@
             });
         }
 
-        // --- TYPING STATUS ---
-        input.addEventListener('input', () => {
-            if(userProfile) {
-                setDoc(doc(db, "typing_status", userProfile.uid), { 
-                    name: userProfile.displayName || userProfile.email.split('@')[0], 
-                    isTyping: input.value.length > 0 
-                });
-                
-                // Ajustement automatique de la hauteur
-                input.style.height = 'auto';
-                input.style.height = input.scrollHeight + 'px';
-            }
-        });
+        // --- GESTION TYPING (Qui écrit ?) ---
+        input.oninput = () => {
+            // Ajustement auto de la hauteur
+            input.style.height = 'auto';
+            input.style.height = input.scrollHeight + 'px';
+
+            setDoc(doc(db, "typing_status", userProfile.uid), { 
+                name: userProfile.displayName || "Ami", 
+                isTyping: true 
+            });
+
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => {
+                deleteDoc(doc(db, "typing_status", userProfile.uid));
+            }, 2000);
+        };
 
         function listenTyping() {
             onSnapshot(collection(db, "typing_status"), (snap) => {
                 let writers = [];
-                snap.forEach(d => { if(d.id !== userProfile?.uid && d.data().isTyping) writers.push(d.data().name); });
-                const indic = document.getElementById('typing-indicator');
+                snap.forEach(d => { 
+                    if(d.id !== userProfile.uid) writers.push(d.data().name); 
+                });
+                const label = document.getElementById('typingLabel');
                 if(writers.length > 0) {
-                    indic.style.opacity = 1;
-                    document.getElementById('typing-text').innerText = writers.join(", ") + " écrit...";
+                    label.style.opacity = 1;
+                    label.innerText = writers.join(', ') + (writers.length > 1 ? " écrivent..." : " écrit...");
                 } else {
-                    indic.style.opacity = 0;
+                    label.style.opacity = 0;
                 }
             });
         }
 
-        // --- UTILS ---
         window.toggleMenu = () => document.getElementById("myDropdown").classList.toggle("show");
         window.signOut = signOut; window.auth = auth;
-
-        function updateTime() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-            document.getElementById('dateText').innerText = now.toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
-        }
-        setInterval(updateTime, 1000); updateTime();
     </script>
 </body>
 </html>

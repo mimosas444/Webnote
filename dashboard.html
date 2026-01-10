@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        /* --- VARIABLES & THEME --- */
         :root {
             --bg: #0b0f1a;
             --surface: rgba(23, 28, 41, 0.8);
@@ -18,6 +17,7 @@
             --text-main: #f8fafc;
             --text-dim: #94a3b8;
             --msg-bg: rgba(30, 41, 59, 0.7);
+            --danger: #ff4d4d;
         }
 
         [data-theme="light"] {
@@ -38,23 +38,14 @@
                 radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(30, 64, 175, 0.15) 0px, transparent 50%);
             color: var(--text-main);
-            height: 100dvh; /* Utilisation de dvh pour mobile */
+            height: 100dvh;
             display: flex;
             justify-content: center;
             transition: background 0.3s, color 0.3s;
         }
 
-        .main-app {
-            width: 100%;
-            max-width: 1100px;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            background: rgba(11, 15, 26, 0.02); /* Très léger fond */
-            height: 100%;
-        }
+        .main-app { width: 100%; max-width: 1100px; display: flex; flex-direction: column; position: relative; height: 100%; }
 
-        /* --- HEADER (Menu à Droite) --- */
         header {
             padding: 15px 25px;
             background: var(--surface);
@@ -68,21 +59,13 @@
 
         .brand h1 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.5px; }
         .brand span { color: var(--accent); }
-
         .header-right { display: flex; align-items: center; gap: 20px; }
         .time-display { text-align: right; line-height: 1.2; }
-        .menu-trigger { background: var(--border); border: none; color: var(--text-main); width: 40px; height: 40px; border-radius: 10px; cursor: pointer; transition: 0.2s; }
-        .menu-trigger:hover { background: var(--accent); color: white; }
+        .menu-trigger { background: var(--border); border: none; color: var(--text-main); width: 40px; height: 40px; border-radius: 10px; cursor: pointer; }
 
-        /* --- CHAT AREA --- */
         .chat-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 20px 140px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            scroll-behavior: smooth;
+            flex: 1; overflow-y: auto; padding: 20px 20px 140px 20px;
+            display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth;
         }
 
         .message { max-width: 85%; position: relative; animation: msgSlide 0.3s ease; display: flex; flex-direction: column; }
@@ -91,94 +74,58 @@
         @keyframes msgSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .msg-bubble {
-            padding: 12px 18px;
-            border-radius: 20px;
-            background: var(--msg-bg);
-            border: 1px solid var(--border);
-            font-size: 0.95rem;
-            line-height: 1.5;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            cursor: pointer;
-            position: relative;
-            transition: 0.2s;
+            padding: 12px 18px; border-radius: 20px; background: var(--msg-bg);
+            border: 1px solid var(--border); font-size: 0.95rem; line-height: 1.5;
+            cursor: pointer; position: relative; transition: 0.2s;
         }
         
         .message.mine .msg-bubble {
             background: linear-gradient(135deg, var(--accent), #4f46e5);
-            border: none;
-            color: white;
-            border-bottom-right-radius: 4px;
+            border: none; color: white; border-bottom-right-radius: 4px;
         }
         .message:not(.mine) .msg-bubble { border-bottom-left-radius: 4px; }
 
         .msg-info { font-size: 0.7rem; color: var(--text-dim); margin-bottom: 4px; padding: 0 5px; display: flex; justify-content: space-between; gap: 10px; }
         
-        /* Reply Context inside Bubble */
         .reply-context {
-            font-size: 0.75rem;
-            border-left: 2px solid rgba(255,255,255,0.5);
-            padding-left: 8px;
-            margin-bottom: 8px;
-            opacity: 0.8;
-            background: rgba(0,0,0,0.1);
-            border-radius: 4px;
-            padding: 4px 8px;
+            font-size: 0.75rem; border-left: 2px solid rgba(255,255,255,0.5);
+            padding: 4px 8px; margin-bottom: 8px; opacity: 0.8; background: rgba(0,0,0,0.1); border-radius: 4px;
         }
-        .message:not(.mine) .reply-context { border-left-color: var(--accent); background: rgba(0,0,0,0.05); }
 
-        /* Reactions Pills */
         .reactions-container { display: flex; gap: 4px; margin-top: -8px; z-index: 10; padding: 0 10px; }
-        .reaction-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2px 6px; font-size: 0.75rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .reaction-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2px 6px; font-size: 0.75rem; }
 
-        /* --- ACTION MENU (iPhone Style) --- */
+        /* ACTION MENU */
         .action-menu {
-            position: absolute;
-            top: -50px; left: 50%; transform: translateX(-50%);
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 6px; border-radius: 30px;
-            display: none; align-items: center; gap: 5px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            white-space: nowrap;
+            position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
+            background: var(--surface); border: 1px solid var(--border); padding: 6px;
+            border-radius: 30px; display: none; align-items: center; gap: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 100; backdrop-filter: blur(10px);
         }
-        .action-menu.active { display: flex; animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .action-menu.active { display: flex; }
         .message.mine .action-menu { left: auto; right: 0; transform: none; }
         
-        .act-btn { background: none; border: none; font-size: 1.1rem; cursor: pointer; padding: 5px 8px; transition: 0.2s; border-radius: 50%; }
-        .act-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.2); }
+        .act-btn { background: none; border: none; font-size: 1.1rem; cursor: pointer; padding: 5px 8px; border-radius: 50%; color: var(--text-main); }
         .sep { width: 1px; height: 15px; background: var(--border); margin: 0 5px; }
 
-        @keyframes popIn { from { opacity: 0; transform: translate(-50%, 10px) scale(0.9); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
-
-        /* --- INPUT AREA & DOCK --- */
+        /* INPUT AREA */
         .input-wrapper {
             position: absolute; bottom: 0; left: 0; width: 100%;
-            background: var(--surface);
-            backdrop-filter: blur(20px);
-            padding: 10px 20px 25px 20px;
-            border-top: 1px solid var(--border);
-            z-index: 500;
+            background: var(--surface); backdrop-filter: blur(20px);
+            padding: 10px 20px 25px 20px; border-top: 1px solid var(--border); z-index: 500;
         }
 
         .reply-bar {
             display: none; justify-content: space-between; align-items: center;
-            font-size: 0.8rem; color: var(--text-dim);
-            padding: 5px 15px; margin-bottom: 5px;
+            font-size: 0.8rem; color: var(--text-dim); padding: 5px 15px; margin-bottom: 5px;
             border-left: 3px solid var(--accent); background: rgba(99, 102, 241, 0.1);
         }
         .reply-bar.show { display: flex; }
 
         .input-box {
-            background: rgba(0,0,0,0.2);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 8px 12px;
-            display: flex; align-items: flex-end; gap: 10px;
-            transition: 0.3s;
+            background: rgba(0,0,0,0.2); border: 1px solid var(--border);
+            border-radius: 24px; padding: 8px 12px; display: flex; align-items: flex-end; gap: 10px;
         }
-        .input-box:focus-within { border-color: var(--accent); background: rgba(0,0,0,0.3); }
 
         textarea {
             flex: 1; background: none; border: none; color: var(--text-main);
@@ -188,27 +135,16 @@
         .send-btn {
             background: var(--accent); color: white; border: none;
             width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center;
         }
-        .send-btn:hover { transform: scale(1.1); }
 
-        /* --- DROPDOWN MENU --- */
         .dropdown-content {
             display: none; position: absolute; top: 70px; right: 20px;
             background: var(--surface); backdrop-filter: blur(15px);
-            border: 1px solid var(--border); border-radius: 18px;
-            min-width: 200px; padding: 10px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5); transform-origin: top right;
+            border: 1px solid var(--border); border-radius: 18px; min-width: 200px; padding: 10px;
         }
-        .dropdown-content a, .dropdown-content div {
-            padding: 12px; color: var(--text-main); text-decoration: none;
-            display: flex; align-items: center; gap: 10px; border-radius: 10px;
-            cursor: pointer; transition: 0.2s; font-size: 0.9rem;
-        }
-        .dropdown-content div:hover, .dropdown-content a:hover { background: var(--border); }
-        .dropdown-content.show { display: block; animation: fadeIn 0.2s; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .dropdown-content.show { display: block; }
+        .dropdown-content div, .dropdown-content a { padding: 12px; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -216,22 +152,17 @@
     <div class="main-app">
         <header>
             <div class="brand"><h1>WebNote<span>.</span></h1></div>
-            
             <div class="header-right">
                 <div class="time-display">
                     <div id="clock" style="font-weight: 800; font-size: 1rem;">00:00</div>
                     <div id="dateText" style="font-size: 0.7rem; color: var(--text-dim);">...</div>
                 </div>
-                <button class="menu-trigger" onclick="toggleMenu()">
-                    <i class="fas fa-bars"></i>
-                </button>
+                <button class="menu-trigger" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
             </div>
-            
             <div id="myDropdown" class="dropdown-content">
                 <a href="perso.html"><i class="fas fa-user-circle"></i> Mon Profil</a>
-                <div onclick="toggleTheme()"><i class="fas fa-adjust"></i> Thème Light/Dark</div>
-                <div style="height:1px; background:var(--border); margin:5px 0;"></div>
-                <div id="logoutBtn" style="color:#ff4d4d;"><i class="fas fa-power-off"></i> Déconnexion</div>
+                <div onclick="toggleTheme()"><i class="fas fa-adjust"></i> Thème</div>
+                <div id="logoutBtn" style="color:var(--danger);"><i class="fas fa-power-off"></i> Déconnexion</div>
             </div>
         </header>
 
@@ -239,14 +170,12 @@
 
         <div class="input-wrapper">
             <div id="typingIndicator" style="font-size: 0.7rem; color: var(--accent); margin-bottom: 5px; height: 15px;"></div>
-            
             <div id="replyPreview" class="reply-bar">
                 <span>Réponse à <b id="replyTarget">...</b></span>
                 <i class="fas fa-times" style="cursor:pointer" onclick="cancelReply()"></i>
             </div>
-
             <div class="input-box">
-                <button style="background:none; border:none; color:var(--text-dim); padding-left:5px;"><i class="fas fa-paperclip"></i></button>
+                <button style="background:none; border:none; color:var(--text-dim);"><i class="fas fa-paperclip"></i></button>
                 <textarea id="msgInput" rows="1" placeholder="Écrire un message..."></textarea>
                 <button class="send-btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
             </div>
@@ -271,27 +200,24 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         let userProfile = null;
-        let currentReply = null; // Pour stocker à qui on répond
+        let currentReply = null;
 
-        // --- AUTH ---
         onAuthStateChanged(auth, (user) => {
             if (user) { 
                 userProfile = user; 
                 loadMessages(); 
                 listenTyping();
-                loadTheme();
             } else { 
                 window.location.href = "index.html"; 
             }
         });
 
-        // --- ENVOI DE MESSAGE ---
         const input = document.getElementById('msgInput');
         const sendBtn = document.getElementById('sendBtn');
 
         async function send() {
-            if (!input.value.trim()) return;
-            const text = input.value;
+            const text = input.value.trim();
+            if (!text || !userProfile) return;
             
             const payload = {
                 content: text,
@@ -302,12 +228,10 @@
                 edited: false
             };
 
-            // Ajout des données de réponse si existantes
             if(currentReply) {
                 payload.replyTo = {
-                    id: currentReply.id,
                     sender: currentReply.sender,
-                    text: currentReply.text.substring(0, 50) + "..."
+                    text: currentReply.text.substring(0, 40) + "..."
                 };
             }
 
@@ -315,14 +239,15 @@
             input.style.height = 'auto';
             cancelReply();
 
-            await addDoc(collection(db, "messages"), payload);
-            setDoc(doc(db, "typing_status", userProfile.uid), { isTyping: false });
+            try {
+                await addDoc(collection(db, "messages"), payload);
+                await setDoc(doc(db, "typing_status", userProfile.uid), { isTyping: false }, { merge: true });
+            } catch(e) { console.error(e); }
         }
 
         sendBtn.onclick = send;
         input.onkeydown = (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } };
 
-        // --- AFFICHAGE MESSAGES ---
         function loadMessages() {
             const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
             onSnapshot(q, (snap) => {
@@ -334,28 +259,15 @@
                     const data = d.data();
                     const id = d.id;
                     const isMine = data.senderId === userProfile.uid;
-                    
-                    // Calcul du temps pour les droits
                     const msgTime = data.createdAt ? data.createdAt.toMillis() : now;
                     const diffHours = (now - msgTime) / (1000 * 60 * 60);
-                    const canEdit = isMine && diffHours < 1;
-                    const canDelete = isMine && diffHours < 24;
-
-                    // Formatage de l'heure
                     const timeStr = data.createdAt ? new Date(msgTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "...";
 
-                    // HTML du Reply
-                    let replyBlock = '';
-                    if(data.replyTo) {
-                        replyBlock = `<div class="reply-context"><b>${data.replyTo.sender}:</b> ${data.replyTo.text}</div>`;
-                    }
+                    // Échapper les caractères spéciaux pour le JS inline
+                    const safeContent = data.content.replace(/`/g, "\\`").replace(/'/g, "\\'");
 
-                    // HTML des réactions
-                    let reactionsHtml = '';
-                    if(data.reactions && data.reactions.length > 0) {
-                        const uniqueReactions = [...new Set(data.reactions)]; // Evite doublons visuels
-                        reactionsHtml = `<div class="reactions-container">${uniqueReactions.map(r => `<span class="reaction-pill">${r}</span>`).join('')}</div>`;
-                    }
+                    let replyBlock = data.replyTo ? `<div class="reply-context"><b>${data.replyTo.sender}:</b> ${data.replyTo.text}</div>` : '';
+                    let reactionsHtml = (data.reactions && data.reactions.length > 0) ? `<div class="reactions-container">${[...new Set(data.reactions)].map(r => `<span class="reaction-pill">${r}</span>`).join('')}</div>` : '';
 
                     const html = `
                         <div class="message ${isMine ? 'mine' : ''}">
@@ -363,101 +275,59 @@
                                 <span>${!isMine ? data.senderName : ''}</span>
                                 <span>${data.edited ? '(modifié)' : ''} ${timeStr}</span>
                             </div>
-                            
                             <div class="msg-bubble" onclick="openActions('${id}')">
                                 ${replyBlock}
                                 ${data.content}
-                                
                                 <div id="actions-${id}" class="action-menu">
                                     <button class="act-btn" onclick="react(event, '${id}', '❤️')">❤️</button>
-                                    <button class="act-btn" onclick="react(event, '${id}', '😂')">😂</button>
                                     <button class="act-btn" onclick="react(event, '${id}', '👍')">👍</button>
                                     <div class="sep"></div>
-                                    <button class="act-btn" onclick="initReply(event, '${id}', '${data.senderName}', \`${data.content.replace(/'/g, "\\'")}\`)"><i class="fas fa-reply"></i></button>
-                                    ${canEdit ? `<button class="act-btn" onclick="editMsg(event, '${id}', \`${data.content.replace(/'/g, "\\'")}\`)"><i class="fas fa-pen"></i></button>` : ''}
-                                    ${canDelete ? `<button class="act-btn" style="color:var(--danger)" onclick="deleteMsg(event, '${id}')"><i class="fas fa-trash"></i></button>` : ''}
+                                    <button class="act-btn" onclick="initReply(event, '${id}', '${data.senderName}', '${safeContent}')"><i class="fas fa-reply"></i></button>
+                                    ${(isMine && diffHours < 1) ? `<button class="act-btn" onclick="editMsg(event, '${id}', '${safeContent}')"><i class="fas fa-pen"></i></button>` : ''}
+                                    ${(isMine && diffHours < 24) ? `<button class="act-btn" style="color:var(--danger)" onclick="deleteMsg(event, '${id}')"><i class="fas fa-trash"></i></button>` : ''}
                                 </div>
                             </div>
                             ${reactionsHtml}
-                        </div>
-                    `;
+                        </div>`;
                     chat.insertAdjacentHTML('beforeend', html);
                 });
                 chat.scrollTop = chat.scrollHeight;
             });
         }
 
-        // --- ACTIONS (Reply, React, Edit, Delete) ---
-
-        // 1. Ouvrir le menu flottant
         window.openActions = (id) => {
-            document.querySelectorAll('.action-menu').forEach(el => {
-                if(el.id !== `actions-${id}`) el.classList.remove('active');
-            });
-            const menu = document.getElementById(`actions-${id}`);
-            if(menu) menu.classList.toggle('active');
+            document.querySelectorAll('.action-menu').forEach(el => { if(el.id !== `actions-${id}`) el.classList.remove('active'); });
+            document.getElementById(`actions-${id}`).classList.toggle('active');
         };
 
-        // Fermer les menus si on clique ailleurs
-        window.onclick = (e) => {
-            if(!e.target.closest('.msg-bubble')) {
-                document.querySelectorAll('.action-menu').forEach(el => el.classList.remove('active'));
-            }
-            if(!e.target.closest('.menu-trigger') && !e.target.closest('.dropdown-content')) {
-                document.getElementById("myDropdown").classList.remove("show");
-            }
-        };
-
-        // 2. Répondre
         window.initReply = (e, id, sender, text) => {
             e.stopPropagation();
             currentReply = { id, sender, text };
             document.getElementById('replyTarget').innerText = sender;
             document.getElementById('replyPreview').classList.add('show');
-            document.getElementById(`actions-${id}`).classList.remove('active');
             input.focus();
         };
 
-        window.cancelReply = () => {
-            currentReply = null;
-            document.getElementById('replyPreview').classList.remove('show');
-        };
+        window.cancelReply = () => { currentReply = null; document.getElementById('replyPreview').classList.remove('show'); };
 
-        // 3. Réagir
         window.react = async (e, id, emoji) => {
             e.stopPropagation();
-            await updateDoc(doc(db, "messages", id), {
-                reactions: arrayUnion(emoji)
-            });
-            document.getElementById(`actions-${id}`).classList.remove('active');
+            await updateDoc(doc(db, "messages", id), { reactions: arrayUnion(emoji) });
         };
 
-        // 4. Modifier (Max 1h)
         window.editMsg = async (e, id, oldText) => {
             e.stopPropagation();
             const newText = prompt("Modifier le message :", oldText);
-            if(newText && newText !== oldText) {
-                await updateDoc(doc(db, "messages", id), {
-                    content: newText,
-                    edited: true
-                });
-            }
-            document.getElementById(`actions-${id}`).classList.remove('active');
+            if(newText && newText !== oldText) await updateDoc(doc(db, "messages", id), { content: newText, edited: true });
         };
 
-        // 5. Supprimer (Max 24h)
         window.deleteMsg = async (e, id) => {
             e.stopPropagation();
-            if(confirm("Supprimer définitivement ?")) {
-                await deleteDoc(doc(db, "messages", id));
-            }
+            if(confirm("Supprimer ?")) await deleteDoc(doc(db, "messages", id));
         };
 
-        // --- TYPING & UI UTILS ---
         input.oninput = () => {
-            setDoc(doc(db, "typing_status", userProfile.uid), { name: userProfile.displayName || "Ami", isTyping: input.value.length > 0 });
-            input.style.height = 'auto';
-            input.style.height = input.scrollHeight + 'px';
+            setDoc(doc(db, "typing_status", userProfile.uid), { name: userProfile.displayName || "Ami", isTyping: input.value.length > 0 }, { merge: true });
         };
 
         function listenTyping() {
@@ -468,7 +338,6 @@
             });
         }
 
-        // Clock & Date
         function updateTime() {
             const now = new Date();
             document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
@@ -476,22 +345,14 @@
         }
         setInterval(updateTime, 1000); updateTime();
 
-        // Menu & Theme
         window.toggleMenu = () => document.getElementById("myDropdown").classList.toggle("show");
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
-
         window.toggleTheme = () => {
             const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            const newTheme = current === 'dark' ? 'light' : 'dark';
+            const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
         };
-
-        function loadTheme() {
-            const saved = localStorage.getItem('theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', saved);
-        }
     </script>
 </body>
-</html>
+    </html>

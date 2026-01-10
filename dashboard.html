@@ -3,273 +3,495 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WebNote OS | Dashboard Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>WebNote - Dashboard Pro</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- DESIGN SYSTEM COMPLET --- */
+        /* --- VARIABLES & THEME --- */
         :root {
-            --bg-dark: #050507;
+            --bg: #0b0f1a;
+            --surface: rgba(23, 28, 41, 0.8);
+            --border: rgba(255, 255, 255, 0.08);
             --accent: #6366f1;
             --accent-glow: rgba(99, 102, 241, 0.3);
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
             --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --danger: #ff4d4d;
+            --text-dim: #94a3b8;
+            --msg-bg: rgba(30, 41, 59, 0.7);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
-        body { background: var(--bg-dark); background-image: radial-gradient(circle at 50% 0%, #17153b, #050507 80%); color: var(--text-main); height: 100dvh; display: flex; justify-content: center; overflow: hidden; }
+        [data-theme="light"] {
+            --bg: #f1f5f9;
+            --surface: rgba(255, 255, 255, 0.8);
+            --border: rgba(0, 0, 0, 0.1);
+            --text-main: #0f172a;
+            --text-dim: #64748b;
+            --msg-bg: #ffffff;
+            --accent: #4f46e5;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        .app-shell { width: 100%; max-width: 1200px; display: flex; flex-direction: column; position: relative; }
+        body {
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(30, 64, 175, 0.15) 0px, transparent 50%);
+            color: var(--text-main);
+            height: 100dvh; /* Utilisation de dvh pour mobile */
+            display: flex;
+            justify-content: center;
+            transition: background 0.3s, color 0.3s;
+        }
 
-        /* HEADER & MENU */
-        header { height: 80px; padding: 0 30px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; }
-        .brand-section { display: flex; align-items: center; gap: 15px; }
-        .logo-box { width: 45px; height: 45px; background: var(--accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px var(--accent-glow); font-size: 1.5rem; color: white; }
-        .brand-name { font-size: 1.4rem; font-weight: 800; }
+        .main-app {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: rgba(11, 15, 26, 0.02); /* Très léger fond */
+            height: 100%;
+        }
 
-        .nav-trigger { background: var(--glass); border: 1px solid var(--glass-border); color: white; padding: 10px 20px; border-radius: 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 600; transition: 0.3s; }
-        .nav-trigger:hover { background: rgba(255,255,255,0.1); }
+        /* --- HEADER (Menu à Droite) --- */
+        header {
+            padding: 15px 25px;
+            background: var(--surface);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
 
-        .menu-overlay { position: absolute; top: 90px; left: 30px; background: rgba(15, 15, 25, 0.95); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 20px; width: 280px; padding: 12px; display: none; box-shadow: 0 30px 60px rgba(0,0,0,0.8); z-index: 2000; animation: fadeIn 0.2s ease; }
-        .menu-overlay.active { display: block; }
+        .brand h1 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.5px; }
+        .brand span { color: var(--accent); }
 
-        /* MESSAGES & BUBBLES */
-        #chat-feed { flex: 1; overflow-y: auto; padding: 20px 40px 150px 40px; display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth; }
-        .msg { max-width: 75%; position: relative; animation: slideUp 0.3s ease; }
-        .msg.me { align-self: flex-end; }
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        .time-display { text-align: right; line-height: 1.2; }
+        .menu-trigger { background: var(--border); border: none; color: var(--text-main); width: 40px; height: 40px; border-radius: 10px; cursor: pointer; transition: 0.2s; }
+        .menu-trigger:hover { background: var(--accent); color: white; }
 
-        .bubble { padding: 14px 20px; border-radius: 22px; background: rgba(30, 41, 59, 0.6); border: 1px solid var(--glass-border); position: relative; cursor: pointer; transition: 0.2s; line-height: 1.5; }
-        .msg.me .bubble { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); border: none; color: white; border-bottom-right-radius: 4px; }
+        /* --- CHAT AREA --- */
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 20px 140px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            scroll-behavior: smooth;
+        }
+
+        .message { max-width: 85%; position: relative; animation: msgSlide 0.3s ease; display: flex; flex-direction: column; }
+        .message.mine { align-self: flex-end; align-items: flex-end; }
         
-        .msg-meta { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-        .reactions-container { display: flex; gap: 4px; margin-top: 6px; }
-        .reaction-tag { background: var(--glass); border: 1px solid var(--glass-border); padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; }
+        @keyframes msgSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* CONTEXT MENU */
-        .msg-actions { position: absolute; background: #161625; border: 1px solid var(--glass-border); border-radius: 12px; padding: 6px; display: none; z-index: 100; gap: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); top: -50px; left: 0; }
-        .action-btn { background: none; border: none; color: white; padding: 8px 12px; cursor: pointer; border-radius: 8px; transition: 0.2s; font-size: 0.9rem; }
-        .action-btn:hover { background: var(--accent); }
-        .action-btn.del-btn:hover { background: var(--danger); }
+        .msg-bubble {
+            padding: 12px 18px;
+            border-radius: 20px;
+            background: var(--msg-bg);
+            border: 1px solid var(--border);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+            position: relative;
+            transition: 0.2s;
+        }
+        
+        .message.mine .msg-bubble {
+            background: linear-gradient(135deg, var(--accent), #4f46e5);
+            border: none;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .message:not(.mine) .msg-bubble { border-bottom-left-radius: 4px; }
 
-        /* INPUT AREA */
-        .dock { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 800px; z-index: 500; }
-        .input-bar { background: rgba(20, 20, 30, 0.8); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 30px; padding: 10px 18px; display: flex; align-items: center; gap: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
-        textarea { flex: 1; background: transparent; border: none; color: white; outline: none; resize: none; font-size: 1rem; max-height: 150px; }
-        .send-btn { width: 48px; height: 48px; border-radius: 50%; border: none; background: var(--accent); color: white; cursor: pointer; transition: 0.3s; }
-        .send-btn:hover { transform: scale(1.05) rotate(-5deg); box-shadow: 0 0 20px var(--accent-glow); }
+        .msg-info { font-size: 0.7rem; color: var(--text-dim); margin-bottom: 4px; padding: 0 5px; display: flex; justify-content: space-between; gap: 10px; }
+        
+        /* Reply Context inside Bubble */
+        .reply-context {
+            font-size: 0.75rem;
+            border-left: 2px solid rgba(255,255,255,0.5);
+            padding-left: 8px;
+            margin-bottom: 8px;
+            opacity: 0.8;
+            background: rgba(0,0,0,0.1);
+            border-radius: 4px;
+            padding: 4px 8px;
+        }
+        .message:not(.mine) .reply-context { border-left-color: var(--accent); background: rgba(0,0,0,0.05); }
 
-        .typing-label { position: absolute; top: -35px; left: 20px; font-size: 0.8rem; color: var(--accent); font-weight: 600; display: none; }
+        /* Reactions Pills */
+        .reactions-container { display: flex; gap: 4px; margin-top: -8px; z-index: 10; padding: 0 10px; }
+        .reaction-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2px 6px; font-size: 0.75rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* --- ACTION MENU (iPhone Style) --- */
+        .action-menu {
+            position: absolute;
+            top: -50px; left: 50%; transform: translateX(-50%);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 6px; border-radius: 30px;
+            display: none; align-items: center; gap: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+        }
+        .action-menu.active { display: flex; animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .message.mine .action-menu { left: auto; right: 0; transform: none; }
+        
+        .act-btn { background: none; border: none; font-size: 1.1rem; cursor: pointer; padding: 5px 8px; transition: 0.2s; border-radius: 50%; }
+        .act-btn:hover { background: rgba(255,255,255,0.1); transform: scale(1.2); }
+        .sep { width: 1px; height: 15px; background: var(--border); margin: 0 5px; }
+
+        @keyframes popIn { from { opacity: 0; transform: translate(-50%, 10px) scale(0.9); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+
+        /* --- INPUT AREA & DOCK --- */
+        .input-wrapper {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            padding: 10px 20px 25px 20px;
+            border-top: 1px solid var(--border);
+            z-index: 500;
+        }
+
+        .reply-bar {
+            display: none; justify-content: space-between; align-items: center;
+            font-size: 0.8rem; color: var(--text-dim);
+            padding: 5px 15px; margin-bottom: 5px;
+            border-left: 3px solid var(--accent); background: rgba(99, 102, 241, 0.1);
+        }
+        .reply-bar.show { display: flex; }
+
+        .input-box {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 8px 12px;
+            display: flex; align-items: flex-end; gap: 10px;
+            transition: 0.3s;
+        }
+        .input-box:focus-within { border-color: var(--accent); background: rgba(0,0,0,0.3); }
+
+        textarea {
+            flex: 1; background: none; border: none; color: var(--text-main);
+            outline: none; resize: none; padding: 10px 5px; font-size: 0.95rem; max-height: 120px;
+        }
+
+        .send-btn {
+            background: var(--accent); color: white; border: none;
+            width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: 0.3s;
+        }
+        .send-btn:hover { transform: scale(1.1); }
+
+        /* --- DROPDOWN MENU --- */
+        .dropdown-content {
+            display: none; position: absolute; top: 70px; right: 20px;
+            background: var(--surface); backdrop-filter: blur(15px);
+            border: 1px solid var(--border); border-radius: 18px;
+            min-width: 200px; padding: 10px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5); transform-origin: top right;
+        }
+        .dropdown-content a, .dropdown-content div {
+            padding: 12px; color: var(--text-main); text-decoration: none;
+            display: flex; align-items: center; gap: 10px; border-radius: 10px;
+            cursor: pointer; transition: 0.2s; font-size: 0.9rem;
+        }
+        .dropdown-content div:hover, .dropdown-content a:hover { background: var(--border); }
+        .dropdown-content.show { display: block; animation: fadeIn 0.2s; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    <div class="app-shell">
+
+    <div class="main-app">
         <header>
-            <div class="brand-section">
-                <div class="logo-box"><i class="fas fa-bolt"></i></div>
-                <div class="brand-name">WebNote<span style="color:var(--accent)">.</span>OS</div>
+            <div class="brand"><h1>WebNote<span>.</span></h1></div>
+            
+            <div class="header-right">
+                <div class="time-display">
+                    <div id="clock" style="font-weight: 800; font-size: 1rem;">00:00</div>
+                    <div id="dateText" style="font-size: 0.7rem; color: var(--text-dim);">...</div>
+                </div>
+                <button class="menu-trigger" onclick="toggleMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
-            <button class="nav-trigger" id="menuBtn"><i class="fas fa-grid-2"></i> Menu Explorer</button>
-            <div id="menuOverlay" class="menu-overlay">
-                <a href="perso.html" style="text-decoration: none; color: inherit;">
-                    <div style="padding: 15px; border-radius: 12px; background: rgba(255,255,255,0.05); margin-bottom: 10px; cursor: pointer;">
-                        <i class="fas fa-user-shield" style="color: var(--accent);"></i> Espace Personnel
-                    </div>
-                </a>
-                <div style="padding: 12px; cursor: pointer;" onclick="changeTheme()"><i class="fas fa-palette"></i> Apparence</div>
-                <div style="padding: 12px; cursor: pointer; color: var(--danger);" onclick="logout()"><i class="fas fa-power-off"></i> Déconnexion</div>
+            
+            <div id="myDropdown" class="dropdown-content">
+                <a href="perso.html"><i class="fas fa-user-circle"></i> Mon Profil</a>
+                <div onclick="toggleTheme()"><i class="fas fa-adjust"></i> Thème Light/Dark</div>
+                <div style="height:1px; background:var(--border); margin:5px 0;"></div>
+                <div id="logoutBtn" style="color:#ff4d4d;"><i class="fas fa-power-off"></i> Déconnexion</div>
             </div>
         </header>
 
-        <main id="chat-feed"></main>
+        <div class="chat-container" id="chat"></div>
 
-        <div class="dock">
-            <div id="typingLabel" class="typing-label">Quelqu'un écrit...</div>
-            <div class="input-bar">
-                <button style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fas fa-plus-circle fa-lg"></i></button>
-                <textarea id="msgInput" rows="1" placeholder="Échangez avec la communauté..."></textarea>
-                <button id="sendBtn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+        <div class="input-wrapper">
+            <div id="typingIndicator" style="font-size: 0.7rem; color: var(--accent); margin-bottom: 5px; height: 15px;"></div>
+            
+            <div id="replyPreview" class="reply-bar">
+                <span>Réponse à <b id="replyTarget">...</b></span>
+                <i class="fas fa-times" style="cursor:pointer" onclick="cancelReply()"></i>
+            </div>
+
+            <div class="input-box">
+                <button style="background:none; border:none; color:var(--text-dim); padding-left:5px;"><i class="fas fa-paperclip"></i></button>
+                <textarea id="msgInput" rows="1" placeholder="Écrire un message..."></textarea>
+                <button class="send-btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
 
-<script type="module">
-    // --- IMPORT FIREBASE ---
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, deleteDoc, setDoc, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, deleteDoc, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
-        authDomain: "webnote-9ea1e.firebaseapp.com",
-        projectId: "webnote-9ea1e",
-        storageBucket: "webnote-9ea1e.firebasestorage.app",
-        messagingSenderId: "869875049003",
-        appId: "1:869875049003:web:0f7334733cb313e426406e"
-    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
+            authDomain: "webnote-9ea1e.firebaseapp.com",
+            projectId: "webnote-9ea1e",
+            storageBucket: "webnote-9ea1e.firebasestorage.app",
+            messagingSenderId: "869875049003",
+            appId: "1:869875049003:web:0f7334733cb313e426406e"
+        };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    let currentUser = null;
-    let typingTimer;
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        let userProfile = null;
+        let currentReply = null; // Pour stocker à qui on répond
 
-    // --- AUTHENTIFICATION ---
-    onAuthStateChanged(auth, user => {
-        if(user) {
-            currentUser = user;
-            listenMessages();
-            listenTyping();
-        } else {
-            window.location.href = "index.html";
-        }
-    });
-
-    // --- ENVOI DE MESSAGE ---
-    async function send() {
-        const input = document.getElementById('msgInput');
-        const text = input.value.trim();
-        if (!text) return;
-
-        input.value = "";
-        input.style.height = 'auto';
-
-        // Nettoyer statut "écrit" immédiatement
-        await deleteDoc(doc(db, "typing_status", currentUser.uid));
-
-        await addDoc(collection(db, "messages"), {
-            content: text,
-            senderId: currentUser.uid,
-            senderName: currentUser.displayName || "Anonyme",
-            createdAt: serverTimestamp(),
-            reactions: [],
-            edited: false
-        });
-    }
-
-    document.getElementById('sendBtn').onclick = send;
-
-    // --- LOGIQUE "EN TRAIN D'ÉCRIRE" ---
-    const msgInput = document.getElementById('msgInput');
-    msgInput.oninput = () => {
-        msgInput.style.height = 'auto';
-        msgInput.style.height = msgInput.scrollHeight + 'px';
-
-        setDoc(doc(db, "typing_status", currentUser.uid), {
-            name: currentUser.displayName || "Kenny",
-            active: true
-        });
-
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(() => {
-            deleteDoc(doc(db, "typing_status", currentUser.uid));
-        }, 3000);
-    };
-
-    function listenTyping() {
-        onSnapshot(collection(db, "typing_status"), snap => {
-            let names = [];
-            snap.forEach(d => { if(d.id !== currentUser.uid) names.push(d.data().name); });
-            const label = document.getElementById('typingLabel');
-            if(names.length > 0) {
-                label.innerText = names.join(", ") + " écrit...";
-                label.style.display = "block";
-            } else {
-                label.style.display = "none";
+        // --- AUTH ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) { 
+                userProfile = user; 
+                loadMessages(); 
+                listenTyping();
+                loadTheme();
+            } else { 
+                window.location.href = "index.html"; 
             }
         });
-    }
 
-    // --- AFFICHAGE DES MESSAGES ---
-    function listenMessages() {
-        const q = query(collection(db, "messages"), orderBy("createdAt", "asc"), limit(100));
-        onSnapshot(q, snap => {
-            const feed = document.getElementById('chat-feed');
-            feed.innerHTML = "";
-            snap.forEach(d => {
-                const msg = d.data();
-                const id = d.id;
-                const isMe = msg.senderId === currentUser.uid;
-                const time = msg.createdAt ? new Date(msg.createdAt.toMillis()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "...";
+        // --- ENVOI DE MESSAGE ---
+        const input = document.getElementById('msgInput');
+        const sendBtn = document.getElementById('sendBtn');
 
-                const html = `
-                    <div class="msg ${isMe ? 'me' : ''}" id="container-${id}">
-                        <div class="msg-meta">
-                            <span style="font-weight:700">${isMe ? 'Vous' : msg.senderName}</span>
-                            <span>${time}</span>
-                            ${msg.edited ? '<span style="font-size:0.6rem; opacity:0.5">(modifié)</span>' : ''}
-                        </div>
-                        <div class="bubble" onclick="toggleActions('${id}')">
-                            ${msg.content}
-                            <div class="msg-actions" id="actions-${id}">
-                                <button class="action-btn" onclick="react('${id}', '❤️')">❤️</button>
-                                <button class="action-btn" onclick="react('${id}', '🔥')">🔥</button>
-                                ${isMe ? `<button class="action-btn" onclick="editMsg('${id}', '${msg.content.replace(/'/g, "\\'")}')"><i class="fas fa-pen"></i></button>` : ''}
-                                ${isMe ? `<button class="action-btn del-btn" onclick="deleteMsg('${id}')"><i class="fas fa-trash"></i></button>` : ''}
+        async function send() {
+            if (!input.value.trim()) return;
+            const text = input.value;
+            
+            const payload = {
+                content: text,
+                senderId: userProfile.uid,
+                senderName: userProfile.displayName || "Anonyme",
+                createdAt: serverTimestamp(),
+                reactions: [],
+                edited: false
+            };
+
+            // Ajout des données de réponse si existantes
+            if(currentReply) {
+                payload.replyTo = {
+                    id: currentReply.id,
+                    sender: currentReply.sender,
+                    text: currentReply.text.substring(0, 50) + "..."
+                };
+            }
+
+            input.value = "";
+            input.style.height = 'auto';
+            cancelReply();
+
+            await addDoc(collection(db, "messages"), payload);
+            setDoc(doc(db, "typing_status", userProfile.uid), { isTyping: false });
+        }
+
+        sendBtn.onclick = send;
+        input.onkeydown = (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } };
+
+        // --- AFFICHAGE MESSAGES ---
+        function loadMessages() {
+            const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
+            onSnapshot(q, (snap) => {
+                const chat = document.getElementById('chat');
+                chat.innerHTML = "";
+                const now = Date.now();
+
+                snap.forEach(d => {
+                    const data = d.data();
+                    const id = d.id;
+                    const isMine = data.senderId === userProfile.uid;
+                    
+                    // Calcul du temps pour les droits
+                    const msgTime = data.createdAt ? data.createdAt.toMillis() : now;
+                    const diffHours = (now - msgTime) / (1000 * 60 * 60);
+                    const canEdit = isMine && diffHours < 1;
+                    const canDelete = isMine && diffHours < 24;
+
+                    // Formatage de l'heure
+                    const timeStr = data.createdAt ? new Date(msgTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "...";
+
+                    // HTML du Reply
+                    let replyBlock = '';
+                    if(data.replyTo) {
+                        replyBlock = `<div class="reply-context"><b>${data.replyTo.sender}:</b> ${data.replyTo.text}</div>`;
+                    }
+
+                    // HTML des réactions
+                    let reactionsHtml = '';
+                    if(data.reactions && data.reactions.length > 0) {
+                        const uniqueReactions = [...new Set(data.reactions)]; // Evite doublons visuels
+                        reactionsHtml = `<div class="reactions-container">${uniqueReactions.map(r => `<span class="reaction-pill">${r}</span>`).join('')}</div>`;
+                    }
+
+                    const html = `
+                        <div class="message ${isMine ? 'mine' : ''}">
+                            <div class="msg-info">
+                                <span>${!isMine ? data.senderName : ''}</span>
+                                <span>${data.edited ? '(modifié)' : ''} ${timeStr}</span>
                             </div>
+                            
+                            <div class="msg-bubble" onclick="openActions('${id}')">
+                                ${replyBlock}
+                                ${data.content}
+                                
+                                <div id="actions-${id}" class="action-menu">
+                                    <button class="act-btn" onclick="react(event, '${id}', '❤️')">❤️</button>
+                                    <button class="act-btn" onclick="react(event, '${id}', '😂')">😂</button>
+                                    <button class="act-btn" onclick="react(event, '${id}', '👍')">👍</button>
+                                    <div class="sep"></div>
+                                    <button class="act-btn" onclick="initReply(event, '${id}', '${data.senderName}', \`${data.content.replace(/'/g, "\\'")}\`)"><i class="fas fa-reply"></i></button>
+                                    ${canEdit ? `<button class="act-btn" onclick="editMsg(event, '${id}', \`${data.content.replace(/'/g, "\\'")}\`)"><i class="fas fa-pen"></i></button>` : ''}
+                                    ${canDelete ? `<button class="act-btn" style="color:var(--danger)" onclick="deleteMsg(event, '${id}')"><i class="fas fa-trash"></i></button>` : ''}
+                                </div>
+                            </div>
+                            ${reactionsHtml}
                         </div>
-                        <div class="reactions-container">
-                            ${msg.reactions ? msg.reactions.map(r => `<span class="reaction-tag">${r}</span>`).join('') : ''}
-                        </div>
-                    </div>
-                `;
-                feed.insertAdjacentHTML('beforeend', html);
+                    `;
+                    chat.insertAdjacentHTML('beforeend', html);
+                });
+                chat.scrollTop = chat.scrollHeight;
             });
-            feed.scrollTop = feed.scrollHeight;
-        });
-    }
-
-    // --- FONCTIONS ACTIONS (GLOBALES) ---
-    window.toggleActions = (id) => {
-        const allMenus = document.querySelectorAll('.msg-actions');
-        const currentMenu = document.getElementById(`actions-${id}`);
-        const isVisible = currentMenu.style.display === 'flex';
-        allMenus.forEach(m => m.style.display = 'none');
-        currentMenu.style.display = isVisible ? 'none' : 'flex';
-    };
-
-    window.deleteMsg = async (id) => {
-        if(confirm("Supprimer ce message définitivement ?")) {
-            await deleteDoc(doc(db, "messages", id));
         }
-    };
 
-    window.editMsg = async (id, oldText) => {
-        const newText = prompt("Modifier le message :", oldText);
-        if(newText && newText !== oldText) {
+        // --- ACTIONS (Reply, React, Edit, Delete) ---
+
+        // 1. Ouvrir le menu flottant
+        window.openActions = (id) => {
+            document.querySelectorAll('.action-menu').forEach(el => {
+                if(el.id !== `actions-${id}`) el.classList.remove('active');
+            });
+            const menu = document.getElementById(`actions-${id}`);
+            if(menu) menu.classList.toggle('active');
+        };
+
+        // Fermer les menus si on clique ailleurs
+        window.onclick = (e) => {
+            if(!e.target.closest('.msg-bubble')) {
+                document.querySelectorAll('.action-menu').forEach(el => el.classList.remove('active'));
+            }
+            if(!e.target.closest('.menu-trigger') && !e.target.closest('.dropdown-content')) {
+                document.getElementById("myDropdown").classList.remove("show");
+            }
+        };
+
+        // 2. Répondre
+        window.initReply = (e, id, sender, text) => {
+            e.stopPropagation();
+            currentReply = { id, sender, text };
+            document.getElementById('replyTarget').innerText = sender;
+            document.getElementById('replyPreview').classList.add('show');
+            document.getElementById(`actions-${id}`).classList.remove('active');
+            input.focus();
+        };
+
+        window.cancelReply = () => {
+            currentReply = null;
+            document.getElementById('replyPreview').classList.remove('show');
+        };
+
+        // 3. Réagir
+        window.react = async (e, id, emoji) => {
+            e.stopPropagation();
             await updateDoc(doc(db, "messages", id), {
-                content: newText,
-                edited: true
+                reactions: arrayUnion(emoji)
+            });
+            document.getElementById(`actions-${id}`).classList.remove('active');
+        };
+
+        // 4. Modifier (Max 1h)
+        window.editMsg = async (e, id, oldText) => {
+            e.stopPropagation();
+            const newText = prompt("Modifier le message :", oldText);
+            if(newText && newText !== oldText) {
+                await updateDoc(doc(db, "messages", id), {
+                    content: newText,
+                    edited: true
+                });
+            }
+            document.getElementById(`actions-${id}`).classList.remove('active');
+        };
+
+        // 5. Supprimer (Max 24h)
+        window.deleteMsg = async (e, id) => {
+            e.stopPropagation();
+            if(confirm("Supprimer définitivement ?")) {
+                await deleteDoc(doc(db, "messages", id));
+            }
+        };
+
+        // --- TYPING & UI UTILS ---
+        input.oninput = () => {
+            setDoc(doc(db, "typing_status", userProfile.uid), { name: userProfile.displayName || "Ami", isTyping: input.value.length > 0 });
+            input.style.height = 'auto';
+            input.style.height = input.scrollHeight + 'px';
+        };
+
+        function listenTyping() {
+            onSnapshot(collection(db, "typing_status"), (snap) => {
+                let active = [];
+                snap.forEach(d => { if(d.id !== userProfile.uid && d.data().isTyping) active.push(d.data().name); });
+                document.getElementById('typingIndicator').innerText = active.length > 0 ? active.join(', ') + " écrit..." : "";
             });
         }
-    };
 
-    window.react = async (id, emoji) => {
-        const msgRef = doc(db, "messages", id);
-        // Ici on pourrait utiliser arrayUnion pour ne pas écraser, mais on simplifie
-        await updateDoc(msgRef, {
-            reactions: [emoji] 
-        });
-    };
+        // Clock & Date
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            document.getElementById('dateText').innerText = now.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric', month:'short'});
+        }
+        setInterval(updateTime, 1000); updateTime();
 
-    // --- MENU & LOGOUT ---
-    document.getElementById('menuBtn').onclick = (e) => {
-        e.stopPropagation();
-        document.getElementById('menuOverlay').classList.toggle('active');
-    };
+        // Menu & Theme
+        window.toggleMenu = () => document.getElementById("myDropdown").classList.toggle("show");
+        document.getElementById('logoutBtn').onclick = () => signOut(auth);
 
-    window.onclick = () => {
-        document.getElementById('menuOverlay').classList.remove('active');
-        document.querySelectorAll('.msg-actions').forEach(m => m.style.display = 'none');
-    };
+        window.toggleTheme = () => {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        };
 
-    window.logout = () => { if(confirm("Déconnexion ?")) signOut(auth); };
-</script>
+        function loadTheme() {
+            const saved = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+        }
+    </script>
 </body>
 </html>

@@ -125,7 +125,11 @@
             background: var(--surface-msg); border: 1px solid var(--border);
             border-bottom-left-radius: 4px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.1s;
         }
+        
+        /* Effet visuel au click sur le message */
+        .message:active .msg-bubble { transform: scale(0.98); }
 
         .message.mine .msg-bubble {
             background: var(--accent-gradient); color: white; border: none;
@@ -152,13 +156,17 @@
 
         /* Options Button (...) */
         .msg-options-btn {
-            opacity: 0; transition: 0.2s; background: none; border: none; color: var(--text-dim); 
-            cursor: pointer; padding: 8px; position: absolute; top: 50%; transform: translateY(-50%);
-            font-size: 1.1rem;
+            opacity: 0; transition: 0.2s; background: var(--surface); border: 1px solid var(--border); 
+            color: var(--text-dim); border-radius: 50%;
+            cursor: pointer; width: 32px; height: 32px; 
+            position: absolute; top: 50%; transform: translateY(-50%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 10;
         }
         .message:hover .msg-options-btn { opacity: 1; }
-        .message.mine .msg-options-btn { left: -35px; }
-        .message:not(.mine) .msg-options-btn { right: -35px; }
+        .message.mine .msg-options-btn { left: -45px; }
+        .message:not(.mine) .msg-options-btn { right: -45px; }
 
         /* Mobile Options visibility */
         @media (max-width: 768px) {
@@ -207,24 +215,38 @@
         }
         .send-btn:hover { transform: scale(1.05) rotate(-10deg); }
 
-        /* Menu Contextuel Flottant */
+        /* Menu Contextuel Flottant Style iOS */
         .msg-menu {
             display: none; position: absolute;
-            background: rgba(20, 20, 25, 0.95); backdrop-filter: blur(15px);
-            border: 1px solid var(--border); border-radius: 12px;
-            min-width: 180px; padding: 5px; z-index: 2000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            animation: fadeIn 0.1s ease;
+            background: rgba(20, 20, 25, 0.95); backdrop-filter: blur(20px);
+            border: 1px solid var(--border); border-radius: 16px;
+            min-width: 190px; padding: 6px; z-index: 2000;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            animation: fadeIn 0.15s ease;
+            flex-direction: column;
         }
         [data-theme="light"] .msg-menu { background: rgba(255, 255, 255, 0.95); }
         
-        .msg-menu div { padding: 10px; color: var(--text-main); border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
-        .msg-menu div:hover { background: rgba(120, 120, 120, 0.15); }
+        .msg-menu div.menu-item { 
+            padding: 12px 15px; color: var(--text-main); border-radius: 10px; 
+            cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 0.95rem; font-weight: 500;
+        }
+        .msg-menu div.menu-item:hover { background: rgba(120, 120, 120, 0.15); }
         
-        .reaction-picker { display: flex; gap: 2px; padding: 5px; border-bottom: 1px solid var(--border); margin-bottom: 5px; justify-content: space-around; }
-        .reaction-picker span { font-size: 1.3rem; cursor: pointer; padding: 5px; border-radius: 5px; transition: 0.2s; }
-        .reaction-picker span:hover { transform: scale(1.2); background: rgba(255,255,255,0.1); }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        /* Style des émojis style iPhone */
+        .reaction-picker { 
+            display: flex; gap: 5px; padding: 8px; 
+            border-bottom: 1px solid var(--border); margin-bottom: 5px; 
+            justify-content: space-between; 
+        }
+        .reaction-picker span { 
+            font-size: 1.4rem; cursor: pointer; padding: 4px; 
+            border-radius: 50%; transition: 0.2s; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .reaction-picker span:hover { transform: scale(1.25); background: rgba(255,255,255,0.1); }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -272,13 +294,14 @@
     <div id="msgActionMenu" class="msg-menu">
         <div class="reaction-picker">
             <span onclick="addReaction('❤️')">❤️</span>
-            <span onclick="addReaction('🔥')">🔥</span>
             <span onclick="addReaction('😂')">😂</span>
-            <span onclick="addReaction('😢')">😢</span>
+            <span onclick="addReaction('😮')">😮</span>
+            <span onclick="addReaction('🔥')">🔥</span>
+            <span onclick="addReaction('👎')">👎</span>
         </div>
-        <div onclick="triggerReply()"><i class="fas fa-reply"></i> Répondre</div>
-        <div id="btnEdit" onclick="triggerEdit()"><i class="fas fa-pen"></i> Modifier</div>
-        <div id="btnDelete" onclick="triggerDelete()" class="danger"><i class="fas fa-trash"></i> Supprimer</div>
+        <div class="menu-item" onclick="triggerReply()"><i class="fas fa-reply"></i> Répondre</div>
+        <div class="menu-item" id="btnEdit" onclick="triggerEdit()"><i class="fas fa-pen"></i> Modifier</div>
+        <div class="menu-item danger" id="btnDelete" onclick="triggerDelete()"><i class="fas fa-trash"></i> Supprimer</div>
     </div>
 
     <script type="module">
@@ -405,6 +428,7 @@
                         if (inner) reactionsHtml = `<div class="reactions-display">${inner}</div>`;
                     }
 
+                    // On utilise onclick sur la message ET sur le bouton pour être sûr
                     const html = `
                         <div class="message ${isMine ? 'mine' : ''}" id="msg-${msgId}">
                             ${!isMine ? `<div class="msg-author">${data.senderName}</div>` : ''}
@@ -418,7 +442,7 @@
                             </div>
                             ${reactionsHtml}
                             <button class="msg-options-btn" onclick="window.openMsgMenu(event, '${msgId}', ${isMine}, ${data.createdAt ? data.createdAt.toMillis() : 0})">
-                                <i class="fas fa-ellipsis-vertical"></i>
+                                <i class="fas fa-ellipsis-h"></i>
                             </button>
                         </div>
                     `;
@@ -437,18 +461,18 @@
             selectedMsgId = id;
             
             const menu = document.getElementById('msgActionMenu');
-            const rect = e.target.getBoundingClientRect();
+            const rect = e.target.getBoundingClientRect(); // Position du bouton cliqué
             
             // Calcul intelligent de position
             let top = rect.top;
-            let left = rect.left - 170; // Position par défaut (gauche du bouton)
+            let left = rect.left - 200; // Position par défaut (gauche du bouton)
 
             if (left < 10) left = rect.right + 10; // Si trop à gauche, on met à droite
-            if (top + 200 > window.innerHeight) top = window.innerHeight - 210; // Si trop bas, on remonte
+            if (top + 250 > window.innerHeight) top = window.innerHeight - 260; // Si trop bas, on remonte
 
             menu.style.top = top + 'px'; 
             menu.style.left = left + 'px';
-            menu.classList.add('show');
+            menu.style.display = 'flex'; // On utilise flex pour l'alignement colonne
 
             const btnEdit = document.getElementById('btnEdit');
             const btnDelete = document.getElementById('btnDelete');
@@ -457,13 +481,19 @@
             btnEdit.style.display = 'none';
             btnDelete.style.display = 'none';
 
-            // Logique de temps (1h = 3600000ms, 24h = 86400000ms)
+            // --- LOGIQUE TEMPORELLE STRICTE ---
+            // Si timestamp est 0 (ex: message tout juste envoyé et pas encore sync), on prend l'heure actuelle
+            const messageTime = timestamp || Date.now();
             const now = Date.now();
-            const elapsed = now - timestamp;
+            const elapsed = now - messageTime;
+
+            // Constantes en millisecondes
+            const ONE_HOUR = 60 * 60 * 1000;
+            const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
 
             if (isMine) {
-                if (elapsed < 3600000) btnEdit.style.display = 'flex'; // < 1h
-                if (elapsed < 86400000) btnDelete.style.display = 'flex'; // < 24h
+                if (elapsed < ONE_HOUR) btnEdit.style.display = 'flex'; // < 1h
+                if (elapsed < TWENTY_FOUR_HOURS) btnDelete.style.display = 'flex'; // < 24h
             }
         };
 
@@ -474,7 +504,7 @@
             await updateDoc(docRef, {
                 [`reactions.${emoji}`]: arrayUnion(userProfile.uid)
             });
-            document.getElementById('msgActionMenu').classList.remove('show');
+            document.getElementById('msgActionMenu').style.display = 'none';
         };
 
         window.triggerReply = () => {
@@ -494,7 +524,7 @@
             document.getElementById('replyToName').innerText = sender;
             document.getElementById('replyPreview').style.display = 'flex';
             input.focus();
-            document.getElementById('msgActionMenu').classList.remove('show');
+            document.getElementById('msgActionMenu').style.display = 'none';
         };
 
         window.cancelReply = () => {
@@ -506,27 +536,27 @@
             const currentText = document.querySelector(`#msg-${selectedMsgId} .msg-text`).innerText;
             const newText = prompt("Modifier le message :", currentText);
             
-            if (newText && newText.trim() !== "") {
+            if (newText && newText.trim() !== "" && newText !== currentText) {
                 const docRef = doc(db, "messages", selectedMsgId);
                 await updateDoc(docRef, {
                     content: newText,
                     edited: true
                 });
             }
-            document.getElementById('msgActionMenu').classList.remove('show');
+            document.getElementById('msgActionMenu').style.display = 'none';
         };
 
         window.triggerDelete = async () => {
             if(confirm("Supprimer définitivement ce message ?")) {
                 await deleteDoc(doc(db, "messages", selectedMsgId));
             }
-            document.getElementById('msgActionMenu').classList.remove('show');
+            document.getElementById('msgActionMenu').style.display = 'none';
         };
 
         // Fermeture des menus au clic ailleurs
         window.onclick = (e) => {
             if (!e.target.closest('.msg-options-btn') && !e.target.closest('.msg-menu')) {
-                document.getElementById('msgActionMenu').classList.remove('show');
+                document.getElementById('msgActionMenu').style.display = 'none';
             }
             if (!e.target.closest('.menu-trigger') && !e.target.closest('.dropdown-content')) {
                 document.getElementById('mainMenu').classList.remove('show');
@@ -575,4 +605,4 @@
         }
     </script>
 </body>
-</html>
+    </html>

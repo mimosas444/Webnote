@@ -1,363 +1,275 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WebNote - Dashboard Pro</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>WebNote OS | Dashboard Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <style>
+        /* --- DESIGN SYSTEM COMPLET --- */
         :root {
-            /* --- THEME COULEURS (Basé sur ton exemple préféré) --- */
-            --bg-dark: #09090b;
-            --bg-gradient: radial-gradient(circle at 50% 0%, #1e1b4b, #09090b 70%);
-            
-            --accent-color: #6366f1;
-            --accent-glow: rgba(99, 102, 241, 0.4);
-            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-blur: blur(25px);
-
+            --bg-dark: #050507;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            
-            --msg-me-bg: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-            --msg-other-bg: rgba(30, 41, 59, 0.7);
+            --danger: #ff4d4d;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body { background: var(--bg-dark); background-image: radial-gradient(circle at 50% 0%, #17153b, #050507 80%); color: var(--text-main); height: 100dvh; display: flex; justify-content: center; overflow: hidden; }
+        
+        .app-shell { width: 100%; max-width: 1200px; display: flex; flex-direction: column; position: relative; }
 
-        body {
-            font-family: 'Outfit', sans-serif;
-            background: var(--bg-dark);
-            background-image: var(--bg-gradient);
-            color: var(--text-main);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            overflow: hidden;
-        }
+        /* HEADER & MENU */
+        header { height: 80px; padding: 0 30px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; }
+        .brand-section { display: flex; align-items: center; gap: 15px; }
+        .logo-box { width: 45px; height: 45px; background: var(--accent); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px var(--accent-glow); font-size: 1.5rem; color: white; }
+        .brand-name { font-size: 1.4rem; font-weight: 800; }
 
-        .main-app {
-            width: 100%;
-            max-width: 1100px;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            background: rgba(9, 9, 11, 0.3);
-            border-left: 1px solid var(--glass-border);
-            border-right: 1px solid var(--glass-border);
-        }
+        .nav-trigger { background: var(--glass); border: 1px solid var(--glass-border); color: white; padding: 10px 20px; border-radius: 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 600; transition: 0.3s; }
+        .nav-trigger:hover { background: rgba(255,255,255,0.1); }
 
-        /* --- HEADER --- */
-        header {
-            height: 75px;
-            padding: 0 25px;
-            background: rgba(9, 9, 11, 0.7);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-        }
+        .menu-overlay { position: absolute; top: 90px; left: 30px; background: rgba(15, 15, 25, 0.95); backdrop-filter: blur(25px); border: 1px solid var(--glass-border); border-radius: 20px; width: 280px; padding: 12px; display: none; box-shadow: 0 30px 60px rgba(0,0,0,0.8); z-index: 2000; animation: fadeIn 0.2s ease; }
+        .menu-overlay.active { display: block; }
 
-        .brand h1 { 
-            font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; 
-            background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+        /* MESSAGES & BUBBLES */
+        #chat-feed { flex: 1; overflow-y: auto; padding: 20px 40px 150px 40px; display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth; }
+        .msg { max-width: 75%; position: relative; animation: slideUp 0.3s ease; }
+        .msg.me { align-self: flex-end; }
 
-        .user-pill {
-            display: flex; align-items: center; gap: 12px;
-            background: var(--glass-bg); border: 1px solid var(--glass-border);
-            padding: 6px 6px 6px 16px; border-radius: 40px; cursor: pointer;
-            transition: 0.3s;
-        }
-        .user-pill:hover { background: rgba(255, 255, 255, 0.1); }
+        .bubble { padding: 14px 20px; border-radius: 22px; background: rgba(30, 41, 59, 0.6); border: 1px solid var(--glass-border); position: relative; cursor: pointer; transition: 0.2s; line-height: 1.5; }
+        .msg.me .bubble { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); border: none; color: white; border-bottom-right-radius: 4px; }
+        
+        .msg-meta { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .reactions-container { display: flex; gap: 4px; margin-top: 6px; }
+        .reaction-tag { background: var(--glass); border: 1px solid var(--glass-border); padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; }
 
-        .avatar-small {
-            width: 36px; height: 36px; border-radius: 50%;
-            background: var(--accent-gradient);
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 600; color: white; border: 2px solid rgba(255,255,255,0.1);
-        }
+        /* CONTEXT MENU */
+        .msg-actions { position: absolute; background: #161625; border: 1px solid var(--glass-border); border-radius: 12px; padding: 6px; display: none; z-index: 100; gap: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); top: -50px; left: 0; }
+        .action-btn { background: none; border: none; color: white; padding: 8px 12px; cursor: pointer; border-radius: 8px; transition: 0.2s; font-size: 0.9rem; }
+        .action-btn:hover { background: var(--accent); }
+        .action-btn.del-btn:hover { background: var(--danger); }
 
-        /* --- CHAT AREA --- */
-        .chat-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px 25px 130px 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+        /* INPUT AREA */
+        .dock { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 800px; z-index: 500; }
+        .input-bar { background: rgba(20, 20, 30, 0.8); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 30px; padding: 10px 18px; display: flex; align-items: center; gap: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
+        textarea { flex: 1; background: transparent; border: none; color: white; outline: none; resize: none; font-size: 1rem; max-height: 150px; }
+        .send-btn { width: 48px; height: 48px; border-radius: 50%; border: none; background: var(--accent); color: white; cursor: pointer; transition: 0.3s; }
+        .send-btn:hover { transform: scale(1.05) rotate(-5deg); box-shadow: 0 0 20px var(--accent-glow); }
 
-        .message { max-width: 80%; animation: popIn 0.3s ease-out; }
-        @keyframes popIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .typing-label { position: absolute; top: -35px; left: 20px; font-size: 0.8rem; color: var(--accent); font-weight: 600; display: none; }
 
-        .message.mine { align-self: flex-end; }
-
-        .msg-bubble {
-            padding: 12px 18px;
-            border-radius: 20px;
-            background: var(--msg-other-bg);
-            border: 1px solid var(--glass-border);
-            font-size: 0.95rem;
-            line-height: 1.5;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .message.mine .msg-bubble {
-            background: var(--msg-me-bg);
-            border: none;
-            color: white;
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.25);
-            border-bottom-right-radius: 4px;
-        }
-
-        .msg-info { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px; padding: 0 8px; }
-
-        /* --- NOUVELLE BARRE DE SAISIE (STYLE DOCK) --- */
-        .footer-dock {
-            position: absolute;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 800px;
-            z-index: 1000;
-        }
-
-        .input-wrapper {
-            background: rgba(30, 30, 35, 0.85);
-            backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 6px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
-        }
-
-        textarea {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: white;
-            padding: 12px 15px;
-            font-size: 1rem;
-            outline: none;
-            resize: none;
-            max-height: 150px;
-            font-family: inherit;
-        }
-
-        .send-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: none;
-            background: var(--accent-gradient);
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 0 15px var(--accent-glow);
-        }
-        .send-btn:hover { transform: scale(1.1) rotate(-10deg); }
-
-        .typing-indicator {
-            position: absolute;
-            top: -30px;
-            left: 20px;
-            font-size: 0.8rem;
-            color: var(--accent-color);
-            font-weight: 600;
-            opacity: 0;
-            transition: opacity 0.3s;
-            text-shadow: 0 0 10px rgba(99,102,241,0.5);
-        }
-
-        /* --- DROPDOWN --- */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 70px; left: 20px;
-            background: rgba(15, 15, 20, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            min-width: 220px;
-            padding: 10px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            z-index: 200;
-        }
-        .dropdown-content.show { display: block; animation: popIn 0.2s ease; }
-        .dropdown-content a, .dropdown-content div {
-            padding: 12px; color: var(--text-main);
-            text-decoration: none; display: flex; align-items: center; gap: 12px;
-            border-radius: 12px; cursor: pointer; transition: 0.2s;
-        }
-        .dropdown-content div:hover, .dropdown-content a:hover { background: var(--glass-bg); }
-
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-
-    <div class="main-app">
+    <div class="app-shell">
         <header>
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <button onclick="toggleMenu()" style="background:none; border:none; color:white; cursor:pointer; font-size:1.4rem;">
-                    <i class="fas fa-bars-staggered"></i>
-                </button>
-                <div class="brand"><h1>WebNote<span>.</span></h1></div>
+            <div class="brand-section">
+                <div class="logo-box"><i class="fas fa-bolt"></i></div>
+                <div class="brand-name">WebNote<span style="color:var(--accent)">.</span>OS</div>
             </div>
-            
-            <div id="myDropdown" class="dropdown-content">
-                <a href="perso.html"><i class="fas fa-fingerprint"></i> Espace Privé</a>
-                <div onclick="changeUsername()"><i class="fas fa-user-edit"></i> Nouveau Pseudo</div>
-                <div onclick="signOut(auth)" style="color:#ef4444;"><i class="fas fa-power-off"></i> Quitter</div>
-            </div>
-
-            <div class="user-pill" onclick="window.location.href='perso.html'">
-                <span id="header-name" style="font-size:0.9rem; font-weight:600;">Chargement...</span>
-                <div class="avatar-small" id="header-avatar">U</div>
+            <button class="nav-trigger" id="menuBtn"><i class="fas fa-grid-2"></i> Menu Explorer</button>
+            <div id="menuOverlay" class="menu-overlay">
+                <a href="perso.html" style="text-decoration: none; color: inherit;">
+                    <div style="padding: 15px; border-radius: 12px; background: rgba(255,255,255,0.05); margin-bottom: 10px; cursor: pointer;">
+                        <i class="fas fa-user-shield" style="color: var(--accent);"></i> Espace Personnel
+                    </div>
+                </a>
+                <div style="padding: 12px; cursor: pointer;" onclick="changeTheme()"><i class="fas fa-palette"></i> Apparence</div>
+                <div style="padding: 12px; cursor: pointer; color: var(--danger);" onclick="logout()"><i class="fas fa-power-off"></i> Déconnexion</div>
             </div>
         </header>
 
-        <div class="chat-container" id="chat">
-            </div>
+        <main id="chat-feed"></main>
 
-        <div class="footer-dock">
-            <div id="typingLabel" class="typing-indicator">Quelqu'un écrit...</div>
-            <div class="input-wrapper">
-                <button style="background:none; border:none; color:var(--text-muted); padding:0 10px;"><i class="fas fa-plus-circle fa-lg"></i></button>
-                <textarea id="msgInput" rows="1" placeholder="Écrire un message..."></textarea>
-                <button class="send-btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+        <div class="dock">
+            <div id="typingLabel" class="typing-label">Quelqu'un écrit...</div>
+            <div class="input-bar">
+                <button style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fas fa-plus-circle fa-lg"></i></button>
+                <textarea id="msgInput" rows="1" placeholder="Échangez avec la communauté..."></textarea>
+                <button id="sendBtn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<script type="module">
+    // --- IMPORT FIREBASE ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, deleteDoc, setDoc, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Ta config Firebase (Reste identique)
-        const firebaseConfig = {
-            apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
-            authDomain: "webnote-9ea1e.firebaseapp.com",
-            projectId: "webnote-9ea1e",
-            storageBucket: "webnote-9ea1e.firebasestorage.app",
-            messagingSenderId: "869875049003",
-            appId: "1:869875049003:web:0f7334733cb313e426406e"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
+        authDomain: "webnote-9ea1e.firebaseapp.com",
+        projectId: "webnote-9ea1e",
+        storageBucket: "webnote-9ea1e.firebasestorage.app",
+        messagingSenderId: "869875049003",
+        appId: "1:869875049003:web:0f7334733cb313e426406e"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    let currentUser = null;
+    let typingTimer;
 
-        let userProfile = null;
-        let typingTimer;
+    // --- AUTHENTIFICATION ---
+    onAuthStateChanged(auth, user => {
+        if(user) {
+            currentUser = user;
+            listenMessages();
+            listenTyping();
+        } else {
+            window.location.href = "index.html";
+        }
+    });
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) { 
-                userProfile = user; 
-                document.getElementById('header-name').innerText = user.displayName || "Utilisateur";
-                document.getElementById('header-avatar').innerText = (user.displayName || "U").charAt(0).toUpperCase();
-                loadMessages(); 
-                listenTyping();
-            } else { 
-                window.location.href = "index.html"; 
-            }
+    // --- ENVOI DE MESSAGE ---
+    async function send() {
+        const input = document.getElementById('msgInput');
+        const text = input.value.trim();
+        if (!text) return;
+
+        input.value = "";
+        input.style.height = 'auto';
+
+        // Nettoyer statut "écrit" immédiatement
+        await deleteDoc(doc(db, "typing_status", currentUser.uid));
+
+        await addDoc(collection(db, "messages"), {
+            content: text,
+            senderId: currentUser.uid,
+            senderName: currentUser.displayName || "Anonyme",
+            createdAt: serverTimestamp(),
+            reactions: [],
+            edited: false
+        });
+    }
+
+    document.getElementById('sendBtn').onclick = send;
+
+    // --- LOGIQUE "EN TRAIN D'ÉCRIRE" ---
+    const msgInput = document.getElementById('msgInput');
+    msgInput.oninput = () => {
+        msgInput.style.height = 'auto';
+        msgInput.style.height = msgInput.scrollHeight + 'px';
+
+        setDoc(doc(db, "typing_status", currentUser.uid), {
+            name: currentUser.displayName || "Kenny",
+            active: true
         });
 
-        const input = document.getElementById('msgInput');
-        const sendBtn = document.getElementById('sendBtn');
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(() => {
+            deleteDoc(doc(db, "typing_status", currentUser.uid));
+        }, 3000);
+    };
 
-        // --- ENVOI MESSAGE ---
-        async function send() {
-            if (!input.value.trim()) return;
-            const text = input.value;
-            input.value = "";
-            input.style.height = 'auto';
+    function listenTyping() {
+        onSnapshot(collection(db, "typing_status"), snap => {
+            let names = [];
+            snap.forEach(d => { if(d.id !== currentUser.uid) names.push(d.data().name); });
+            const label = document.getElementById('typingLabel');
+            if(names.length > 0) {
+                label.innerText = names.join(", ") + " écrit...";
+                label.style.display = "block";
+            } else {
+                label.style.display = "none";
+            }
+        });
+    }
 
-            await addDoc(collection(db, "messages"), {
-                content: text,
-                senderId: userProfile.uid,
-                senderName: userProfile.displayName || "Anonyme",
-                createdAt: serverTimestamp()
-            });
-            // Stop typing status
-            await deleteDoc(doc(db, "typing_status", userProfile.uid));
-        }
+    // --- AFFICHAGE DES MESSAGES ---
+    function listenMessages() {
+        const q = query(collection(db, "messages"), orderBy("createdAt", "asc"), limit(100));
+        onSnapshot(q, snap => {
+            const feed = document.getElementById('chat-feed');
+            feed.innerHTML = "";
+            snap.forEach(d => {
+                const msg = d.data();
+                const id = d.id;
+                const isMe = msg.senderId === currentUser.uid;
+                const time = msg.createdAt ? new Date(msg.createdAt.toMillis()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "...";
 
-        sendBtn.onclick = send;
-        input.onkeydown = (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } };
-
-        // --- CHARGEMENT MESSAGES ---
-        function loadMessages() {
-            const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
-            onSnapshot(q, (snap) => {
-                const chat = document.getElementById('chat');
-                chat.innerHTML = "";
-                snap.forEach(d => {
-                    const data = d.data();
-                    const isMine = data.senderId === userProfile.uid;
-                    const html = `
-                        <div class="message ${isMine ? 'mine' : ''}">
-                            <div class="msg-info">${isMine ? 'Vous' : data.senderName}</div>
-                            <div class="msg-bubble">${data.content}</div>
+                const html = `
+                    <div class="msg ${isMe ? 'me' : ''}" id="container-${id}">
+                        <div class="msg-meta">
+                            <span style="font-weight:700">${isMe ? 'Vous' : msg.senderName}</span>
+                            <span>${time}</span>
+                            ${msg.edited ? '<span style="font-size:0.6rem; opacity:0.5">(modifié)</span>' : ''}
                         </div>
-                    `;
-                    chat.insertAdjacentHTML('beforeend', html);
-                });
-                chat.scrollTop = chat.scrollHeight;
+                        <div class="bubble" onclick="toggleActions('${id}')">
+                            ${msg.content}
+                            <div class="msg-actions" id="actions-${id}">
+                                <button class="action-btn" onclick="react('${id}', '❤️')">❤️</button>
+                                <button class="action-btn" onclick="react('${id}', '🔥')">🔥</button>
+                                ${isMe ? `<button class="action-btn" onclick="editMsg('${id}', '${msg.content.replace(/'/g, "\\'")}')"><i class="fas fa-pen"></i></button>` : ''}
+                                ${isMe ? `<button class="action-btn del-btn" onclick="deleteMsg('${id}')"><i class="fas fa-trash"></i></button>` : ''}
+                            </div>
+                        </div>
+                        <div class="reactions-container">
+                            ${msg.reactions ? msg.reactions.map(r => `<span class="reaction-tag">${r}</span>`).join('') : ''}
+                        </div>
+                    </div>
+                `;
+                feed.insertAdjacentHTML('beforeend', html);
+            });
+            feed.scrollTop = feed.scrollHeight;
+        });
+    }
+
+    // --- FONCTIONS ACTIONS (GLOBALES) ---
+    window.toggleActions = (id) => {
+        const allMenus = document.querySelectorAll('.msg-actions');
+        const currentMenu = document.getElementById(`actions-${id}`);
+        const isVisible = currentMenu.style.display === 'flex';
+        allMenus.forEach(m => m.style.display = 'none');
+        currentMenu.style.display = isVisible ? 'none' : 'flex';
+    };
+
+    window.deleteMsg = async (id) => {
+        if(confirm("Supprimer ce message définitivement ?")) {
+            await deleteDoc(doc(db, "messages", id));
+        }
+    };
+
+    window.editMsg = async (id, oldText) => {
+        const newText = prompt("Modifier le message :", oldText);
+        if(newText && newText !== oldText) {
+            await updateDoc(doc(db, "messages", id), {
+                content: newText,
+                edited: true
             });
         }
+    };
 
-        // --- GESTION TYPING (Qui écrit ?) ---
-        input.oninput = () => {
-            // Ajustement auto de la hauteur
-            input.style.height = 'auto';
-            input.style.height = input.scrollHeight + 'px';
+    window.react = async (id, emoji) => {
+        const msgRef = doc(db, "messages", id);
+        // Ici on pourrait utiliser arrayUnion pour ne pas écraser, mais on simplifie
+        await updateDoc(msgRef, {
+            reactions: [emoji] 
+        });
+    };
 
-            setDoc(doc(db, "typing_status", userProfile.uid), { 
-                name: userProfile.displayName || "Ami", 
-                isTyping: true 
-            });
+    // --- MENU & LOGOUT ---
+    document.getElementById('menuBtn').onclick = (e) => {
+        e.stopPropagation();
+        document.getElementById('menuOverlay').classList.toggle('active');
+    };
 
-            clearTimeout(typingTimer);
-            typingTimer = setTimeout(() => {
-                deleteDoc(doc(db, "typing_status", userProfile.uid));
-            }, 2000);
-        };
+    window.onclick = () => {
+        document.getElementById('menuOverlay').classList.remove('active');
+        document.querySelectorAll('.msg-actions').forEach(m => m.style.display = 'none');
+    };
 
-        function listenTyping() {
-            onSnapshot(collection(db, "typing_status"), (snap) => {
-                let writers = [];
-                snap.forEach(d => { 
-                    if(d.id !== userProfile.uid) writers.push(d.data().name); 
-                });
-                const label = document.getElementById('typingLabel');
-                if(writers.length > 0) {
-                    label.style.opacity = 1;
-                    label.innerText = writers.join(', ') + (writers.length > 1 ? " écrivent..." : " écrit...");
-                } else {
-                    label.style.opacity = 0;
-                }
-            });
-        }
-
-        window.toggleMenu = () => document.getElementById("myDropdown").classList.toggle("show");
-        window.signOut = signOut; window.auth = auth;
-    </script>
+    window.logout = () => { if(confirm("Déconnexion ?")) signOut(auth); };
+</script>
 </body>
 </html>

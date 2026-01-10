@@ -3,440 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WebNote - Espace Personnel</title>
+    <title>WebNote - Dashboard Pro</title>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-<style>
-    :root {
-        --bg-deep: #000000;
-        --bg-gradient: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #000000 60%);
-        --glass-surface: rgba(20, 20, 23, 0.7);
-        --glass-border: rgba(255, 255, 255, 0.08);
-        --glass-highlight: rgba(255, 255, 255, 0.12);
-        --primary: #818cf8;
-        --primary-glow: rgba(129, 140, 248, 0.25);
-        --text-main: #f8fafc;
-        --text-muted: #94a3b8;
-        --success: #10b981;
-        --ease-apple: cubic-bezier(0.25, 1, 0.5, 1);
+    <style>
+        :root {
+            /* --- THÈME SOMBRE (Défaut) --- */
+            --bg: #09090b;
+            --bg-gradient: radial-gradient(circle at 50% 0%, #1e1b4b, #09090b 70%);
+            --surface: rgba(30, 30, 35, 0.6);
+            --surface-msg: #27272a;
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #6366f1; /* Indigo */
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --accent-glow: rgba(99, 102, 241, 0.4);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --glass: blur(20px);
+            --danger: #ef4444;
+        }
+
+        /* --- THÈME CLAIR --- */
+        [data-theme="light"] {
+            --bg: #f3f4f6;
+            --bg-gradient: radial-gradient(circle at 50% 0%, #e0e7ff, #f3f4f6 80%);
+            --surface: rgba(255, 255, 255, 0.8);
+            --surface-msg: #ffffff;
+            --border: rgba(0, 0, 0, 0.08);
+            --accent: #4f46e5;
+            --accent-gradient: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+            --accent-glow: rgba(79, 70, 229, 0.2);
+            --text-main: #111827;
+            --text-dim: #6b7280;
+            --glass: blur(20px);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; outline: none; -webkit-tap-highlight-color: transparent; }
         
-        /* Variables dynamiques pour le responsive */
-        --container-padding: 24px;
-        --card-padding: 24px;
-        --font-h1: 2rem;
-    }
+        body {
+            background-color: var(--bg);
+            background-image: var(--bg-gradient);
+            color: var(--text-main);
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
 
-    /* --- GLOBAL & ANIMATIONS --- */
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        /* --- HEADER --- */
+        header {
+            height: 70px; padding: 0 20px; flex-shrink: 0;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(var(--bg), 0.5); backdrop-filter: var(--glass);
+            border-bottom: 1px solid var(--border);
+            z-index: 50;
+        }
 
-    body {
-        background-color: var(--bg-deep);
-        background-image: var(--bg-gradient);
-        background-attachment: fixed;
-        color: var(--text-main);
-        min-height: 100vh;
-        padding: var(--container-padding);
-        display: flex;
-        justify-content: center;
-        overflow-x: hidden;
-    }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        
+        .brand h1 { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
+        .brand span { color: var(--accent); }
+        
+        .dropdown { position: relative; }
+        .menu-trigger {
+            background: var(--surface); border: 1px solid var(--border);
+            color: var(--text-main); padding: 8px 14px; border-radius: 30px;
+            cursor: pointer; display: flex; align-items: center; gap: 10px;
+            transition: 0.3s; font-size: 0.9rem;
+        }
+        .menu-trigger:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); }
 
-    @keyframes slideUpFade {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+        .dropdown-content {
+            display: none; position: absolute; top: 50px; left: 0;
+            background: rgba(15, 15, 20, 0.95); 
+            border: 1px solid var(--border);
+            min-width: 220px; border-radius: 16px; z-index: 1000;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            backdrop-filter: blur(20px); padding: 8px;
+            animation: slideDown 0.2s ease;
+        }
+        [data-theme="light"] .dropdown-content { background: rgba(255, 255, 255, 0.95); }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .fade-in-stagger { animation: slideUpFade 0.8s var(--ease-apple) forwards; opacity: 0; }
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.2s; }
-    .delay-3 { animation-delay: 0.3s; }
-    .delay-4 { animation-delay: 0.4s; }
+        .dropdown-content div, .dropdown-content a {
+            color: var(--text-main); padding: 12px 15px; text-decoration: none;
+            display: flex; align-items: center; gap: 12px;
+            border-radius: 10px; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: 0.2s;
+        }
+        .dropdown-content div:hover, .dropdown-content a:hover { background: rgba(120, 120, 120, 0.15); }
+        .danger { color: var(--danger) !important; }
+        .show { display: block; }
 
-    /* --- LAYOUT GRID SYSTEM --- */
-    .dashboard-container {
-        width: 100%; max-width: 1200px;
-        display: grid;
-        grid-template-columns: 340px 1fr;
-        grid-template-rows: auto 1fr;
-        gap: 24px;
-    }
+        .weather-widget { display: flex; flex-direction: column; align-items: flex-end; }
+        .clock-display { font-weight: 700; font-size: 1rem; line-height: 1; }
+        .date-display { font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; }
 
-    /* --- GLASS COMPONENTS --- */
-    .glass-panel {
-        background: var(--glass-surface);
-        backdrop-filter: blur(40px);
-        -webkit-backdrop-filter: blur(40px);
-        border: 1px solid var(--glass-border);
-        border-radius: 24px;
-        padding: var(--card-padding);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        transition: transform 0.3s var(--ease-apple), border-color 0.3s;
-        display: flex; flex-direction: column;
-    }
-    .glass-panel:hover { border-color: var(--glass-highlight); }
+        /* --- CHAT AREA --- */
+        .chat-container {
+            flex: 1; overflow-y: auto; padding: 20px 20px 140px 20px;
+            display: flex; flex-direction: column; gap: 18px;
+            scroll-behavior: smooth;
+        }
 
-    /* --- HEADER --- */
-    .header-area {
-        grid-column: 1 / -1;
-        display: flex; justify-content: space-between; align-items: flex-end;
-        padding-bottom: 10px; border-bottom: 1px solid var(--glass-border);
-        margin-bottom: 10px;
-    }
-    .welcome-text h1 { font-size: var(--font-h1); font-weight: 700; letter-spacing: -1px; line-height: 1.2; }
-    .welcome-text p { color: var(--text-muted); font-size: 0.95rem; display: flex; align-items: center; gap: 8px; margin-top: 5px; }
-    
-    .weather-widget-container {
-        display: flex; flex-direction: column; align-items: flex-end; gap: 5px;
-    }
-    .weather-badge {
-        background: rgba(255,255,255,0.05); padding: 8px 20px; border-radius: 30px;
-        display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 0.95rem;
-        border: 1px solid var(--glass-border); white-space: nowrap;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    .weather-location { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; display:flex; align-items:center; gap:5px; }
+        .message {
+            max-width: 85%; display: flex; flex-direction: column;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
+        }
+        @keyframes popIn { from { opacity: 0; transform: translateY(15px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-    /* --- SIDEBAR --- */
-    .sidebar-col { display: flex; flex-direction: column; gap: 24px; }
+        .message.mine { align-self: flex-end; align-items: flex-end; }
 
-    .profile-card { text-align: center; align-items: center; }
-    .avatar-circle {
-        width: 80px; height: 80px; margin: 0 auto 16px;
-        background: linear-gradient(135deg, #4f46e5, #9333ea);
-        border-radius: 50%; display: grid; place-items: center;
-        font-size: 1.5rem; font-weight: 700; color: white;
-        box-shadow: 0 0 30px var(--primary-glow);
-        border: 2px solid rgba(255,255,255,0.1);
-    }
-    .seniority-badge {
-        display: inline-block; font-size: 0.75rem; color: var(--primary);
-        background: rgba(99, 102, 241, 0.1); padding: 4px 12px; border-radius: 12px; margin-top: 10px;
-    }
+        .msg-author { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 4px; margin-left: 10px; }
+        .message.mine .msg-author { display: none; }
 
-    .goal-tracker { gap: 15px; justify-content: flex-start; }
-    .glass-input {
-        background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); color: white;
-        padding: 12px; border-radius: 12px; outline: none; width: 100%; font-size: 0.95rem;
-        transition: border-color 0.2s;
-    }
-    .glass-input:focus { border-color: var(--primary); }
-    .progress-track {
-        height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin-top: 8px;
-    }
-    .progress-fill {
-        height: 100%; background: var(--primary); width: 0%;
-        transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-        box-shadow: 0 0 15px var(--primary-glow);
-    }
+        .msg-bubble {
+            padding: 12px 18px; border-radius: 20px;
+            font-size: 0.95rem; line-height: 1.5; position: relative; word-wrap: break-word;
+            background: var(--surface-msg); border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.1s;
+        }
+        
+        /* Effet visuel au click sur le message */
+        .message:active .msg-bubble { transform: scale(0.98); }
 
-    /* --- MAIN CONTENT --- */
-    .main-col { display: flex; flex-direction: column; gap: 24px; }
+        .message.mine .msg-bubble {
+            background: var(--accent-gradient); color: white; border: none;
+            border-radius: 20px; border-bottom-right-radius: 4px; border-bottom-left-radius: 20px;
+            box-shadow: 0 5px 15px var(--accent-glow);
+        }
 
-    /* Tabs & Notes */
-    .tabs-nav { 
-        display: flex; gap: 10px; margin-bottom: 15px; 
-        border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;
-        overflow-x: auto; scrollbar-width: none;
-    }
-    .tab-btn {
-        background: none; border: none; color: var(--text-muted); font-size: 0.9rem; font-weight: 600;
-        cursor: pointer; padding: 8px 16px; border-radius: 8px; transition: 0.3s; white-space: nowrap; flex-shrink: 0;
-    }
-    .tab-btn.active { color: var(--text-main); background: rgba(255,255,255,0.08); }
-    .notepad-area {
-        width: 100%; flex: 1; min-height: 200px; background: transparent; border: none; color: var(--text-main);
-        font-size: 1.05rem; line-height: 1.6; resize: none; outline: none;
-    }
+        .msg-info-bottom {
+            display: flex; justify-content: flex-end; align-items: center; gap: 5px;
+            font-size: 0.65rem; margin-top: 5px; opacity: 0.7;
+        }
+        
+        /* Réactions & Reply */
+        .reply-context {
+            font-size: 0.75rem; color: var(--text-dim); background: rgba(127, 127, 127, 0.1);
+            padding: 5px 10px; border-radius: 8px; margin-bottom: 5px; border-left: 3px solid var(--accent);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+        }
+        .message.mine .reply-context { color: rgba(255,255,255,0.8); background: rgba(0,0,0,0.2); border-left-color: white; }
 
-    /* --- EMPLOI DU TEMPS (NEW) --- */
-    .schedule-header {
-        display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
-    }
-    .schedule-header h3 { font-size: 1.1rem; display: flex; align-items: center; gap: 10px; }
-    
-    .timeline {
-        display: flex; flex-direction: column; gap: 0; position: relative;
-    }
-    .timeline::before {
-        content: ''; position: absolute; left: 24px; top: 10px; bottom: 10px;
-        width: 2px; background: linear-gradient(to bottom, var(--primary), transparent); opacity: 0.3;
-    }
-    
-    .timeline-item {
-        display: grid; grid-template-columns: 50px 1fr; gap: 15px;
-        padding: 12px 0; position: relative;
-    }
-    .timeline-icon {
-        width: 48px; height: 48px; border-radius: 14px;
-        display: grid; place-items: center; font-size: 1.2rem;
-        z-index: 2; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        border: 1px solid rgba(255,255,255,0.1);
-    }
-    .timeline-content {
-        background: rgba(255,255,255,0.03); border-radius: 16px; padding: 12px 16px;
-        border: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;
-        transition: 0.2s;
-    }
-    .timeline-item:hover .timeline-content { background: rgba(255,255,255,0.06); transform: translateX(5px); }
-    
-    .time-slot { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; margin-bottom: 2px; }
-    .task-title { font-weight: 600; font-size: 0.95rem; color: var(--text-main); }
-    .task-sub { font-size: 0.8rem; color: var(--text-muted); }
+        .reactions-display { display: flex; gap: 4px; margin-top: 4px; z-index: 2; position: relative; margin-left: 10px; flex-wrap: wrap; }
+        .message.mine .reactions-display { justify-content: flex-end; margin-right: 10px; }
+        .reaction-pill { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 2px 8px; font-size: 0.75rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display:flex; align-items:center; gap:3px; }
 
-    /* Gradients pour les icônes */
-    .grad-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); color:white; }
-    .grad-purple { background: linear-gradient(135deg, #a855f7, #7c3aed); color:white; }
-    .grad-orange { background: linear-gradient(135deg, #f97316, #ea580c); color:white; }
-    .grad-green { background: linear-gradient(135deg, #10b981, #059669); color:white; }
+        /* Options Button (...) */
+        .msg-options-btn {
+            opacity: 0; transition: 0.2s; background: var(--surface); border: 1px solid var(--border); 
+            color: var(--text-dim); border-radius: 50%;
+            cursor: pointer; width: 32px; height: 32px; 
+            position: absolute; top: 50%; transform: translateY(-50%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        .message:hover .msg-options-btn { opacity: 1; }
+        .message.mine .msg-options-btn { left: -45px; }
+        .message:not(.mine) .msg-options-btn { right: -45px; }
 
-    /* --- CALENDAR (IMPROVED) --- */
-    .calendar-header { 
-        display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; 
-        padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    .cal-nav-btn {
-        background: rgba(255,255,255,0.05); border: none; color: white; width: 32px; height: 32px;
-        border-radius: 8px; cursor: pointer; transition: 0.2s; display: grid; place-items: center;
-    }
-    .cal-nav-btn:hover { background: var(--primary); }
-    
-    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
-    .cal-day-name { 
-        text-align: center; font-size: 0.7rem; color: var(--text-muted); 
-        text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
-    }
-    .cal-day {
-        aspect-ratio: 1; display: flex; justify-content: center; align-items: center; border-radius: 12px;
-        font-size: 0.9rem; cursor: pointer; transition: 0.2s; color: var(--text-muted); position: relative;
-    }
-    .cal-day:hover { background: rgba(255,255,255,0.1); color: white; }
-    .cal-day.current-month { color: var(--text-main); font-weight: 500; background: rgba(255,255,255,0.02); }
-    .cal-day.today {
-        background: var(--text-main); color: black; font-weight: 800;
-        box-shadow: 0 0 15px rgba(255,255,255,0.3);
-    }
-    .cal-day.has-event::after {
-        content: ''; position: absolute; bottom: 6px; width: 4px; height: 4px; 
-        background: var(--primary); border-radius: 50%;
-    }
+        /* Mobile Options visibility */
+        @media (max-width: 768px) {
+            .msg-options-btn { opacity: 1; } 
+        }
 
-    /* --- MODAL --- */
-    .modal-overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-        z-index: 200; display: none; place-items: center; opacity: 0; transition: opacity 0.3s; padding: 20px;
-    }
-    .modal-overlay.open { display: grid; opacity: 1; }
-    .modal-card {
-        background: #18181b; width: 100%; max-width: 450px; padding: 30px; border-radius: 24px;
-        border: 1px solid var(--glass-border); text-align: center; transform: scale(0.95); transition: 0.3s;
-        box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-    }
-    .modal-overlay.open .modal-card { transform: scale(1); }
-    .btn-primary {
-        background: var(--text-main); color: black; padding: 14px 28px; border-radius: 14px;
-        border: none; font-weight: 700; cursor: pointer; margin-top: 24px; transition: 0.2s; width: 100%; font-size: 1rem;
-    }
+        /* --- INPUT DOCK --- */
+        .input-dock-container {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 0 15px 20px 15px;
+            background: linear-gradient(to top, var(--bg) 60%, transparent);
+            z-index: 100;
+            display: flex; flex-direction: column; gap: 10px;
+        }
 
-    /* RESPONSIVE */
-    @media (max-width: 968px) {
-        .dashboard-container { grid-template-columns: 1fr; gap: 20px; }
-        .sidebar-col { flex-direction: row; }
-        .profile-card, .goal-tracker { flex: 1; }
-        .header-area { align-items: center; }
-    }
-    @media (max-width: 700px) {
-        :root { --container-padding: 15px; --card-padding: 20px; --font-h1: 1.6rem; }
-        body { display: block; }
-        .dashboard-container { display: flex; flex-direction: column; gap: 15px; }
-        .header-area { flex-direction: column; align-items: flex-start; gap: 15px; border-bottom: none; }
-        .weather-widget-container { width: 100%; align-items: center; }
-        .sidebar-col { flex-direction: column; }
-        .timeline-item { grid-template-columns: 48px 1fr; gap: 10px; }
-    }
-</style>
+        .reply-preview-bar {
+            background: var(--surface); padding: 8px 15px; border-radius: 12px;
+            font-size: 0.85rem; display: none; align-items: center; justify-content: space-between;
+            border: 1px solid var(--accent); backdrop-filter: blur(10px);
+            animation: slideUp 0.2s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .typing-indicator { font-size: 0.7rem; color: var(--accent); font-weight: 600; padding-left: 15px; min-height: 15px; }
+
+        .input-bar {
+            background: var(--surface); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border); border-radius: 26px;
+            padding: 6px; display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        .input-bar:focus-within { border-color: var(--accent); box-shadow: 0 10px 40px var(--accent-glow); }
+
+        textarea {
+            flex: 1; background: transparent; border: none; color: var(--text-main);
+            padding: 12px 10px; font-size: 1rem; outline: none; resize: none; 
+            max-height: 120px; font-family: inherit;
+        }
+
+        .send-btn {
+            width: 42px; height: 42px; border-radius: 50%; border: none;
+            background: var(--accent-gradient); color: white; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+            flex-shrink: 0; box-shadow: 0 4px 12px var(--accent-glow);
+        }
+        .send-btn:hover { transform: scale(1.05) rotate(-10deg); }
+
+        /* Menu Contextuel Flottant Style iOS */
+        .msg-menu {
+            display: none; position: absolute;
+            background: rgba(20, 20, 25, 0.95); backdrop-filter: blur(20px);
+            border: 1px solid var(--border); border-radius: 16px;
+            min-width: 190px; padding: 6px; z-index: 2000;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            animation: fadeIn 0.15s ease;
+            flex-direction: column;
+        }
+        [data-theme="light"] .msg-menu { background: rgba(255, 255, 255, 0.95); }
+        
+        .msg-menu div.menu-item { 
+            padding: 12px 15px; color: var(--text-main); border-radius: 10px; 
+            cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 0.95rem; font-weight: 500;
+        }
+        .msg-menu div.menu-item:hover { background: rgba(120, 120, 120, 0.15); }
+        
+        /* Style des émojis style iPhone */
+        .reaction-picker { 
+            display: flex; gap: 5px; padding: 8px; 
+            border-bottom: 1px solid var(--border); margin-bottom: 5px; 
+            justify-content: space-between; 
+        }
+        .reaction-picker span { 
+            font-size: 1.4rem; cursor: pointer; padding: 4px; 
+            border-radius: 50%; transition: 0.2s; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .reaction-picker span:hover { transform: scale(1.25); background: rgba(255,255,255,0.1); }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+    </style>
 </head>
 <body>
 
-    <div class="dashboard-container">
+    <header>
+        <div class="header-left">
+            <div class="dropdown">
+                <div onclick="toggleMenu()" class="menu-trigger">
+                    <i class="fas fa-bars-staggered"></i>
+                    <span id="headerUsername">Chargement...</span>
+                </div>
+                <div id="mainMenu" class="dropdown-content">
+                    <a href="perso.html"><i class="fas fa-fingerprint"></i> Espace Privé</a>
+                    <div onclick="toggleTheme()"><i class="fas fa-adjust"></i> Thème</div>
+                    <div onclick="signOutApp()" class="danger"><i class="fas fa-sign-out-alt"></i> Déconnexion</div>
+                </div>
+            </div>
+            <div class="brand"><h1>WebNote<span>.</span></h1></div>
+        </div>
         
-        <header class="header-area fade-in-stagger">
-            <div class="welcome-text">
-                <h1 id="userGreeting">Bonjour.</h1>
-                <p>Heureux de vous revoir <i class="fas fa-heart" style="color:#ef4444; font-size:0.8rem;"></i></p>
-            </div>
-            
-            <div class="weather-widget-container">
-                <div class="weather-badge">
-                    <i id="weatherIcon" class="fas fa-circle-notch fa-spin"></i>
-                    <span id="weatherTemp">--°C</span>
-                    <div style="width:1px; height:15px; background:rgba(255,255,255,0.2); margin:0 5px;"></div>
-                    <span id="weatherText" style="font-weight:400;">Chargement...</span>
-                </div>
-                <div class="weather-location" id="weatherLocation">
-                    <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> Localisation...
-                </div>
-            </div>
-        </header>
+        <div class="weather-widget">
+            <div class="clock-display" id="clock">00:00</div>
+            <div class="date-display" id="dateText">...</div>
+        </div>
+    </header>
 
-        <aside class="sidebar-col">
-            <div class="glass-panel profile-card fade-in-stagger delay-1">
-                <div class="avatar-circle" id="userInitials">U</div>
-                <h2 id="userName" style="font-size:1.2rem;">Utilisateur</h2>
-                <div class="seniority-badge" id="memberSince">Membre depuis ...</div>
-                
-                <div style="margin-top: 25px; display: grid; gap: 8px;">
-                    <a href="dashboard.html" class="glass-input" style="text-decoration:none; text-align:center; font-size:0.9rem; display:flex; justify-content:center; align-items:center; gap:8px;">
-                        <i class="fas fa-comments"></i> Retour au Chat
-                    </a>
-                    <button onclick="logout()" class="glass-input" style="background:rgba(239, 68, 68, 0.1); color:#ef4444; cursor:pointer;">
-                        Déconnexion
-                    </button>
-                </div>
-            </div>
+    <div class="chat-container" id="chat">
+        </div>
 
-            <div class="glass-panel goal-tracker fade-in-stagger delay-2">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <h3 style="font-size:1rem;">Focus du mois</h3>
-                    <i class="fas fa-bullseye" style="color:var(--primary);"></i>
-                </div>
+    <div class="input-dock-container">
+        <div id="typingIndicator" class="typing-indicator"></div>
 
-                <div id="goalDisplay" style="display:none;">
-                    <div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:5px;">
-                        <span id="goalTitleDisplay">Lecture</span>
-                        <span id="goalPercent">0%</span>
-                    </div>
-                    <div class="progress-track"><div class="progress-fill" id="goalBar"></div></div>
-                    <button onclick="checkGoalDay()" class="glass-input" style="margin-top:15px; cursor:pointer; background:var(--primary); border:none;">
-                        <i class="fas fa-check"></i> Valider aujourd'hui
-                    </button>
-                </div>
+        <div id="replyPreview" class="reply-preview-bar">
+            <span><i class="fas fa-reply" style="color:var(--accent)"></i> Réponse à <b id="replyToName">...</b></span>
+            <i class="fas fa-times" onclick="cancelReply()" style="cursor:pointer; color: var(--text-dim); padding:5px;"></i>
+        </div>
 
-                <div id="goalSetup">
-                    <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Définissez un objectif :</p>
-                    <div style="display:flex; gap:10px; margin-bottom:10px;">
-                        <input type="text" id="newGoalName" placeholder="Ex: Méditation" class="glass-input">
-                        <input type="number" id="newGoalDays" placeholder="Jours" class="glass-input" style="width:70px;">
-                    </div>
-                    <button onclick="setNewGoal()" class="glass-input" style="cursor:pointer; width:100%;">Créer</button>
-                </div>
-            </div>
-        </aside>
-
-        <main class="main-col">
-            
-            <div class="glass-panel fade-in-stagger delay-2">
-                <div class="tabs-nav">
-                    <button class="tab-btn active" onclick="switchTab('today')">Aujourd'hui</button>
-                    <button class="tab-btn" onclick="switchTab('yesterday')">Hier</button>
-                    <button class="tab-btn" onclick="switchTab('archive')">Mémo</button>
-                    <span id="saveIndicator" style="margin-left:auto; font-size:0.8rem; color:var(--success); opacity:0; transition:0.3s;">
-                        <i class="fas fa-check-circle"></i> Sauvegardé
-                    </span>
-                </div>
-                <textarea id="noteArea" class="notepad-area" placeholder="Une idée, une tâche, une pensée..."></textarea>
-            </div>
-
-            <div class="glass-panel fade-in-stagger delay-3">
-                <div class="schedule-header">
-                    <h3><i class="fas fa-calendar-week" style="color:var(--primary);"></i> Planning Quotidien</h3>
-                    <div style="font-size:0.85rem; background:rgba(255,255,255,0.1); padding:5px 12px; border-radius:20px;">
-                        <i class="fas fa-clock"></i> En cours
-                    </div>
-                </div>
-                
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-icon grad-blue">
-                            <i class="fas fa-laptop-code"></i>
-                        </div>
-                        <div class="timeline-content">
-                            <div>
-                                <div class="time-slot">09:00 - 10:30</div>
-                                <div class="task-title">Développement Web</div>
-                                <div class="task-sub">Projet Dashboard</div>
-                            </div>
-                            <i class="fas fa-chevron-right" style="color:var(--text-muted); font-size:0.8rem;"></i>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item">
-                        <div class="timeline-icon grad-orange">
-                            <i class="fas fa-dumbbell"></i>
-                        </div>
-                        <div class="timeline-content">
-                            <div>
-                                <div class="time-slot">11:00 - 12:00</div>
-                                <div class="task-title">Sport & Santé</div>
-                                <div class="task-sub">Séance Cardio</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item">
-                        <div class="timeline-icon grad-purple">
-                            <i class="fas fa-brain"></i>
-                        </div>
-                        <div class="timeline-content">
-                            <div>
-                                <div class="time-slot">14:00 - 15:30</div>
-                                <div class="task-title">Formation IA</div>
-                                <div class="task-sub">Module Deep Learning</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-item">
-                        <div class="timeline-icon grad-green">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <div class="timeline-content">
-                            <div>
-                                <div class="time-slot">16:00 - 17:00</div>
-                                <div class="task-title">Bilan & Analyse</div>
-                                <div class="task-sub">Revue des objectifs</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass-panel fade-in-stagger delay-4">
-                <div class="calendar-header">
-                    <h3 id="calMonthYear" style="text-transform:capitalize; font-size:1.1rem; font-weight:700;">Janvier 2026</h3>
-                    <div style="display:flex; gap:8px;">
-                        <button class="cal-nav-btn" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
-                        <button class="cal-nav-btn" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
-                    </div>
-                </div>
-                <div class="calendar-grid">
-                    <div class="cal-day-name">Lun</div><div class="cal-day-name">Mar</div><div class="cal-day-name">Mer</div>
-                    <div class="cal-day-name">Jeu</div><div class="cal-day-name">Ven</div><div class="cal-day-name">Sam</div><div class="cal-day-name">Dim</div>
-                </div>
-                <div class="calendar-grid" id="calendarDays"></div>
-            </div>
-
-        </main>
+        <div class="input-bar">
+            <button style="background:none; border:none; color:var(--text-dim); font-size:1.1rem; padding:0 10px;"><i class="fas fa-plus"></i></button>
+            <textarea id="msgInput" rows="1" placeholder="Message..."></textarea>
+            <button class="send-btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+        </div>
     </div>
 
-    <div class="modal-overlay" id="welcomeModal">
-        <div class="modal-card">
-            <div style="font-size:3rem; margin-bottom:15px;">✨</div>
-            <h2 style="margin-bottom:10px;">Bienvenue sur votre Espace</h2>
-            <p style="color:var(--text-muted); line-height:1.6;">
-                Ceci est votre tableau de bord personnel. Suivez vos objectifs, écrivez vos pensées quotidiennes et consultez votre calendrier. Tout est synchronisé.
-            </p>
-            <button class="btn-primary" onclick="closeModal()">C'est parti</button>
+    <div id="msgActionMenu" class="msg-menu">
+        <div class="reaction-picker">
+            <span onclick="addReaction('❤️')">❤️</span>
+            <span onclick="addReaction('😂')">😂</span>
+            <span onclick="addReaction('😮')">😮</span>
+            <span onclick="addReaction('🔥')">🔥</span>
+            <span onclick="addReaction('👎')">👎</span>
         </div>
+        <div class="menu-item" onclick="triggerReply()"><i class="fas fa-reply"></i> Répondre</div>
+        <div class="menu-item" id="btnEdit" onclick="triggerEdit()"><i class="fas fa-pen"></i> Modifier</div>
+        <div class="menu-item danger" id="btnDelete" onclick="triggerDelete()"><i class="fas fa-trash"></i> Supprimer</div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, updateDoc, deleteDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // CONFIG FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
             authDomain: "webnote-9ea1e.firebaseapp.com",
@@ -450,210 +322,287 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let currentUser = null;
-        let currentTab = 'today';
-        let typingTimeout;
-        let currentDate = new Date(); 
+        let userProfile = null;
+        let currentReplyData = null;
+        let selectedMsgId = null;
 
-        // --- AUTH & INIT ---
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                initUI(user);
-                initListeners();
-                checkFirstTime();
-            } else {
-                window.location.href = "index.html";
+        // --- THEME ---
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.body.setAttribute('data-theme', savedTheme);
+
+        window.toggleTheme = () => {
+            const current = document.body.getAttribute('data-theme');
+            const newTheme = current === 'light' ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            document.getElementById('mainMenu').classList.remove('show');
+        };
+
+        // --- TIME ---
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            document.getElementById('dateText').innerText = now.toLocaleDateString('fr-FR', {weekday:'short', day:'numeric', month:'short'});
+        }
+        setInterval(updateTime, 1000); updateTime();
+
+        // --- AUTH ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) { 
+                userProfile = user;
+                document.getElementById('headerUsername').innerText = user.displayName || "Moi";
+                loadMessages(); 
+                listenTyping();
+            } else { 
+                window.location.href = "index.html"; 
             }
         });
 
-        // --- UI INITIALIZATION & METEO ---
-        function initUI(user) {
-            // Profile
-            document.getElementById('userName').innerText = user.displayName || "Membre";
-            document.getElementById('userInitials').innerText = (user.displayName || "U").charAt(0).toUpperCase();
-            
-            // Member Since logic
-            const creation = new Date(user.metadata.creationTime);
-            const now = new Date();
-            const diffTime = Math.abs(now - creation);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-            document.getElementById('memberSince').innerText = `Membre depuis ${diffDays} jour(s)`;
+        // --- MESSAGERIE ---
+        const input = document.getElementById('msgInput');
+        const sendBtn = document.getElementById('sendBtn');
 
-            // --- METEO COMPLETE ---
-            if(navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (pos) => {
-                    try {
-                        const { latitude, longitude } = pos.coords;
-                        
-                        // 1. Récupération Météo (OpenMeteo)
-                        const resWeather = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
-                        const dataWeather = await resWeather.json();
-                        
-                        document.getElementById('weatherTemp').innerText = Math.round(dataWeather.current_weather.temperature) + "°C";
-                        
-                        // Mapping Icones
-                        const code = dataWeather.current_weather.weathercode;
-                        let icon = "fa-sun";
-                        let text = "Ensoleillé";
-                        if (code > 2) { icon = "fa-cloud"; text = "Nuageux"; }
-                        if (code > 50) { icon = "fa-cloud-rain"; text = "Pluvieux"; }
-                        if (code > 70) { icon = "fa-snowflake"; text = "Neige"; }
-                        
-                        document.getElementById('weatherIcon').className = `fas ${icon}`;
-                        document.getElementById('weatherText').innerText = text;
+        async function send() {
+            const text = input.value.trim();
+            if (!text) return;
 
-                        // 2. Récupération Ville/Pays (OpenStreetMap / Nominatim)
-                        // Note: C'est une API gratuite, pas besoin de clé pour un usage léger.
-                        const resLoc = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-                        const dataLoc = await resLoc.json();
-                        
-                        const city = dataLoc.address.city || dataLoc.address.town || dataLoc.address.village || "Ma Position";
-                        const country = dataLoc.address.country || "";
-                        
-                        document.getElementById('weatherLocation').innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> ${city}, ${country}`;
+            const payload = {
+                content: text,
+                senderId: userProfile.uid,
+                senderName: userProfile.displayName || "Anonyme",
+                createdAt: serverTimestamp(),
+                edited: false,
+                reactions: {} 
+            };
 
-                    } catch(e) { 
-                        console.log("Weather Error", e);
-                        document.getElementById('weatherText').innerText = "Indisponible";
+            if (currentReplyData) {
+                payload.replyTo = {
+                    id: currentReplyData.id,
+                    name: currentReplyData.name,
+                    snippet: currentReplyData.content.substring(0, 50) + (currentReplyData.content.length > 50 ? "..." : "")
+                };
+            }
+
+            // UI Reset immédiat
+            input.value = "";
+            input.style.height = 'auto';
+            cancelReply();
+
+            // Clear typing status
+            const typingRef = doc(db, "typing_status", userProfile.uid);
+            deleteDoc(typingRef).catch(e => {});
+
+            await addDoc(collection(db, "messages"), payload);
+        }
+
+        sendBtn.onclick = send;
+        input.onkeydown = (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } };
+
+        function loadMessages() {
+            const q = query(collection(db, "messages"), orderBy("createdAt", "asc"));
+            onSnapshot(q, (snap) => {
+                const chat = document.getElementById('chat');
+                chat.innerHTML = "";
+                
+                snap.forEach(d => {
+                    const data = d.data();
+                    const msgId = d.id;
+                    const isMine = data.senderId === userProfile.uid;
+                    const time = data.createdAt ? new Date(data.createdAt.toMillis()).toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'}) : '...';
+                    
+                    // Gestion de l'affichage Réponse
+                    let replyHtml = '';
+                    if (data.replyTo) {
+                        replyHtml = `<div class="reply-context"><i class="fas fa-reply"></i> <b>${data.replyTo.name}</b>: ${data.replyTo.snippet}</div>`;
                     }
+
+                    // Gestion de l'affichage Réactions
+                    let reactionsHtml = '';
+                    if (data.reactions) {
+                        let inner = '';
+                        for (const [emoji, uids] of Object.entries(data.reactions)) {
+                            if (uids && uids.length > 0) {
+                                inner += `<div class="reaction-pill">${emoji} <span>${uids.length}</span></div>`;
+                            }
+                        }
+                        if (inner) reactionsHtml = `<div class="reactions-display">${inner}</div>`;
+                    }
+
+                    // On utilise onclick sur la message ET sur le bouton pour être sûr
+                    const html = `
+                        <div class="message ${isMine ? 'mine' : ''}" id="msg-${msgId}">
+                            ${!isMine ? `<div class="msg-author">${data.senderName}</div>` : ''}
+                            <div class="msg-bubble">
+                                ${replyHtml}
+                                <span class="msg-text">${data.content}</span>
+                                <div class="msg-info-bottom">
+                                    ${data.edited ? '<i class="fas fa-pen" style="font-size:0.6rem; margin-right:4px;"></i>' : ''}
+                                    ${time}
+                                </div>
+                            </div>
+                            ${reactionsHtml}
+                            <button class="msg-options-btn" onclick="window.openMsgMenu(event, '${msgId}', ${isMine}, ${data.createdAt ? data.createdAt.toMillis() : 0})">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                        </div>
+                    `;
+                    chat.insertAdjacentHTML('beforeend', html);
+                });
+                
+                // Auto scroll si on est proche du bas
+                chat.scrollTop = chat.scrollHeight;
+            });
+        }
+
+        // --- GESTION MENU CONTEXTUEL & ACTIONS ---
+        
+        window.openMsgMenu = (e, id, isMine, timestamp) => {
+            e.stopPropagation(); // Empêche la fermeture immédiate
+            selectedMsgId = id;
+            
+            const menu = document.getElementById('msgActionMenu');
+            const rect = e.target.getBoundingClientRect(); // Position du bouton cliqué
+            
+            // Calcul intelligent de position
+            let top = rect.top;
+            let left = rect.left - 200; // Position par défaut (gauche du bouton)
+
+            if (left < 10) left = rect.right + 10; // Si trop à gauche, on met à droite
+            if (top + 250 > window.innerHeight) top = window.innerHeight - 260; // Si trop bas, on remonte
+
+            menu.style.top = top + 'px'; 
+            menu.style.left = left + 'px';
+            menu.style.display = 'flex'; // On utilise flex pour l'alignement colonne
+
+            const btnEdit = document.getElementById('btnEdit');
+            const btnDelete = document.getElementById('btnDelete');
+            
+            // Masquer par défaut
+            btnEdit.style.display = 'none';
+            btnDelete.style.display = 'none';
+
+            // --- LOGIQUE TEMPORELLE STRICTE ---
+            // Si timestamp est 0 (ex: message tout juste envoyé et pas encore sync), on prend l'heure actuelle
+            const messageTime = timestamp || Date.now();
+            const now = Date.now();
+            const elapsed = now - messageTime;
+
+            // Constantes en millisecondes
+            const ONE_HOUR = 60 * 60 * 1000;
+            const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+
+            if (isMine) {
+                if (elapsed < ONE_HOUR) btnEdit.style.display = 'flex'; // < 1h
+                if (elapsed < TWENTY_FOUR_HOURS) btnDelete.style.display = 'flex'; // < 24h
+            }
+        };
+
+        window.addReaction = async (emoji) => {
+            if (!selectedMsgId) return;
+            const docRef = doc(db, "messages", selectedMsgId);
+            // On utilise la notation pointée pour mettre à jour la map reactions
+            await updateDoc(docRef, {
+                [`reactions.${emoji}`]: arrayUnion(userProfile.uid)
+            });
+            document.getElementById('msgActionMenu').style.display = 'none';
+        };
+
+        window.triggerReply = () => {
+            const msgEl = document.getElementById(`msg-${selectedMsgId}`);
+            if(!msgEl) return;
+            
+            // Récupérer le texte propre (sans l'heure ni les réactions)
+            const textContent = msgEl.querySelector('.msg-text').innerText;
+            // Trouver le nom
+            let sender = "Moi";
+            if (!msgEl.classList.contains('mine')) {
+                sender = msgEl.querySelector('.msg-author').innerText;
+            }
+
+            currentReplyData = { id: selectedMsgId, name: sender, content: textContent };
+            
+            document.getElementById('replyToName').innerText = sender;
+            document.getElementById('replyPreview').style.display = 'flex';
+            input.focus();
+            document.getElementById('msgActionMenu').style.display = 'none';
+        };
+
+        window.cancelReply = () => {
+            currentReplyData = null;
+            document.getElementById('replyPreview').style.display = 'none';
+        };
+
+        window.triggerEdit = async () => {
+            const currentText = document.querySelector(`#msg-${selectedMsgId} .msg-text`).innerText;
+            const newText = prompt("Modifier le message :", currentText);
+            
+            if (newText && newText.trim() !== "" && newText !== currentText) {
+                const docRef = doc(db, "messages", selectedMsgId);
+                await updateDoc(docRef, {
+                    content: newText,
+                    edited: true
                 });
             }
+            document.getElementById('msgActionMenu').style.display = 'none';
+        };
 
-            renderCalendar();
+        window.triggerDelete = async () => {
+            if(confirm("Supprimer définitivement ce message ?")) {
+                await deleteDoc(doc(db, "messages", selectedMsgId));
+            }
+            document.getElementById('msgActionMenu').style.display = 'none';
+        };
+
+        // Fermeture des menus au clic ailleurs
+        window.onclick = (e) => {
+            if (!e.target.closest('.msg-options-btn') && !e.target.closest('.msg-menu')) {
+                document.getElementById('msgActionMenu').style.display = 'none';
+            }
+            if (!e.target.closest('.menu-trigger') && !e.target.closest('.dropdown-content')) {
+                document.getElementById('mainMenu').classList.remove('show');
+            }
         }
 
-        // --- DATA SYNC (NOTES & GOALS) ---
-        function initListeners() {
-            onSnapshot(doc(db, "user_notes", currentUser.uid), (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    const el = document.getElementById('noteArea');
-                    if(document.activeElement !== el) {
-                        el.value = data[currentTab] || "";
+        window.toggleMenu = () => document.getElementById('mainMenu').classList.toggle("show");
+        window.signOutApp = () => signOut(auth);
+
+        // --- TYPING ---
+        input.oninput = () => {
+            input.style.height = 'auto';
+            input.style.height = input.scrollHeight + 'px';
+            
+            if(userProfile) {
+                const docRef = doc(db, "typing_status", userProfile.uid);
+                // Utilisation de setDoc avec merge pour ne pas écraser
+                import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js").then(({setDoc}) => {
+                    setDoc(docRef, { 
+                        name: userProfile.displayName, 
+                        isTyping: input.value.length > 0, 
+                        timestamp: Date.now() 
+                    }, {merge: true});
+                });
+            }
+        };
+
+        function listenTyping() {
+            onSnapshot(collection(db, "typing_status"), (snap) => {
+                let active = [];
+                const now = Date.now();
+                snap.forEach(d => { 
+                    const data = d.data();
+                    // On filtre si > 3 secondes d'inactivité
+                    if(d.id !== userProfile.uid && data.isTyping && (now - data.timestamp < 3000)) {
+                        active.push(data.name); 
                     }
+                });
+                const indicator = document.getElementById('typingIndicator');
+                if (active.length > 0) {
+                    indicator.innerText = `${active.join(', ')} écrit...`;
+                } else {
+                    indicator.innerText = "";
                 }
             });
-
-            onSnapshot(doc(db, "user_profiles", currentUser.uid), (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    if(data.activeGoal) {
-                        document.getElementById('goalSetup').style.display = 'none';
-                        document.getElementById('goalDisplay').style.display = 'block';
-                        document.getElementById('goalTitleDisplay').innerText = data.activeGoal.name;
-                        
-                        const percent = (data.activeGoal.current / data.activeGoal.target) * 100;
-                        document.getElementById('goalBar').style.width = percent + "%";
-                        document.getElementById('goalPercent').innerText = Math.round(percent) + "%";
-                    }
-                }
-            });
         }
-
-        window.switchTab = async (tabName) => {
-            await saveNoteImmediate();
-            currentTab = tabName;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            const snap = await getDoc(doc(db, "user_notes", currentUser.uid));
-            if(snap.exists()) {
-                document.getElementById('noteArea').value = snap.data()[tabName] || "";
-            } else {
-                document.getElementById('noteArea').value = "";
-            }
-        };
-
-        const noteArea = document.getElementById('noteArea');
-        noteArea.addEventListener('input', () => {
-            document.getElementById('saveIndicator').style.opacity = '0';
-            clearTimeout(typingTimeout);
-            typingTimeout = setTimeout(saveNoteImmediate, 1000);
-        });
-
-        async function saveNoteImmediate() {
-            if(!currentUser) return;
-            await setDoc(doc(db, "user_notes", currentUser.uid), {
-                [currentTab]: noteArea.value
-            }, { merge: true });
-            document.getElementById('saveIndicator').style.opacity = '1';
-        }
-
-        window.setNewGoal = async () => {
-            const name = document.getElementById('newGoalName').value;
-            const days = parseInt(document.getElementById('newGoalDays').value);
-            if(name && days) {
-                await setDoc(doc(db, "user_profiles", currentUser.uid), {
-                    activeGoal: { name: name, target: days, current: 0, lastUpdated: null }
-                }, { merge: true });
-            }
-        };
-
-        window.checkGoalDay = async () => {
-            const snap = await getDoc(doc(db, "user_profiles", currentUser.uid));
-            const data = snap.data().activeGoal;
-            const todayStr = new Date().toDateString();
-            if(data.lastUpdated !== todayStr) {
-                const newCurrent = Math.min(data.current + 1, data.target);
-                await setDoc(doc(db, "user_profiles", currentUser.uid), {
-                    activeGoal: { ...data, current: newCurrent, lastUpdated: todayStr }
-                }, { merge: true });
-            } else {
-                alert("Objectif déjà validé aujourd'hui !");
-            }
-        };
-
-        // --- CALENDAR LOGIC ---
-        window.changeMonth = (delta) => {
-            currentDate.setMonth(currentDate.getMonth() + delta);
-            renderCalendar();
-        };
-
-        function renderCalendar() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            
-            document.getElementById('calMonthYear').innerText = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' }).format(currentDate);
-
-            const firstDayIndex = new Date(year, month, 1).getDay(); 
-            const adjustedFirstDay = firstDayIndex === 0 ? 6 : firstDayIndex - 1; 
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            
-            const today = new Date();
-            const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
-
-            let html = "";
-            for(let i=0; i<adjustedFirstDay; i++) { html += `<div></div>`; }
-
-            for(let i=1; i<=daysInMonth; i++) {
-                let classes = "cal-day current-month";
-                // Simuler des events aléatoires pour l'effet visuel
-                const hasEvent = (i % 5 === 0); 
-                if(hasEvent) classes += " has-event";
-                
-                if(isCurrentMonth && i === today.getDate()) classes += " today";
-                html += `<div class="${classes}">${i}</div>`;
-            }
-
-            document.getElementById('calendarDays').innerHTML = html;
-        }
-
-        // --- UTILS ---
-        function checkFirstTime() {
-            if(!localStorage.getItem('webnote_welcome_v2')) {
-                const modal = document.getElementById('welcomeModal');
-                modal.classList.add('open');
-                modal.style.display = 'grid';
-            }
-        }
-        window.closeModal = () => {
-            document.getElementById('welcomeModal').classList.remove('open');
-            setTimeout(() => document.getElementById('welcomeModal').style.display = 'none', 300);
-            localStorage.setItem('webnote_welcome_v2', 'true');
-        };
-        window.logout = () => signOut(auth);
-
     </script>
 </body>
-    </html>
+</html>

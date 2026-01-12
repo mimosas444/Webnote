@@ -10,6 +10,7 @@
     
 <style>
     :root {
+        /* THEME DARK (Défaut) */
         --bg-deep: #000000;
         --bg-gradient: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #000000 60%);
         --glass-surface: rgba(20, 20, 23, 0.7);
@@ -27,6 +28,27 @@
         --font-h1: 2rem;
     }
 
+    /* THEME LIGHT */
+    body.light-mode {
+        --bg-deep: #f8fafc;
+        --bg-gradient: radial-gradient(circle at 50% 0%, #e0e7ff 0%, #f1f5f9 60%);
+        --glass-surface: rgba(255, 255, 255, 0.65);
+        --glass-border: rgba(0, 0, 0, 0.06);
+        --glass-highlight: rgba(255, 255, 255, 0.9);
+        --primary: #4f46e5;
+        --primary-glow: rgba(79, 70, 229, 0.15);
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        color: var(--text-main);
+    }
+    
+    body.light-mode .glass-input { background: rgba(255,255,255,0.5); border-color: rgba(0,0,0,0.1); color: var(--text-main); }
+    body.light-mode .day-row { background: rgba(255,255,255,0.4); border: 1px solid rgba(0,0,0,0.05); }
+    body.light-mode .task-item { background: rgba(255,255,255,0.6); border: 1px solid rgba(0,0,0,0.05); }
+    body.light-mode .task-title { color: #0f172a; }
+    body.light-mode .modal-card { background: #fff; color: #1e293b; }
+    body.light-mode .icon-option { background: rgba(0,0,0,0.05); }
+
     /* --- GLOBAL --- */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
 
@@ -38,6 +60,7 @@
         min-height: 100vh;
         padding: var(--container-padding);
         display: flex; justify-content: center; overflow-x: hidden;
+        transition: background 0.5s ease;
     }
 
     @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -53,12 +76,12 @@
     .glass-panel {
         background: var(--glass-surface); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
         border: 1px solid var(--glass-border); border-radius: 24px; padding: var(--card-padding);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.4); transition: border-color 0.3s;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.05); transition: border-color 0.3s, background 0.3s;
         display: flex; flex-direction: column;
     }
     .glass-panel:hover { border-color: var(--glass-highlight); }
 
-    /* --- HEADER & WEATHER --- */
+    /* --- HEADER --- */
     .header-area {
         grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: flex-end;
         padding-bottom: 10px; border-bottom: 1px solid var(--glass-border); margin-bottom: 10px;
@@ -67,12 +90,23 @@
     .welcome-text p { color: var(--text-muted); font-size: 0.95rem; margin-top: 5px; }
     
     .weather-widget-container { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+    .weather-top-row { display: flex; align-items: center; gap: 15px; }
+    
     .weather-badge {
         background: rgba(255,255,255,0.05); padding: 8px 20px; border-radius: 30px;
         display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 0.95rem;
         border: 1px solid var(--glass-border); white-space: nowrap;
     }
     .weather-location { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; display:flex; align-items:center; gap:5px; }
+
+    /* BOUTON THEME */
+    .theme-toggle-btn {
+        width: 40px; height: 40px; border-radius: 50%;
+        background: var(--glass-surface); border: 1px solid var(--glass-border);
+        color: var(--text-main); cursor: pointer; display: grid; place-items: center;
+        transition: 0.3s;
+    }
+    .theme-toggle-btn:hover { background: var(--glass-highlight); transform: rotate(15deg); }
 
     /* --- SIDEBAR --- */
     .sidebar-col { display: flex; flex-direction: column; gap: 24px; }
@@ -90,57 +124,46 @@
     .progress-track { height: 8px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin-top: 8px; }
     .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 1s ease; }
 
-    /* --- MAIN CONTENT --- */
+    /* MESSAGE FELICITATIONS */
+    .congrats-box {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        padding: 15px; border-radius: 16px; text-align: center; margin-top: 15px;
+        animation: slideUpFade 0.5s ease;
+    }
+    .congrats-text { font-weight: 700; color: var(--success); font-size: 0.95rem; margin-bottom: 4px; }
+    .congrats-sub { font-size: 0.8rem; color: var(--text-muted); }
+
+    /* --- MAIN --- */
     .main-col { display: flex; flex-direction: column; gap: 24px; }
-    
-    /* Notes Tabs */
     .tabs-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; overflow-x: auto; scrollbar-width: none; }
     .tab-btn { background: none; border: none; color: var(--text-muted); font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 8px 16px; border-radius: 8px; white-space: nowrap; }
     .tab-btn.active { color: var(--text-main); background: rgba(255,255,255,0.08); }
     .notepad-area { width: 100%; flex: 1; min-height: 150px; background: transparent; border: none; color: var(--text-main); font-size: 1.05rem; line-height: 1.6; resize: none; outline: none; }
 
-    /* --- SEMAINE / PLANNING PRO --- */
-    .week-header {
-        display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
-    }
+    /* --- PLANNING --- */
+    .week-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .week-info { font-size: 1.1rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
     .current-date-badge { background: var(--primary-glow); color: var(--primary); font-size: 0.8rem; padding: 4px 10px; border-radius: 12px; }
 
     .schedule-grid { display: flex; flex-direction: column; gap: 15px; }
-
-    .day-row {
-        background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid transparent;
-        transition: 0.2s; overflow: hidden;
-    }
+    .day-row { background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid transparent; transition: 0.2s; overflow: hidden; }
     .day-row:hover { border-color: rgba(255,255,255,0.05); background: rgba(255,255,255,0.03); }
 
-    .day-header {
-        padding: 12px 20px; display: flex; justify-content: space-between; align-items: center;
-        border-bottom: 1px solid rgba(255,255,255,0.02);
-    }
+    .day-header { padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.02); }
     .day-name { font-weight: 700; font-size: 0.95rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
     .day-name.active-day { color: var(--primary); }
     
-    .add-task-btn {
-        background: none; border: none; color: var(--text-muted); cursor: pointer;
-        width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; transition: 0.2s;
-    }
+    .add-task-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; transition: 0.2s; }
     .add-task-btn:hover { background: var(--primary); color: white; }
 
     .task-list { padding: 10px 15px; display: grid; gap: 8px; }
     .empty-day { padding: 10px; text-align: center; font-size: 0.8rem; color: rgba(255,255,255,0.1); font-style: italic; }
 
-    .task-item {
-        background: rgba(0,0,0,0.3); padding: 12px 16px; border-radius: 12px;
-        display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s;
-        border-left: 3px solid var(--task-color, #555);
-    }
+    .task-item { background: rgba(0,0,0,0.3); padding: 12px 16px; border-radius: 12px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; border-left: 3px solid var(--task-color, #555); }
     .task-item:hover { transform: translateX(5px); background: rgba(255,255,255,0.05); }
     
-    .task-icon-box {
-        width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center;
-        background: rgba(255,255,255,0.05); color: var(--task-color); font-size: 1rem;
-    }
+    .task-icon-box { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: rgba(255,255,255,0.05); color: var(--task-color); font-size: 1rem; }
     .task-details { flex: 1; }
     .task-time { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-bottom: 2px; }
     .task-title { font-size: 0.95rem; font-weight: 500; color: white; }
@@ -155,48 +178,20 @@
     .cal-day.today { background: var(--text-main); color: black; font-weight: 800; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
 
     /* --- MODALS --- */
-    .modal-overlay {
-        position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 200;
-        display: none; place-items: center; opacity: 0; transition: opacity 0.3s; padding: 20px;
-    }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 200; display: none; place-items: center; opacity: 0; transition: opacity 0.3s; padding: 20px; }
     .modal-overlay.open { display: grid; opacity: 1; }
-    .modal-card {
-        background: #18181b; width: 100%; max-width: 450px; padding: 25px; border-radius: 24px;
-        border: 1px solid var(--glass-border); box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-    }
-    .btn-primary {
-        background: var(--text-main); color: black; padding: 12px; border-radius: 12px; border: none;
-        font-weight: 700; cursor: pointer; width: 100%; font-size: 1rem; margin-top: 15px;
-    }
-    .btn-danger {
-        background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 12px; border-radius: 12px;
-        border: none; font-weight: 600; cursor: pointer; width: 100%; margin-top: 10px;
-    }
+    .modal-card { background: #18181b; width: 100%; max-width: 450px; padding: 25px; border-radius: 24px; border: 1px solid var(--glass-border); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+    .btn-primary { background: var(--text-main); color: black; padding: 12px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; width: 100%; font-size: 1rem; margin-top: 15px; }
+    .btn-danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 12px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; width: 100%; margin-top: 10px; }
 
-    /* Form Styles */
     .form-group { margin-bottom: 15px; }
     .form-label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 5px; }
     .icon-selector { display: flex; gap: 10px; margin-top: 10px; justify-content: center; }
-    .icon-option {
-        width: 40px; height: 40px; border-radius: 10px; cursor: pointer; display: grid; place-items: center;
-        border: 2px solid transparent; background: rgba(255,255,255,0.05); transition: 0.2s;
-    }
+    .icon-option { width: 40px; height: 40px; border-radius: 10px; cursor: pointer; display: grid; place-items: center; border: 2px solid transparent; background: rgba(255,255,255,0.05); transition: 0.2s; }
     .icon-option.selected { border-color: var(--text-main); background: rgba(255,255,255,0.15); transform: scale(1.1); }
 
-    /* RESPONSIVE */
-    @media (max-width: 968px) {
-        .dashboard-container { grid-template-columns: 1fr; }
-        .sidebar-col { flex-direction: row; }
-        .profile-card, .goal-tracker { flex: 1; }
-    }
-    @media (max-width: 700px) {
-        :root { --container-padding: 15px; }
-        body { display: block; }
-        .dashboard-container { display: flex; flex-direction: column; }
-        .header-area { flex-direction: column; align-items: flex-start; gap: 15px; }
-        .weather-widget-container { width: 100%; align-items: center; }
-        .sidebar-col { flex-direction: column; }
-    }
+    @media (max-width: 968px) { .dashboard-container { grid-template-columns: 1fr; } .sidebar-col { flex-direction: row; } .profile-card, .goal-tracker { flex: 1; } }
+    @media (max-width: 700px) { :root { --container-padding: 15px; } body { display: block; } .dashboard-container { display: flex; flex-direction: column; } .header-area { flex-direction: column; align-items: flex-start; gap: 15px; } .weather-widget-container { width: 100%; align-items: center; } .sidebar-col { flex-direction: column; } }
 </style>
 </head>
 <body>
@@ -206,15 +201,21 @@
         <header class="header-area fade-in-stagger">
             <div class="welcome-text">
                 <h1 id="userGreeting">Bonjour.</h1>
-                <p>Votre espace productivité <i class="fas fa-rocket" style="color:var(--primary); font-size:0.9rem;"></i></p>
+                <p>Votre espace de productivité <i class="fas fa-rocket" style="color:var(--primary); font-size:0.9rem;"></i></p>
             </div>
             
             <div class="weather-widget-container">
-                <div class="weather-badge">
-                    <i id="weatherIcon" class="fas fa-circle-notch fa-spin"></i>
-                    <span id="weatherTemp">--°C</span>
-                    <div style="width:1px; height:15px; background:rgba(255,255,255,0.2); margin:0 5px;"></div>
-                    <span id="weatherText" style="font-weight:400;">Chargement...</span>
+                <div class="weather-top-row">
+                    <button class="theme-toggle-btn" onclick="toggleTheme()">
+                        <i class="fas fa-sun" id="themeIcon"></i>
+                    </button>
+                    
+                    <div class="weather-badge">
+                        <i id="weatherIcon" class="fas fa-circle-notch fa-spin"></i>
+                        <span id="weatherTemp">--°C</span>
+                        <div style="width:1px; height:15px; background:rgba(255,255,255,0.2); margin:0 5px;"></div>
+                        <span id="weatherText" style="font-weight:400;">Chargement...</span>
+                    </div>
                 </div>
                 <div class="weather-location" id="weatherLocation">
                     <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> Localisation...
@@ -241,24 +242,32 @@
             <div class="glass-panel goal-tracker fade-in-stagger delay-2">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                     <h3 style="font-size:1rem;">Focus du mois</h3>
-                    <i class="fas fa-bullseye" style="color:var(--primary);"></i>
+                    <i class="fas fa-pen" style="color:var(--text-muted); cursor:pointer; font-size:0.8rem;" onclick="editGoal()" title="Modifier l'objectif"></i>
                 </div>
+                
                 <div id="goalDisplay" style="display:none;">
                     <div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:5px;">
                         <span id="goalTitleDisplay">Titre</span>
                         <span id="goalPercent">0%</span>
                     </div>
                     <div class="progress-track"><div class="progress-fill" id="goalBar"></div></div>
-                    <button onclick="checkGoalDay()" class="glass-input" style="margin-top:15px; cursor:pointer; background:var(--primary); border:none;">
-                        <i class="fas fa-check"></i> Valider
+                    
+                    <div id="congratsMessage" class="congrats-box" style="display:none;">
+                        <div class="congrats-text"><i class="fas fa-trophy"></i> Excellente performance</div>
+                        <div class="congrats-sub">Objectif mensuel atteint avec succès.</div>
+                    </div>
+
+                    <button id="btnValidateGoal" onclick="checkGoalDay()" class="glass-input" style="margin-top:15px; cursor:pointer; background:var(--primary); border:none;">
+                        <i class="fas fa-check"></i> Valider une session
                     </button>
                 </div>
+                
                 <div id="goalSetup">
                     <div style="display:flex; gap:10px; margin-bottom:10px;">
                         <input type="text" id="newGoalName" placeholder="Objectif..." class="glass-input">
-                        <input type="number" id="newGoalDays" placeholder="Jours" class="glass-input" style="width:70px;">
+                        <input type="number" id="newGoalDays" placeholder="Sessions" class="glass-input" style="width:80px;">
                     </div>
-                    <button onclick="setNewGoal()" class="glass-input" style="cursor:pointer; width:100%;">Créer</button>
+                    <button onclick="setNewGoal()" class="glass-input" style="cursor:pointer; width:100%;">Définir</button>
                 </div>
             </div>
         </aside>
@@ -320,12 +329,10 @@
     <div class="modal-overlay" id="taskModal">
         <div class="modal-card">
             <h3 id="modalTaskTitle" style="margin-bottom:20px;">Nouvelle Activité</h3>
-            
             <div class="form-group">
                 <label class="form-label">Titre de l'activité</label>
                 <input type="text" id="taskInputTitle" class="glass-input" placeholder="Ex: Réunion Projet">
             </div>
-
             <div class="form-group">
                 <div style="display:flex; gap:10px;">
                     <div style="flex:1;">
@@ -338,13 +345,10 @@
                     </div>
                 </div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">Type & Couleur</label>
-                <div class="icon-selector" id="iconSelector">
-                    </div>
+                <div class="icon-selector" id="iconSelector"></div>
             </div>
-
             <button class="btn-primary" onclick="saveTask()">Enregistrer</button>
             <button class="btn-danger" id="btnDeleteTask" onclick="deleteTask()" style="display:none;">Supprimer</button>
             <button class="glass-input" onclick="closeTaskModal()" style="margin-top:10px; border:none; background:transparent; cursor:pointer; color:var(--text-muted);">Annuler</button>
@@ -377,17 +381,17 @@
 
         // VARIABLES PLANNING
         const daysOfWeek = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
-        let scheduleData = {}; // Stocke le planning localement
+        let scheduleData = {};
         let currentEditDay = null;
         let currentEditIndex = null;
 
         // ICONS PRESETS
         const iconPresets = [
-            { icon: 'fa-briefcase', color: '#3b82f6' }, // Travail (Bleu)
-            { icon: 'fa-dumbbell', color: '#f97316' }, // Sport (Orange)
-            { icon: 'fa-book', color: '#a855f7' }, // Etude (Violet)
-            { icon: 'fa-coffee', color: '#10b981' }, // Pause (Vert)
-            { icon: 'fa-shopping-cart', color: '#ec4899' } // Autre (Rose)
+            { icon: 'fa-briefcase', color: '#3b82f6' }, 
+            { icon: 'fa-dumbbell', color: '#f97316' }, 
+            { icon: 'fa-book', color: '#a855f7' }, 
+            { icon: 'fa-coffee', color: '#10b981' }, 
+            { icon: 'fa-shopping-cart', color: '#ec4899' }
         ];
         let selectedIconIdx = 0;
 
@@ -412,12 +416,13 @@
             const diffDays = Math.ceil(Math.abs(new Date() - creation) / (1000 * 60 * 60 * 24)); 
             document.getElementById('memberSince').innerText = `Membre depuis ${diffDays} jour(s)`;
 
-            // Date Badge Header
             const options = { month: 'short', day: 'numeric' };
             document.getElementById('currentDateBadge').innerText = "Auj. " + new Date().toLocaleDateString('fr-FR', options);
             document.getElementById('weekRangeDisplay').innerText = getWeekRange();
-
-            // Météo
+            
+            // Appel Salutation & Météo
+            updateGreeting();
+            
             if(navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(async (pos) => {
                     try {
@@ -442,48 +447,72 @@
             renderIconSelector();
         }
 
-        // --- FIRESTORE LISTENERS ---
+        // --- NOUVEAU : FONCTION SALUTATION & THEME ---
+        window.updateGreeting = () => {
+            const hour = new Date().getHours();
+            let greeting = "Bonjour";
+            if(hour >= 12 && hour < 18) greeting = "Bonne après-midi";
+            else if(hour >= 18) greeting = "Bonsoir";
+            document.getElementById('userGreeting').innerText = greeting + ".";
+        };
+
+        window.toggleTheme = () => {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            document.getElementById('themeIcon').className = isLight ? 'fas fa-moon' : 'fas fa-sun';
+        };
+
+        // --- LISTENERS ---
         function initListeners() {
-            // Notes
             onSnapshot(doc(db, "user_notes", currentUser.uid), (docSnap) => {
                 if (docSnap.exists() && document.activeElement !== document.getElementById('noteArea')) {
                     document.getElementById('noteArea').value = docSnap.data()[currentTab] || "";
                 }
             });
 
-            // Objectifs
+            // LOGIQUE OBJECTIF + FELICITATIONS
             onSnapshot(doc(db, "user_profiles", currentUser.uid), (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     if(data.activeGoal) {
                         document.getElementById('goalSetup').style.display = 'none';
                         document.getElementById('goalDisplay').style.display = 'block';
+                        
                         document.getElementById('goalTitleDisplay').innerText = data.activeGoal.name;
-                        const percent = (data.activeGoal.current / data.activeGoal.target) * 100;
+                        const percent = Math.min((data.activeGoal.current / data.activeGoal.target) * 100, 100);
+                        
                         document.getElementById('goalBar').style.width = percent + "%";
                         document.getElementById('goalPercent').innerText = Math.round(percent) + "%";
+                        
+                        // Affichage Félicitations si 100%
+                        const congratsBox = document.getElementById('congratsMessage');
+                        const btnValidate = document.getElementById('btnValidateGoal');
+                        
+                        if(percent >= 100) {
+                            congratsBox.style.display = 'block';
+                            btnValidate.style.display = 'none';
+                            document.getElementById('goalBar').style.background = "var(--success)";
+                        } else {
+                            congratsBox.style.display = 'none';
+                            btnValidate.style.display = 'block';
+                            document.getElementById('goalBar').style.background = "var(--primary)";
+                        }
                     }
                 }
             });
 
-            // PLANNING (NOUVEAU)
             onSnapshot(doc(db, "user_schedule", currentUser.uid), (docSnap) => {
-                if(docSnap.exists()) {
-                    scheduleData = docSnap.data();
-                } else {
-                    scheduleData = {};
-                }
+                if(docSnap.exists()) scheduleData = docSnap.data();
+                else scheduleData = {};
                 renderSchedule();
             });
         }
 
         // --- PLANNING LOGIC ---
-        
         function getWeekRange() {
             const curr = new Date();
-            const first = curr.getDate() - curr.getDay(); // Sunday
-            const last = first + 6; // Saturday
-            
+            const first = curr.getDate() - curr.getDay(); 
+            const last = first + 6; 
             const firstDay = new Date(curr.setDate(first)).toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
             const lastDay = new Date(curr.setDate(last)).toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
             return `${firstDay} au ${lastDay}`;
@@ -492,57 +521,44 @@
         function renderSchedule() {
             const container = document.getElementById('scheduleContainer');
             container.innerHTML = "";
-            const todayIndex = new Date().getDay(); // 0 = Sunday
+            const todayIndex = new Date().getDay(); 
 
             daysOfWeek.forEach((day, index) => {
                 const isToday = index === todayIndex;
                 const tasks = scheduleData[day] || [];
-                
-                // Trier les tâches par heure
                 tasks.sort((a, b) => a.start.localeCompare(b.start));
 
                 let taskHtml = "";
-                if(tasks.length === 0) {
-                    taskHtml = `<div class="empty-day">Aucune activité prévue</div>`;
-                } else {
+                if(tasks.length === 0) taskHtml = `<div class="empty-day">Aucune activité prévue</div>`;
+                else {
                     tasks.forEach((task, tIndex) => {
-                        const iconData = iconPresets.find(i => i.icon === task.icon) || iconPresets[0];
                         taskHtml += `
                         <div class="task-item" style="--task-color: ${task.color}" onclick="openTaskModal('${day}', ${tIndex})">
-                            <div class="task-icon-box">
-                                <i class="fas ${task.icon}"></i>
-                            </div>
+                            <div class="task-icon-box"><i class="fas ${task.icon}"></i></div>
                             <div class="task-details">
                                 <div class="task-time">${task.start} - ${task.end}</div>
                                 <div class="task-title">${task.title}</div>
                             </div>
-                            <i class="fas fa-pen" style="font-size:0.7rem; opacity:0.5;"></i>
                         </div>`;
                     });
                 }
-
                 const dayHtml = `
                 <div class="day-row">
                     <div class="day-header">
                         <span class="day-name ${isToday ? 'active-day' : ''}">${day} ${isToday ? '(Aujourd\'hui)' : ''}</span>
                         <button class="add-task-btn" onclick="openTaskModal('${day}', null)"><i class="fas fa-plus"></i></button>
                     </div>
-                    <div class="task-list">
-                        ${taskHtml}
-                    </div>
+                    <div class="task-list">${taskHtml}</div>
                 </div>`;
                 container.insertAdjacentHTML('beforeend', dayHtml);
             });
         }
 
-        // --- TASK MODAL LOGIC ---
-        
+        // --- TASK MODAL ---
         function renderIconSelector() {
             const container = document.getElementById('iconSelector');
             container.innerHTML = iconPresets.map((preset, idx) => `
-                <div class="icon-option ${idx === 0 ? 'selected' : ''}" 
-                     style="color:${preset.color}" 
-                     onclick="selectIcon(${idx})">
+                <div class="icon-option ${idx === 0 ? 'selected' : ''}" style="color:${preset.color}" onclick="selectIcon(${idx})">
                     <i class="fas ${preset.icon}"></i>
                 </div>
             `).join('');
@@ -550,41 +566,32 @@
 
         window.selectIcon = (idx) => {
             selectedIconIdx = idx;
-            document.querySelectorAll('.icon-option').forEach((el, i) => {
-                el.classList.toggle('selected', i === idx);
-            });
+            document.querySelectorAll('.icon-option').forEach((el, i) => el.classList.toggle('selected', i === idx));
         };
 
         window.openTaskModal = (day, index) => {
             currentEditDay = day;
             currentEditIndex = index;
-            
             const modal = document.getElementById('taskModal');
             const btnDelete = document.getElementById('btnDeleteTask');
 
             if (index === null) {
-                // ADD MODE
-                document.getElementById('modalTaskTitle').innerText = "Ajouter à " + day.charAt(0).toUpperCase() + day.slice(1);
+                document.getElementById('modalTaskTitle').innerText = "Ajouter : " + day;
                 document.getElementById('taskInputTitle').value = "";
                 document.getElementById('taskInputStart').value = "09:00";
                 document.getElementById('taskInputEnd').value = "10:00";
                 selectIcon(0);
                 btnDelete.style.display = 'none';
             } else {
-                // EDIT MODE
                 const task = scheduleData[day][index];
-                document.getElementById('modalTaskTitle').innerText = "Modifier l'activité";
+                document.getElementById('modalTaskTitle').innerText = "Modifier";
                 document.getElementById('taskInputTitle').value = task.title;
                 document.getElementById('taskInputStart').value = task.start;
                 document.getElementById('taskInputEnd').value = task.end;
-                
-                // Find icon index
                 const iconIdx = iconPresets.findIndex(p => p.icon === task.icon);
                 selectIcon(iconIdx >= 0 ? iconIdx : 0);
-                
                 btnDelete.style.display = 'block';
             }
-            
             modal.classList.add('open');
             modal.style.display = 'grid';
         };
@@ -596,55 +603,33 @@
 
         window.saveTask = async () => {
             if(!currentUser || !currentEditDay) return;
-
             const title = document.getElementById('taskInputTitle').value;
             const start = document.getElementById('taskInputStart').value;
             const end = document.getElementById('taskInputEnd').value;
             const iconData = iconPresets[selectedIconIdx];
 
-            if(!title || !start || !end) return alert("Veuillez tout remplir");
+            if(!title) return alert("Titre requis");
 
-            const newTask = {
-                title, start, end,
-                icon: iconData.icon,
-                color: iconData.color
-            };
-
+            const newTask = { title, start, end, icon: iconData.icon, color: iconData.color };
             let dayTasks = scheduleData[currentEditDay] || [];
+            if(currentEditIndex !== null) dayTasks[currentEditIndex] = newTask;
+            else dayTasks.push(newTask);
 
-            if(currentEditIndex !== null) {
-                // Update existing
-                dayTasks[currentEditIndex] = newTask;
-            } else {
-                // Add new
-                dayTasks.push(newTask);
-            }
-
-            // Save to Firestore
-            await setDoc(doc(db, "user_schedule", currentUser.uid), {
-                [currentEditDay]: dayTasks
-            }, { merge: true });
-
+            await setDoc(doc(db, "user_schedule", currentUser.uid), { [currentEditDay]: dayTasks }, { merge: true });
             closeTaskModal();
         };
 
         window.deleteTask = async () => {
             if(!currentUser || !currentEditDay || currentEditIndex === null) return;
-            
             if(confirm("Supprimer cette activité ?")) {
                 let dayTasks = scheduleData[currentEditDay];
                 dayTasks.splice(currentEditIndex, 1);
-                
-                await setDoc(doc(db, "user_schedule", currentUser.uid), {
-                    [currentEditDay]: dayTasks
-                }, { merge: true });
-                
+                await setDoc(doc(db, "user_schedule", currentUser.uid), { [currentEditDay]: dayTasks }, { merge: true });
                 closeTaskModal();
             }
         };
 
-        // --- OTHER FUNCTIONS (Notes, Goals, Calendar) ---
-        
+        // --- NOTES & GOALS ---
         window.switchTab = async (tabName) => {
             await saveNoteImmediate();
             currentTab = tabName;
@@ -667,6 +652,14 @@
             document.getElementById('saveIndicator').style.opacity = '1';
         }
 
+        // --- NOUVEAU : EDITION OBJECTIF ---
+        window.editGoal = () => {
+            document.getElementById('goalDisplay').style.display = 'none';
+            document.getElementById('goalSetup').style.display = 'block';
+            const currentTitle = document.getElementById('goalTitleDisplay').innerText;
+            if(currentTitle !== "Titre") document.getElementById('newGoalName').value = currentTitle;
+        };
+
         window.setNewGoal = async () => {
             const name = document.getElementById('newGoalName').value;
             const days = parseInt(document.getElementById('newGoalDays').value);
@@ -678,10 +671,12 @@
             const data = snap.data().activeGoal;
             const todayStr = new Date().toDateString();
             if(data.lastUpdated !== todayStr) {
+                // On s'assure de ne pas dépasser le target
                 await setDoc(doc(db, "user_profiles", currentUser.uid), { activeGoal: { ...data, current: Math.min(data.current + 1, data.target), lastUpdated: todayStr } }, { merge: true });
             } else alert("Déjà validé aujourd'hui !");
         };
 
+        // --- CALENDAR & UTILS ---
         window.changeMonth = (delta) => { currentDate.setMonth(currentDate.getMonth() + delta); renderCalendar(); };
         
         function renderCalendar() {
@@ -692,7 +687,7 @@
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             const today = new Date();
             let html = "";
-            for(let i=0; i<firstDayIndex; i++) html += `<div></div>`; // Dimanche est index 0 en JS standard, parfait pour cal-grid
+            for(let i=0; i<firstDayIndex; i++) html += `<div></div>`;
             for(let i=1; i<=daysInMonth; i++) {
                 let cl = "cal-day current-month";
                 if(today.getMonth()===month && today.getDate()===i) cl += " today";
@@ -716,4 +711,4 @@
 
     </script>
 </body>
-    </html>
+  </html>

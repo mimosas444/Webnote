@@ -3,291 +3,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WebNote - Espace Pro Ultimate</title>
+    <title>WebNote - Espace Pro</title>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
 <style>
     :root {
-        /* --- THEME DARK (Premium) --- */
-        --bg-deep: #050505;
-        --bg-gradient: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                       radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-                       radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+        /* --- THEME DARK (iOS Dark Mode - Défaut) --- */
+        --bg-deep: #000000;
+        /* Fond avec des nuances subtiles style Apple */
+        --bg-gradient: radial-gradient(circle at 0% 0%, #2c1e4a 0%, #000000 40%), radial-gradient(circle at 100% 100%, #1e3a8a 0%, #000000 40%);
         
-        --glass-surface: rgba(20, 20, 23, 0.4);
-        --glass-border: rgba(255, 255, 255, 0.06);
-        --glass-highlight: rgba(255, 255, 255, 0.1);
-        --glass-blur: 50px;
+        /* Glassmorphism iOS Pro */
+        --glass-surface: rgba(30, 30, 35, 0.70);
+        --glass-border: rgba(255, 255, 255, 0.12);
+        --glass-highlight: rgba(255, 255, 255, 0.2);
+        --blur-amount: 50px; /* Flou intense */
+        --saturation: 180%; /* Vibrance */
         
-        --primary: #6366f1;
-        --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-        --primary-glow: rgba(99, 102, 241, 0.4);
+        --primary: #0a84ff; /* Bleu iOS système */
+        --primary-hover: #007aff;
+        --primary-glow: rgba(10, 132, 255, 0.3);
         
         --text-main: #ffffff;
-        --text-muted: #94a3b8;
+        --text-inv: #000000;
+        --text-muted: #8e8e93; /* Gris système iOS */
         
-        --input-bg: rgba(0, 0, 0, 0.2);
-        --btn-bg: rgba(255, 255, 255, 0.08);
-        --btn-text: #ffffff;
-
-        --success: #10b981;
-        --ease-pro: cubic-bezier(0.16, 1, 0.3, 1);
-        
-        --container-padding: 30px;
-        --card-padding: 28px;
-        --radius-lg: 24px;
-        --radius-md: 16px;
-    }
-
-    /* --- THEME LIGHT (Jour) --- */
-    body.light-mode {
-        --bg-deep: #f8fafc;
-        --bg-gradient: radial-gradient(at 50% 0%, rgba(99, 102, 241, 0.15) 0, transparent 70%);
-        --glass-surface: rgba(255, 255, 255, 0.6);
-        --glass-border: rgba(0, 0, 0, 0.06);
-        --glass-highlight: rgba(255, 255, 255, 0.8);
-        --glass-blur: 40px;
-        
-        --primary: #4f46e5;
-        --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-        --text-main: #0f172a;
-        --text-muted: #64748b;
-        --input-bg: rgba(255, 255, 255, 0.5);
+        --input-bg: rgba(118, 118, 128, 0.24);
         --btn-bg: #ffffff;
-        --btn-text: #4f46e5;
+        --btn-text: #000000;
+
+        --success: #30d158; /* Vert iOS */
+        --danger: #ff453a;  /* Rouge iOS */
+        
+        --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
+        
+        --container-padding: 24px;
+        --card-radius: 24px;
+        --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
-    /* --- THEME PRO (GOLD) --- */
-    body.pro-mode-active {
-        --primary: #d4af37;
-        --primary-gradient: linear-gradient(135deg, #d4af37 0%, #fdb931 100%);
-        --primary-glow: rgba(212, 175, 55, 0.4);
-        --bg-gradient: radial-gradient(at 50% 0%, rgba(60, 50, 20, 1) 0, transparent 60%),
-                       radial-gradient(at 0% 100%, rgba(20, 20, 20, 1) 0, transparent 50%);
+    /* --- THEME LIGHT (iOS Light Mode) --- */
+    body.light-mode {
+        --bg-deep: #f2f2f7;
+        --bg-gradient: radial-gradient(circle at 50% 0%, #e0e7ff 0%, #f2f2f7 60%);
+        
+        --glass-surface: rgba(255, 255, 255, 0.65);
+        --glass-border: rgba(0, 0, 0, 0.05);
+        --glass-highlight: rgba(255, 255, 255, 0.9);
+        --blur-amount: 40px;
+        
+        --primary: #007aff;
+        --primary-hover: #0062cc;
+        
+        --text-main: #000000;
+        --text-inv: #ffffff;
+        --text-muted: #86868b;
+
+        --input-bg: rgba(118, 118, 128, 0.12);
+        --btn-bg: #007aff;
+        --btn-text: #ffffff;
     }
 
-    /* --- GLOBAL & RESET --- */
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; outline: none; }
+    /* --- GLOBAL --- */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-stack); -webkit-tap-highlight-color: transparent; }
 
     body {
         background-color: var(--bg-deep);
         background-image: var(--bg-gradient);
         background-attachment: fixed;
-        background-size: cover;
         color: var(--text-main);
         min-height: 100vh;
         padding: var(--container-padding);
-        display: flex; justify-content: center;
-        overflow-x: hidden;
-        transition: background 0.6s var(--ease-pro), color 0.4s ease;
+        display: flex; justify-content: center; overflow-x: hidden;
+        transition: background 0.5s ease, color 0.3s ease;
     }
 
-    /* MODE PERFORMANCE (Désactive animations) */
-    body.reduce-motion * { animation: none !important; transition: none !important; }
+    /* Animations fluides */
+    @keyframes slideUpFade { 
+        from { opacity: 0; transform: translateY(30px) scale(0.98); } 
+        to { opacity: 1; transform: translateY(0) scale(1); } 
+    }
+    .fade-in-stagger { animation: slideUpFade 0.7s var(--ease-apple) forwards; opacity: 0; }
+    .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.15s; } .delay-3 { animation-delay: 0.2s; } .delay-4 { animation-delay: 0.25s; }
 
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.2); border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(128,128,128,0.4); }
-
-    /* Animations Pro */
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    @keyframes pulseSoft { 0% { box-shadow: 0 0 0 0 var(--primary-glow); } 70% { box-shadow: 0 0 0 10px rgba(0,0,0,0); } 100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); } }
-
-    .fade-in-stagger { animation: fadeInUp 0.8s var(--ease-pro) forwards; opacity: 0; }
-    .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.2s; } .delay-3 { animation-delay: 0.3s; } .delay-4 { animation-delay: 0.4s; }
-
+    /* --- LAYOUT --- */
     .dashboard-container {
-        width: 100%; max-width: 1280px;
-        display: grid; grid-template-columns: 320px 1fr; grid-template-rows: auto 1fr; gap: 24px;
-        position: relative; z-index: 2;
+        width: 100%; max-width: 1200px;
+        display: grid; grid-template-columns: 340px 1fr; grid-template-rows: auto 1fr; gap: 20px;
     }
 
+    /* CARTE EFFET VERRE PRO */
     .glass-panel {
         background: var(--glass-surface);
-        backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur));
+        backdrop-filter: blur(var(--blur-amount)) saturate(var(--saturation));
+        -webkit-backdrop-filter: blur(var(--blur-amount)) saturate(var(--saturation));
         border: 1px solid var(--glass-border);
-        border-top: 1px solid var(--glass-highlight);
-        border-radius: var(--radius-lg);
-        padding: var(--card-padding);
-        box-shadow: 0 20px 50px -10px rgba(0,0,0,0.3);
-        transition: transform 0.3s var(--ease-pro), box-shadow 0.3s var(--ease-pro), border-color 0.3s;
-        display: flex; flex-direction: column; overflow: hidden;
+        border-radius: var(--card-radius);
+        padding: 24px;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s var(--ease-apple), box-shadow 0.3s;
+        display: flex; flex-direction: column;
     }
-    .glass-panel:hover {
-        border-color: rgba(255,255,255,0.15);
-        box-shadow: 0 30px 60px -12px rgba(0,0,0,0.4);
-        transform: translateY(-2px);
+    .glass-panel:hover { 
+        border-color: var(--glass-highlight); 
+        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.2);
     }
-    body.light-mode .glass-panel { box-shadow: 0 20px 50px -10px rgba(0,0,0,0.05); }
 
+    /* --- HEADER --- */
     .header-area {
         grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: flex-end;
-        padding: 0 10px 15px 10px; margin-bottom: 5px;
+        padding-bottom: 10px; margin-bottom: 5px;
     }
-    .welcome-text h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; background: linear-gradient(to right, var(--text-main), var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .welcome-text p { color: var(--text-muted); font-size: 1rem; margin-top: 8px; font-weight: 500; }
+    .welcome-text h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.5px; line-height: 1.1; }
+    .welcome-text p { color: var(--text-muted); font-size: 1rem; margin-top: 4px; font-weight: 500; }
     
     .weather-widget-container { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-    .weather-top-row { display: flex; align-items: center; gap: 15px; }
+    .weather-top-row { display: flex; align-items: center; gap: 12px; }
     
     .weather-badge {
-        background: rgba(255,255,255,0.03); padding: 8px 18px; border-radius: 50px;
-        display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 0.9rem;
+        background: rgba(255,255,255,0.08); padding: 6px 16px; border-radius: 100px;
+        display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 0.9rem;
         border: 1px solid var(--glass-border); backdrop-filter: blur(10px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
     body.light-mode .weather-badge { background: rgba(255,255,255,0.5); }
 
-    .theme-toggle-btn {
-        width: 44px; height: 44px; border-radius: 50%;
-        background: var(--glass-surface); border: 1px solid var(--glass-border);
-        color: var(--text-main); cursor: pointer; display: grid; place-items: center;
-        transition: 0.3s var(--ease-pro); font-size: 1.1rem;
-    }
-    .theme-toggle-btn:hover { background: var(--glass-highlight); transform: rotate(15deg) scale(1.1); }
+    .weather-location { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; display:flex; align-items:center; gap:5px; }
 
-    .sidebar-col { display: flex; flex-direction: column; gap: 24px; }
+    /* BOUTON THEME */
+    .theme-toggle-btn {
+        width: 36px; height: 36px; border-radius: 50%;
+        background: rgba(255,255,255,0.1); border: none;
+        color: var(--text-main); cursor: pointer; display: grid; place-items: center;
+        transition: 0.3s;
+    }
+    .theme-toggle-btn:hover { background: rgba(255,255,255,0.2); }
+    body.light-mode .theme-toggle-btn { background: rgba(0,0,0,0.05); }
+
+    /* --- SIDEBAR --- */
+    .sidebar-col { display: flex; flex-direction: column; gap: 20px; }
     
     .avatar-circle {
         width: 80px; height: 80px; margin: 0 auto 16px; 
-        background: var(--primary-gradient);
-        border-radius: 50%; display: grid; place-items: center; font-size: 1.8rem; color: white;
-        box-shadow: 0 10px 30px var(--primary-glow); 
-        border: 3px solid rgba(255,255,255,0.1);
-        animation: pulseSoft 3s infinite;
+        background: linear-gradient(135deg, #0a84ff, #5e5ce6); /* Gradient iOS */
+        border-radius: 50%; display: grid; place-items: center; font-size: 1.8rem; color: white; font-weight: 600;
+        box-shadow: 0 10px 20px rgba(10, 132, 255, 0.3); border: 2px solid rgba(255,255,255,0.2);
     }
-
+    
+    /* INPUTS & BUTTONS */
     .glass-input {
-        background: var(--input-bg); border: 1px solid var(--glass-border); color: var(--text-main);
-        padding: 14px; border-radius: var(--radius-md); width: 100%; font-size: 0.95rem; 
-        transition: 0.2s var(--ease-pro);
+        background: var(--input-bg); border: none; color: var(--text-main);
+        padding: 12px 16px; border-radius: 14px; outline: none; width: 100%; font-size: 1rem; transition: 0.2s;
     }
-    .glass-input:focus { border-color: var(--primary); background: rgba(255,255,255,0.05); box-shadow: 0 0 0 4px var(--primary-glow); }
+    .glass-input:focus { background: rgba(118, 118, 128, 0.35); }
+    .glass-input::placeholder { color: var(--text-muted); }
     
     .btn-action {
-        background: var(--btn-bg); color: var(--text-main);
-        border: 1px solid var(--glass-border); cursor: pointer; font-weight: 600;
-        display: flex; align-items: center; justify-content: center; gap: 8px;
-        transition: all 0.2s var(--ease-pro);
+        background: var(--btn-bg); color: var(--btn-text);
+        border: none; cursor: pointer; font-weight: 600; font-size: 0.95rem;
+        border-radius: 14px;
+        transition: transform 0.2s var(--ease-apple), opacity 0.2s;
     }
-    .btn-action:hover { background: var(--text-main); color: var(--bg-deep); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-    
-    .pro-badge-ui {
-        background: linear-gradient(45deg, #FFD700, #FDB931);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        font-weight: 800; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;
-        border: 1px solid #FDB931; padding: 2px 6px; border-radius: 4px; margin-left: 8px;
-        vertical-align: middle;
+    .btn-action:hover { transform: scale(1.02); opacity: 0.9; }
+    .btn-action:active { transform: scale(0.98); }
+
+    /* FOCUS TIMER */
+    .timer-display { font-size: 2.8rem; font-weight: 700; text-align: center; margin: 15px 0; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
+    .timer-controls { display: flex; gap: 12px; justify-content: center; }
+    .timer-btn { width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(255,255,255,0.1); color: var(--text-main); cursor: pointer; display: grid; place-items: center; transition: 0.2s; }
+    .timer-btn:hover { background: var(--primary); color: white; }
+
+    .progress-track { height: 6px; background: rgba(128,128,128,0.2); border-radius: 100px; overflow: hidden; margin-top: 10px; }
+    .progress-fill { height: 100%; background: var(--primary); width: 0%; border-radius: 100px; transition: width 1s var(--ease-apple); }
+
+    /* MESSAGE FELICITATIONS */
+    .congrats-box {
+        background: rgba(48, 209, 88, 0.15);
+        border: none;
+        padding: 15px; border-radius: 16px; text-align: center; margin-top: 15px;
+        animation: slideUpFade 0.5s ease;
     }
+    .congrats-text { font-weight: 700; color: var(--success); font-size: 0.95rem; }
+    .congrats-sub { font-size: 0.8rem; color: var(--text-muted); }
 
-    .pro-section {
-        margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--glass-border);
+    /* --- MAIN --- */
+    .main-col { display: flex; flex-direction: column; gap: 20px; }
+    .tabs-nav { display: flex; gap: 5px; margin-bottom: 15px; background: rgba(118, 118, 128, 0.12); padding: 4px; border-radius: 12px; width: fit-content; }
+    .tab-btn { 
+        background: none; border: none; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; cursor: pointer; 
+        padding: 6px 16px; border-radius: 8px; transition: 0.3s; 
     }
-    .btn-pro-option {
-        width: 100%; text-align: left; background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, transparent 100%);
-        border: 1px solid var(--primary); padding: 12px; border-radius: 12px;
-        color: var(--primary); font-weight: 600; cursor: pointer; margin-bottom: 8px;
-        display: flex; justify-content: space-between; align-items: center;
-        transition: 0.3s;
+    .tab-btn.active { color: var(--text-main); background: rgba(118, 118, 128, 0.3); font-weight: 600; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+    body.light-mode .tab-btn.active { background: #fff; color: #000; }
+
+    .notepad-area { width: 100%; flex: 1; min-height: 150px; background: transparent; border: none; color: var(--text-main); font-size: 1.1rem; line-height: 1.6; resize: none; outline: none; font-family: var(--font-stack); }
+
+    /* --- PLANNING --- */
+    .week-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .week-info { font-size: 1.1rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+    .current-date-badge { background: var(--primary); color: white; font-size: 0.8rem; padding: 4px 12px; border-radius: 100px; font-weight: 600; }
+
+    .schedule-grid { display: flex; flex-direction: column; gap: 15px; }
+    .day-row { 
+        background: rgba(255,255,255,0.03); 
+        border-radius: 18px; 
+        transition: 0.2s; overflow: hidden; 
     }
-    body.pro-mode-active .btn-pro-option { background: var(--primary); color: #000; box-shadow: 0 5px 20px var(--primary-glow); }
-    
-    .btn-pro-option:hover { filter: brightness(1.2); }
+    .day-row:hover { background: rgba(255,255,255,0.06); }
+    body.light-mode .day-row { background: rgba(255,255,255,0.6); }
 
-    .btn-advanced {
-        width: 100%; padding: 10px; border-radius: 10px; border: none; background: transparent;
-        color: var(--text-muted); font-size: 0.85rem; cursor: pointer; text-align: left;
-        display: flex; align-items: center; gap: 10px; transition: 0.2s;
-    }
-    .btn-advanced:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
-
-
-    .timer-display { font-size: 3rem; font-weight: 800; text-align: center; margin: 15px 0; font-variant-numeric: tabular-nums; letter-spacing: -2px; 
-    background: linear-gradient(to bottom, var(--text-main), var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    
-    .timer-btn { width: 45px; height: 45px; border-radius: 50%; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: var(--text-main); cursor: pointer; display: grid; place-items: center; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-size: 1rem; }
-    .timer-btn:hover { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.1); box-shadow: 0 0 20px var(--primary-glow); }
-
-    .main-col { display: flex; flex-direction: column; gap: 24px; }
-    
-    .tabs-nav { display: flex; gap: 5px; margin-bottom: 15px; background: rgba(0,0,0,0.2); padding: 5px; border-radius: 12px; border: 1px solid var(--glass-border); width: fit-content; }
-    body.light-mode .tabs-nav { background: rgba(255,255,255,0.4); }
-    
-    .tab-btn { background: none; border: none; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; cursor: pointer; padding: 8px 20px; border-radius: 8px; transition: 0.3s; }
-    .tab-btn.active { color: var(--text-main); background: var(--glass-highlight); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    
-    .notepad-area { width: 100%; flex: 1; min-height: 200px; background: transparent; border: none; color: var(--text-main); font-size: 1.1rem; line-height: 1.7; resize: none; }
-
-    .day-row { background: rgba(255,255,255,0.02); border-radius: var(--radius-md); border: 1px solid transparent; transition: 0.2s; overflow: hidden; margin-bottom: 10px; }
-    .day-row:hover { border-color: var(--glass-border); background: rgba(255,255,255,0.04); }
-    body.light-mode .day-row { background: rgba(255,255,255,0.4); }
-
-    .day-header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.03); }
-    .day-name { font-weight: 700; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; }
+    .day-header { padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .day-name { font-weight: 700; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
     .day-name.active-day { color: var(--primary); }
     
-    .add-task-btn { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; transition: 0.2s; background: rgba(255,255,255,0.05); color: var(--text-main); border:none; cursor: pointer; }
-    .add-task-btn:hover { background: var(--primary); color: white; }
+    .add-task-btn { background: rgba(255,255,255,0.1); border: none; color: var(--text-main); cursor: pointer; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; transition: 0.2s; }
+    .add-task-btn:hover { background: var(--primary); color: white; transform: rotate(90deg); }
+
+    .task-list { padding: 10px 15px; display: grid; gap: 8px; }
+    .empty-day { padding: 10px; text-align: center; font-size: 0.85rem; color: var(--text-muted); opacity: 0.8; }
 
     .task-item { 
-        background: rgba(0,0,0,0.2); padding: 14px 18px; border-radius: 12px; display: flex; align-items: center; gap: 16px; 
-        cursor: pointer; transition: 0.2s; border-left: 4px solid var(--task-color, #555); margin-bottom: 6px;
+        background: rgba(44, 44, 46, 0.4); 
+        padding: 12px 16px; border-radius: 14px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; 
+        border-left: 4px solid var(--task-color, #555); 
     }
-    body.light-mode .task-item { background: rgba(255,255,255,0.6); }
-    .task-item:hover { transform: translateX(8px); background: rgba(255,255,255,0.08); }
+    body.light-mode .task-item { background: rgba(255,255,255,0.8); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
     
-    .task-icon-box { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: rgba(255,255,255,0.05); color: var(--task-color); font-size: 1.1rem; }
+    .task-item:hover { transform: translateX(5px); background: rgba(44, 44, 46, 0.8); }
+    
+    .task-icon-box { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; background: rgba(255,255,255,0.1); color: var(--task-color); font-size: 1rem; }
+    .task-details { flex: 1; }
+    .task-time { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-bottom: 2px; }
+    .task-title { font-size: 0.95rem; font-weight: 600; color: var(--text-main); }
 
-    .cal-day { aspect-ratio: 1; display: grid; place-items: center; border-radius: 10px; font-size: 0.9rem; cursor: pointer; color: var(--text-muted); transition: 0.2s; }
-    .cal-day:hover { background: rgba(255,255,255,0.1); color: var(--text-main); }
-    .cal-day.today { background: var(--primary); color: white; font-weight: 700; box-shadow: 0 5px 15px var(--primary-glow); }
+    /* --- CALENDAR --- */
+    .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .cal-nav-btn { background: rgba(255,255,255,0.1); border: none; color: var(--text-main); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .cal-day-name { text-align: center; font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin-bottom: 10px; }
+    .cal-day { aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; font-size: 0.95rem; cursor: pointer; color: var(--text-muted); transition: 0.2s; }
+    .cal-day:hover { background: rgba(255,255,255,0.1); }
+    .cal-day.current-month { color: var(--text-main); }
+    .cal-day.today { background: var(--primary); color: white; font-weight: 700; box-shadow: 0 4px 12px var(--primary-glow); }
 
-    .modal-overlay { 
-        position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); z-index: 200; 
-        display: none; place-items: center; opacity: 0; transition: opacity 0.3s; padding: 20px; 
-    }
+    /* --- MODALS --- */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 200; display: none; place-items: center; opacity: 0; transition: opacity 0.3s; padding: 20px; }
     .modal-overlay.open { display: grid; opacity: 1; }
     
     .modal-card { 
-        background: #101012; width: 100%; max-width: 420px; padding: 30px; border-radius: 30px; 
-        border: 1px solid var(--glass-border); box-shadow: 0 40px 80px rgba(0,0,0,0.6); 
-        transform: scale(0.95); transition: transform 0.3s var(--ease-pro);
+        background: rgba(30, 30, 35, 0.85); backdrop-filter: blur(50px);
+        width: 100%; max-width: 400px; padding: 30px; border-radius: 30px; 
+        border: 1px solid var(--glass-border); box-shadow: 0 25px 50px rgba(0,0,0,0.5); 
+        text-align: center;
     }
-    .modal-overlay.open .modal-card { transform: scale(1); }
-    body.light-mode .modal-card { background: #ffffff; }
+    body.light-mode .modal-card { background: rgba(255,255,255,0.9); color: #000; }
 
-    .btn-primary { 
-        background: var(--primary-gradient); color: white; padding: 14px; border-radius: 14px; border: none; 
-        font-weight: 700; cursor: pointer; width: 100%; font-size: 1rem; margin-top: 20px; 
-        box-shadow: 0 10px 25px var(--primary-glow); transition:0.3s; 
-    }
-    .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 15px 35px var(--primary-glow); }
+    .btn-primary { background: var(--primary); color: white; padding: 14px; border-radius: 16px; border: none; font-weight: 600; cursor: pointer; width: 100%; font-size: 1rem; margin-top: 20px; transition:0.2s; }
+    .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
 
-    /* SWITCH TOGGLE */
-    .switch-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 34px; }
-    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-    input:checked + .slider { background-color: var(--primary); }
-    input:checked + .slider:before { transform: translateX(20px); }
+    .btn-danger { background: rgba(255, 69, 58, 0.15); color: #ff453a; padding: 12px; border-radius: 14px; border: none; font-weight: 600; cursor: pointer; width: 100%; margin-top: 10px; }
 
-    @media (max-width: 968px) { 
-        .dashboard-container { grid-template-columns: 1fr; max-width: 700px; } 
-        .sidebar-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; } 
-        .profile-card { grid-column: 1 / -1; }
-    }
-    @media (max-width: 700px) { 
-        :root { --container-padding: 15px; --card-padding: 20px; } 
-        .header-area { flex-direction: column; align-items: flex-start; gap: 20px; } 
-        .weather-widget-container { width: 100%; align-items: center; flex-direction: row; justify-content: space-between; }
-        .sidebar-col { display: flex; flex-direction: column; } 
-        .tabs-nav { width: 100%; overflow-x: auto; }
-        .welcome-text h1 { font-size: 2rem; }
-    }
+    .form-group { margin-bottom: 20px; text-align: left; }
+    .form-label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; margin-left: 5px; }
+    
+    .icon-selector { display: flex; gap: 12px; margin-top: 10px; justify-content: center; }
+    .icon-option { width: 45px; height: 45px; border-radius: 12px; cursor: pointer; display: grid; place-items: center; border: 2px solid transparent; background: rgba(128,128,128,0.15); transition: 0.2s; color: var(--text-muted); font-size: 1.1rem; }
+    .icon-option.selected { border-color: var(--primary); background: rgba(10, 132, 255, 0.15); transform: scale(1.1); color: var(--primary); }
+
+    @media (max-width: 968px) { .dashboard-container { grid-template-columns: 1fr; } .sidebar-col { flex-direction: row; flex-wrap: wrap; } .profile-card, .goal-tracker, .focus-timer { flex: 1; min-width: 300px; } }
+    @media (max-width: 700px) { :root { --container-padding: 15px; } body { display: block; } .dashboard-container { display: flex; flex-direction: column; } .header-area { flex-direction: column; align-items: flex-start; gap: 15px; } .weather-widget-container { width: 100%; align-items: center; } .sidebar-col { flex-direction: column; } }
 </style>
 </head>
 <body>
@@ -297,13 +282,10 @@
         <header class="header-area fade-in-stagger">
             <div class="welcome-text">
                 <h1 id="userGreeting">Bonjour.</h1>
-                <p>Espace de productivité <i class="fas fa-check-circle" style="color:var(--primary); margin-left:5px;"></i></p>
+                <p>Votre espace productivité <i class="fas fa-rocket" style="color:var(--primary); font-size:0.9rem;"></i></p>
             </div>
             
             <div class="weather-widget-container">
-                <div class="weather-location" id="weatherLocation">
-                    <i class="fas fa-location-arrow" style="color:var(--primary);"></i> Localisation...
-                </div>
                 <div class="weather-top-row">
                     <button class="theme-toggle-btn" onclick="toggleTheme()" title="Changer le thème">
                         <i class="fas fa-sun" id="themeIcon"></i>
@@ -311,8 +293,13 @@
                     
                     <div class="weather-badge">
                         <i id="weatherIcon" class="fas fa-circle-notch fa-spin"></i>
-                        <span id="weatherTemp">--°</span>
+                        <span id="weatherTemp">--°C</span>
+                        <div style="width:1px; height:15px; background:var(--text-muted); margin:0 5px; opacity:0.3;"></div>
+                        <span id="weatherText" style="font-weight:400;">Chargement...</span>
                     </div>
+                </div>
+                <div class="weather-location" id="weatherLocation">
+                    <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> Localisation...
                 </div>
             </div>
         </header>
@@ -320,200 +307,159 @@
         <aside class="sidebar-col">
             <div class="glass-panel profile-card fade-in-stagger delay-1">
                 <div class="avatar-circle" id="userInitials">U</div>
-                <div style="text-align:center; margin-bottom:20px;">
-                    <h2 id="userName" style="font-size:1.3rem; margin-bottom:5px;">Utilisateur <span class="pro-badge-ui">PRO</span></h2>
-                    <div class="seniority-badge" id="memberSince" style="color:var(--text-muted); font-size:0.8rem;">Membre Premium</div>
-                </div>
+                <h2 id="userName" style="font-size:1.3rem; font-weight:700; text-align:center;">Utilisateur</h2>
+                <div class="seniority-badge" id="memberSince" style="color:var(--text-muted); font-size:0.85rem; text-align:center; margin-bottom:20px;">Membre depuis ...</div>
                 
                 <div style="display: grid; gap: 10px;">
-                    <a href="dashboard.html" class="glass-input btn-action" style="text-decoration:none;">
+                    <a href="dashboard.html" class="glass-input btn-action" style="text-decoration:none; text-align:center; display:flex; justify-content:center; align-items:center; gap:8px;">
                         <i class="fas fa-comments"></i> Retour Chat
                     </a>
-                </div>
+                    
+                    <button onclick="exportPlanningPDF()" class="glass-input btn-action" style="color:var(--text-main); border:1px solid var(--glass-border);">
+                         <i class="fas fa-file-pdf" style="color:#ff375f; margin-right:8px;"></i> Exporter en PDF
+                    </button>
 
-                <div class="pro-section">
-                    <button class="btn-pro-option" onclick="toggleProMode()" id="btnProMode">
-                        <span><i class="fas fa-crown"></i> Mode Pro</span>
-                        <i class="fas fa-toggle-off" id="iconProToggle"></i>
+                    <button onclick="logout()" class="glass-input btn-action" style="color:#ff453a; background: rgba(255, 69, 58, 0.08);">
+                        Déconnexion
                     </button>
-                    <button class="btn-advanced" onclick="openSettings()">
-                        <i class="fas fa-sliders-h"></i> Paramètres avancés
-                    </button>
-                    <button class="btn-advanced" style="color:#ef4444;" onclick="logout()">
-                        <i class="fas fa-sign-out-alt"></i> Déconnexion
-                    </button>
-                </div>
-            </div>
-
-            <div class="glass-panel focus-timer fade-in-stagger delay-2" style="text-align:center; position:relative; overflow:hidden;">
-                <div style="position:absolute; top:-20px; right:-20px; width:100px; height:100px; background:var(--primary); filter:blur(60px); opacity:0.3;"></div>
-                <h3 style="font-size:1rem; margin-bottom:5px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; font-weight:700;">Focus Session</h3>
-                
-                <div class="timer-display" id="timerDisplay">25:00</div>
-                
-                <div class="timer-controls">
-                    <button class="timer-btn" onclick="toggleTimer()" id="timerPlayBtn"><i class="fas fa-play"></i></button>
-                    <button class="timer-btn" onclick="resetTimer()"><i class="fas fa-redo"></i></button>
                 </div>
             </div>
 
             <div class="glass-panel goal-tracker fade-in-stagger delay-2">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <h3 style="font-size:1rem;">Objectif mensuel</h3>
-                    <i class="fas fa-cog" style="color:var(--text-muted); cursor:pointer; font-size:0.9rem;" onclick="editGoal()" title="Modifier"></i>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h3 style="font-size:1rem; font-weight:700;">Focus du mois</h3>
+                    <i class="fas fa-pen" style="color:var(--text-muted); cursor:pointer; font-size:0.8rem;" onclick="editGoal()" title="Modifier l'objectif"></i>
                 </div>
                 
                 <div id="goalDisplay" style="display:none;">
-                    <div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:8px; font-weight:600;">
-                        <span id="goalTitleDisplay">Sport</span>
-                        <span id="goalPercent" style="color:var(--primary);">0%</span>
+                    <div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:5px;">
+                        <span id="goalTitleDisplay" style="font-weight:600;">Titre</span>
+                        <span id="goalPercent" style="font-weight:700; color:var(--primary);">0%</span>
                     </div>
-                    <div style="height:6px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden;">
-                        <div id="goalBar" style="height:100%; width:0%; background:var(--primary-gradient); transition:width 1s ease;"></div>
-                    </div>
+                    <div class="progress-track"><div class="progress-fill" id="goalBar"></div></div>
                     
-                    <div id="congratsMessage" style="background:rgba(16, 185, 129, 0.1); border:1px solid rgba(16,185,129,0.3); padding:10px; border-radius:12px; margin-top:15px; text-align:center; display:none;">
-                        <div style="color:var(--success); font-weight:700; font-size:0.9rem;"><i class="fas fa-trophy"></i> Objectif atteint !</div>
+                    <div id="congratsMessage" class="congrats-box" style="display:none;">
+                        <div class="congrats-text"><i class="fas fa-trophy"></i> Excellente performance</div>
+                        <div class="congrats-sub">Objectif mensuel atteint avec succès.</div>
                     </div>
 
-                    <button id="btnValidateGoal" onclick="checkGoalDay()" class="glass-input btn-action" style="margin-top:20px; background:var(--primary); color:white; border:none; box-shadow:0 5px 15px var(--primary-glow);">
-                        Valider session <i class="fas fa-check"></i>
+                    <button id="btnValidateGoal" onclick="checkGoalDay()" class="glass-input btn-action" style="margin-top:20px; background:var(--primary); color:white; border:none; box-shadow: 0 4px 15px var(--primary-glow);">
+                        <i class="fas fa-check"></i> Valider une session
                     </button>
                 </div>
                 
                 <div id="goalSetup">
                     <div style="display:flex; gap:10px; margin-bottom:10px;">
                         <input type="text" id="newGoalName" placeholder="Objectif..." class="glass-input">
-                        <input type="number" id="newGoalDays" placeholder="Nbr" class="glass-input" style="width:70px;">
+                        <input type="number" id="newGoalDays" placeholder="Nb" class="glass-input" style="width:70px;">
                     </div>
-                    <button onclick="setNewGoal()" class="glass-input btn-action" style="width:100%;">Définir</button>
+                    <button onclick="setNewGoal()" class="glass-input btn-action" style="width:100%; background:var(--primary); color:white;">Définir</button>
                 </div>
+            </div>
+
+            <div class="glass-panel focus-timer fade-in-stagger delay-2" style="text-align:center;">
+                <h3 style="font-size:1rem; margin-bottom:10px; font-weight:700;"><i class="fas fa-hourglass-half" style="color:var(--primary); margin-right:5px;"></i> Timer Focus</h3>
+                <div class="timer-display" id="timerDisplay">25:00</div>
+                <div class="timer-controls">
+                    <button class="timer-btn" onclick="toggleTimer()" id="timerPlayBtn"><i class="fas fa-play"></i></button>
+                    <button class="timer-btn" onclick="resetTimer()"><i class="fas fa-redo"></i></button>
+                </div>
+                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:15px; font-weight:500;">Session de 25 minutes</div>
             </div>
         </aside>
 
         <main class="main-col">
             
             <div class="glass-panel fade-in-stagger delay-2">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid var(--glass-border); padding-bottom:10px;">
-                    <div class="tabs-nav">
-                        <button class="tab-btn active" onclick="switchTab('today')">Notes du jour</button>
-                        <button class="tab-btn" onclick="switchTab('yesterday')">Hier</button>
-                        <button class="tab-btn" onclick="switchTab('archive')">Idées</button>
-                    </div>
-                    <span id="saveIndicator" style="font-size:0.8rem; color:var(--success); opacity:0; transition:0.3s; display:flex; align-items:center; gap:5px;">
-                        <i class="fas fa-cloud-upload-alt"></i> Saved
+                <div class="tabs-nav">
+                    <button class="tab-btn active" onclick="switchTab('today')">Aujourd'hui</button>
+                    <button class="tab-btn" onclick="switchTab('yesterday')">Hier</button>
+                    <button class="tab-btn" onclick="switchTab('archive')">Mémo</button>
+                    <span id="saveIndicator" style="margin-left:auto; font-size:0.8rem; color:var(--success); opacity:0; transition:0.3s; display:flex; align-items:center; gap:5px;">
+                        <i class="fas fa-check-circle"></i> Sauvegardé
                     </span>
                 </div>
-                <textarea id="noteArea" class="notepad-area" placeholder="Écrivez vos pensées, tâches ou idées ici..."></textarea>
+                <textarea id="noteArea" class="notepad-area" placeholder="Notez vos pensées ici..."></textarea>
             </div>
 
             <div class="glass-panel fade-in-stagger delay-3">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                    <div style="font-size: 1.2rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 12px;">
-                        <span style="background:var(--primary-glow); color:var(--primary); padding:8px; border-radius:10px;"><i class="fas fa-calendar-alt"></i></span>
+                <div class="week-header">
+                    <div class="week-info">
+                        <i class="fas fa-calendar-week" style="color:var(--primary);"></i>
                         <span id="weekRangeDisplay">Semaine...</span>
                     </div>
-                    <div style="background:rgba(255,255,255,0.1); padding:6px 14px; border-radius:20px; font-size:0.85rem; font-weight:600;" id="currentDateBadge">
-                        10 Jan
-                    </div>
+                    <div class="current-date-badge" id="currentDateBadge">Auj. 10 Jan</div>
                 </div>
                 
                 <div class="schedule-grid" id="scheduleContainer">
-                    <div style="text-align:center; padding:30px; color:var(--text-muted);">
-                        <i class="fas fa-spinner fa-spin"></i> Chargement du planning...
-                    </div>
+                    <div style="text-align:center; padding:30px; color:var(--text-muted);">Chargement du planning...</div>
                 </div>
             </div>
 
             <div class="glass-panel fade-in-stagger delay-4">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 id="calMonthYear" style="text-transform:capitalize; font-size:1.2rem; font-weight:800;">Mois</h3>
-                    <div style="display:flex; gap:10px;">
-                        <button onclick="changeMonth(-1)" class="add-task-btn"><i class="fas fa-chevron-left"></i></button>
-                        <button onclick="changeMonth(1)" class="add-task-btn"><i class="fas fa-chevron-right"></i></button>
+                <div class="calendar-header">
+                    <h3 id="calMonthYear" style="text-transform:capitalize; font-size:1.2rem; font-weight:700;">Mois</h3>
+                    <div style="display:flex; gap:8px;">
+                        <button class="cal-nav-btn" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                        <button class="cal-nav-btn" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
-                <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-bottom:10px;">
+                <div class="calendar-grid">
                     <div class="cal-day-name">Dim</div><div class="cal-day-name">Lun</div><div class="cal-day-name">Mar</div>
                     <div class="cal-day-name">Mer</div><div class="cal-day-name">Jeu</div><div class="cal-day-name">Ven</div><div class="cal-day-name">Sam</div>
                 </div>
-                <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px;" id="calendarDays"></div>
+                <div class="calendar-grid" id="calendarDays"></div>
             </div>
 
         </main>
     </div>
 
     <div class="modal-overlay" id="welcomeModal">
-        <div class="modal-card" style="text-align:center;">
-            <div style="width:60px; height:60px; background:var(--primary-gradient); border-radius:50%; display:grid; place-items:center; font-size:1.5rem; color:white; margin:0 auto 20px; box-shadow:0 10px 30px var(--primary-glow);">
-                <i class="fas fa-rocket"></i>
-            </div>
-            <h2 style="margin-bottom:10px; font-size:1.8rem;">Bienvenue Pro.</h2>
-            <p style="color:var(--text-muted); line-height:1.6; margin-bottom:20px;">Votre nouvel espace de productivité ultime est prêt. Configurez votre semaine et atteignez vos objectifs.</p>
-            <button class="btn-primary" onclick="closeModal()">Commencer l'expérience</button>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="settingsModal">
         <div class="modal-card">
-            <h3 style="margin-bottom:20px; font-size:1.4rem;"><i class="fas fa-sliders-h"></i> Paramètres Avancés</h3>
-            
-            <div class="switch-row">
-                <span style="color:var(--text-main); font-weight:600;">Mode Performance (No Anim)</span>
-                <label class="switch">
-                    <input type="checkbox" id="reduceMotionToggle" onchange="toggleReduceMotion()">
-                    <span class="slider"></span>
-                </label>
+            <div style="width:60px; height:60px; background:var(--primary); border-radius:50%; margin:0 auto 20px; display:grid; place-items:center; font-size:1.5rem; color:white;">
+                <i class="fas fa-hand-sparkles"></i>
             </div>
-            
-            <div style="margin-top:25px; border-top:1px solid var(--glass-border); padding-top:20px;">
-                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:10px;">Gestion des données</p>
-                <button class="btn-advanced" style="background:rgba(255,255,255,0.05); justify-content:center;" onclick="exportData()">
-                    <i class="fas fa-download"></i> Exporter mes données (JSON)
-                </button>
-            </div>
-
-            <button onclick="closeSettings()" style="width:100%; margin-top:20px; background:transparent; border:none; color:var(--text-muted); cursor:pointer;">Fermer</button>
+            <h2 style="margin-bottom:10px; font-weight:800;">Bienvenue</h2>
+            <p style="color:var(--text-muted); line-height:1.6; font-size:1rem;">Configurez votre semaine, suivez vos objectifs et restez productif.</p>
+            <button class="btn-primary" onclick="closeModal()">C'est parti</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="taskModal">
         <div class="modal-card">
-            <h3 id="modalTaskTitle" style="margin-bottom:25px; font-size:1.4rem;">Nouvelle Activité</h3>
-            
-            <div style="margin-bottom:20px;">
-                <label style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">Titre de l'activité</label>
-                <input type="text" id="taskInputTitle" class="glass-input" placeholder="Ex: Réunion Projet Marketing">
+            <h3 id="modalTaskTitle" style="margin-bottom:25px; font-weight:700;">Nouvelle Activité</h3>
+            <div class="form-group">
+                <label class="form-label">Titre de l'activité</label>
+                <input type="text" id="taskInputTitle" class="glass-input" placeholder="Ex: Réunion Projet">
             </div>
-            
-            <div style="display:flex; gap:15px; margin-bottom:20px;">
-                <div style="flex:1;">
-                    <label style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">Début</label>
-                    <input type="time" id="taskInputStart" class="glass-input">
+            <div class="form-group">
+                <div style="display:flex; gap:15px;">
+                    <div style="flex:1;">
+                        <label class="form-label">Début</label>
+                        <input type="time" id="taskInputStart" class="glass-input">
+                    </div>
+                    <div style="flex:1;">
+                        <label class="form-label">Fin</label>
+                        <input type="time" id="taskInputEnd" class="glass-input">
+                    </div>
                 </div>
-                <div style="flex:1;">
-                    <label style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;">Fin</label>
-                    <input type="time" id="taskInputEnd" class="glass-input">
-                </div>
             </div>
-            
-            <div style="margin-bottom:25px;">
-                <label style="display:block; font-size:0.85rem; color:var(--text-muted); margin-bottom:12px; text-align:center;">Couleur & Icône</label>
-                <div class="icon-selector" id="iconSelector" style="display:flex; gap:12px; justify-content:center;"></div>
+            <div class="form-group">
+                <label class="form-label">Type & Couleur</label>
+                <div class="icon-selector" id="iconSelector"></div>
             </div>
-            
             <button class="btn-primary" onclick="saveTask()">Enregistrer</button>
-            <button class="glass-input" id="btnDeleteTask" onclick="deleteTask()" style="margin-top:10px; color:#ef4444; border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.1); display:none;">Supprimer</button>
-            <button onclick="closeTaskModal()" style="width:100%; margin-top:15px; background:transparent; border:none; color:var(--text-muted); cursor:pointer;">Annuler</button>
+            <button class="btn-danger" id="btnDeleteTask" onclick="deleteTask()" style="display:none;">Supprimer</button>
+            <button class="glass-input" onclick="closeTaskModal()" style="margin-top:15px; border:none; background:transparent; cursor:pointer; color:var(--text-muted); font-weight:600;">Annuler</button>
         </div>
     </div>
 
     <script type="module">
+        // --- CONFIG FIREBASE ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // CONFIG (Identique)
         const firebaseConfig = {
             apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
             authDomain: "webnote-9ea1e.firebaseapp.com",
@@ -538,13 +484,13 @@
         let currentEditDay = null;
         let currentEditIndex = null;
 
-        // ICONS PRESETS
+        // ICONS PRESETS (Couleurs iOS Vibrance)
         const iconPresets = [
-            { icon: 'fa-briefcase', color: '#3b82f6' }, 
-            { icon: 'fa-dumbbell', color: '#f97316' }, 
-            { icon: 'fa-book', color: '#a855f7' }, 
-            { icon: 'fa-coffee', color: '#10b981' }, 
-            { icon: 'fa-shopping-cart', color: '#ec4899' }
+            { icon: 'fa-briefcase', color: '#0a84ff' }, // System Blue
+            { icon: 'fa-dumbbell', color: '#ff9f0a' },  // System Orange
+            { icon: 'fa-book', color: '#bf5af2' },      // System Purple
+            { icon: 'fa-coffee', color: '#30d158' },    // System Green
+            { icon: 'fa-shopping-cart', color: '#ff375f' } // System Pink
         ];
         let selectedIconIdx = 0;
 
@@ -555,7 +501,6 @@
                 initUI(user);
                 initListeners();
                 checkFirstTime();
-                checkProMode();
             } else {
                 window.location.href = "index.html";
             }
@@ -563,19 +508,20 @@
 
         // --- UI INIT ---
         function initUI(user) {
-            document.getElementById('userName').innerHTML = (user.displayName || "Membre") + ' <span class="pro-badge-ui">PRO</span>';
+            document.getElementById('userName').innerText = user.displayName || "Utilisateur";
             document.getElementById('userInitials').innerText = (user.displayName || "U").charAt(0).toUpperCase();
             
             const creation = new Date(user.metadata.creationTime);
             const diffDays = Math.ceil(Math.abs(new Date() - creation) / (1000 * 60 * 60 * 24)); 
-            document.getElementById('memberSince').innerText = `Membre Premium depuis ${diffDays} jour(s)`;
+            document.getElementById('memberSince').innerText = `Membre depuis ${diffDays} jour(s)`;
 
             const options = { month: 'short', day: 'numeric' };
-            document.getElementById('currentDateBadge').innerText = new Date().toLocaleDateString('fr-FR', options);
+            document.getElementById('currentDateBadge').innerText = "Auj. " + new Date().toLocaleDateString('fr-FR', options);
             document.getElementById('weekRangeDisplay').innerText = getWeekRange();
             
             updateGreeting();
             
+            // Météo
             if(navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(async (pos) => {
                     try {
@@ -583,21 +529,47 @@
                         const resW = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
                         const dataW = await resW.json();
                         
-                        document.getElementById('weatherTemp').innerText = Math.round(dataW.current_weather.temperature) + "°";
+                        document.getElementById('weatherTemp').innerText = Math.round(dataW.current_weather.temperature) + "°C";
                         const code = dataW.current_weather.weathercode;
                         let icon = code < 3 ? "fa-sun" : code < 50 ? "fa-cloud" : "fa-cloud-rain";
                         document.getElementById('weatherIcon').className = `fas ${icon}`;
+                        document.getElementById('weatherText').innerText = code < 3 ? "Beau temps" : "Nuageux";
 
                         const resLoc = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
                         const dataLoc = await resLoc.json();
                         const city = dataLoc.address.city || dataLoc.address.town || "Ma Position";
-                        document.getElementById('weatherLocation').innerHTML = `<i class="fas fa-location-arrow" style="color:var(--primary);"></i> ${city}`;
+                        document.getElementById('weatherLocation').innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> ${city}`;
                     } catch(e) {}
                 });
             }
             renderCalendar();
             renderIconSelector();
         }
+
+        // --- EXPORT PDF ---
+        window.exportPlanningPDF = () => {
+            const element = document.querySelector('.dashboard-container');
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Génération...';
+
+            const opt = {
+                margin:       [5, 5, 5, 5],
+                filename:     `Planning_WebNote_${new Date().toISOString().slice(0,10)}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                btn.innerHTML = originalText;
+            }).catch(err => {
+                console.error(err);
+                alert("Erreur export PDF");
+                btn.innerHTML = originalText;
+            });
+        };
 
         // --- GREETING & THEME ---
         window.updateGreeting = () => {
@@ -613,80 +585,6 @@
             const isLight = document.body.classList.contains('light-mode');
             document.getElementById('themeIcon').className = isLight ? 'fas fa-moon' : 'fas fa-sun';
         };
-
-        // --- NEW: MODE PRO LOGIC ---
-        let isProMode = false;
-        
-        window.toggleProMode = () => {
-            isProMode = !isProMode;
-            applyProMode();
-            localStorage.setItem('webnote_pro_active', isProMode);
-            // Petit feedback visuel
-            const btn = document.getElementById('btnProMode');
-            btn.style.transform = "scale(0.95)";
-            setTimeout(() => btn.style.transform = "scale(1)", 200);
-        };
-
-        function checkProMode() {
-            const saved = localStorage.getItem('webnote_pro_active');
-            if(saved === 'true') {
-                isProMode = true;
-                applyProMode();
-            }
-        }
-
-        function applyProMode() {
-            const icon = document.getElementById('iconProToggle');
-            if(isProMode) {
-                document.body.classList.add('pro-mode-active');
-                icon.className = "fas fa-toggle-on";
-            } else {
-                document.body.classList.remove('pro-mode-active');
-                icon.className = "fas fa-toggle-off";
-            }
-        }
-
-        // --- NEW: ADVANCED SETTINGS LOGIC ---
-        window.openSettings = () => {
-            const modal = document.getElementById('settingsModal');
-            modal.classList.add('open');
-            modal.style.display = 'grid';
-        };
-        
-        window.closeSettings = () => {
-            document.getElementById('settingsModal').classList.remove('open');
-            setTimeout(() => document.getElementById('settingsModal').style.display = 'none', 300);
-        };
-
-        window.toggleReduceMotion = () => {
-            document.body.classList.toggle('reduce-motion');
-        };
-
-        window.exportData = async () => {
-            if(!currentUser) return;
-            // Récupérer les notes actuelles
-            const notesSnap = await getDoc(doc(db, "user_notes", currentUser.uid));
-            const notesData = notesSnap.exists() ? notesSnap.data() : {};
-            
-            // Créer l'objet JSON
-            const exportObj = {
-                user: currentUser.displayName,
-                date: new Date().toISOString(),
-                schedule: scheduleData,
-                notes: notesData
-            };
-            
-            // Créer le fichier et lancer le téléchargement
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj, null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "webnote_backup.json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-            alert("Exportation réussie !");
-        };
-
 
         // --- POMODORO TIMER ---
         let timerInterval = null;
@@ -732,7 +630,7 @@
             document.getElementById('timerDisplay').innerText = `${m}:${s}`;
         }
 
-        // --- LISTENERS ---
+        // --- LISTENERS FIREBASE ---
         function initListeners() {
             onSnapshot(doc(db, "user_notes", currentUser.uid), (docSnap) => {
                 if (docSnap.exists() && document.activeElement !== document.getElementById('noteArea')) {
@@ -763,7 +661,7 @@
                         } else {
                             congratsBox.style.display = 'none';
                             btnValidate.style.display = 'block';
-                            document.getElementById('goalBar').style.background = "var(--primary-gradient)";
+                            document.getElementById('goalBar').style.background = "var(--primary)";
                         }
                     }
                 }
@@ -797,15 +695,15 @@
                 tasks.sort((a, b) => a.start.localeCompare(b.start));
 
                 let taskHtml = "";
-                if(tasks.length === 0) taskHtml = `<div style="font-size:0.8rem; color:var(--text-muted); opacity:0.5; padding:5px 0;">Rien de prévu</div>`;
+                if(tasks.length === 0) taskHtml = `<div class="empty-day">Aucune activité prévue</div>`;
                 else {
                     tasks.forEach((task, tIndex) => {
                         taskHtml += `
                         <div class="task-item" style="--task-color: ${task.color}" onclick="openTaskModal('${day}', ${tIndex})">
                             <div class="task-icon-box"><i class="fas ${task.icon}"></i></div>
                             <div class="task-details">
-                                <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">${task.start} - ${task.end}</div>
-                                <div style="font-size:0.95rem; font-weight:600; color:var(--text-main);">${task.title}</div>
+                                <div class="task-time">${task.start} - ${task.end}</div>
+                                <div class="task-title">${task.title}</div>
                             </div>
                         </div>`;
                     });
@@ -813,10 +711,10 @@
                 const dayHtml = `
                 <div class="day-row">
                     <div class="day-header">
-                        <span class="day-name ${isToday ? 'active-day' : ''}">${day} ${isToday ? ' (Aujourd\'hui)' : ''}</span>
+                        <span class="day-name ${isToday ? 'active-day' : ''}">${day} ${isToday ? '(Aujourd\'hui)' : ''}</span>
                         <button class="add-task-btn" onclick="openTaskModal('${day}', null)"><i class="fas fa-plus"></i></button>
                     </div>
-                    <div style="padding:10px 15px;">${taskHtml}</div>
+                    <div class="task-list">${taskHtml}</div>
                 </div>`;
                 container.insertAdjacentHTML('beforeend', dayHtml);
             });
@@ -826,9 +724,7 @@
         function renderIconSelector() {
             const container = document.getElementById('iconSelector');
             container.innerHTML = iconPresets.map((preset, idx) => `
-                <div class="icon-option ${idx === 0 ? 'selected' : ''}" 
-                     style="width:40px; height:40px; border-radius:10px; display:grid; place-items:center; cursor:pointer; background:rgba(255,255,255,0.05); color:${preset.color}; border:2px solid ${idx===0?preset.color:'transparent'}" 
-                     onclick="selectIcon(${idx})">
+                <div class="icon-option ${idx === 0 ? 'selected' : ''}" style="color:${preset.color}" onclick="selectIcon(${idx})">
                     <i class="fas ${preset.icon}"></i>
                 </div>
             `).join('');
@@ -836,10 +732,7 @@
 
         window.selectIcon = (idx) => {
             selectedIconIdx = idx;
-            document.querySelectorAll('#iconSelector > div').forEach((el, i) => {
-                el.style.borderColor = (i === idx) ? iconPresets[i].color : 'transparent';
-                el.style.transform = (i === idx) ? 'scale(1.1)' : 'scale(1)';
-            });
+            document.querySelectorAll('.icon-option').forEach((el, i) => el.classList.toggle('selected', i === idx));
         };
 
         window.openTaskModal = (day, index) => {
@@ -857,7 +750,7 @@
                 btnDelete.style.display = 'none';
             } else {
                 const task = scheduleData[day][index];
-                document.getElementById('modalTaskTitle').innerText = "Modifier l'activité";
+                document.getElementById('modalTaskTitle').innerText = "Modifier";
                 document.getElementById('taskInputTitle').value = task.title;
                 document.getElementById('taskInputStart').value = task.start;
                 document.getElementById('taskInputEnd').value = task.end;
@@ -960,15 +853,15 @@
             let html = "";
             for(let i=0; i<firstDayIndex; i++) html += `<div></div>`;
             for(let i=1; i<=daysInMonth; i++) {
-                let cl = "cal-day";
-                if(today.getMonth()===month && today.getDate()===i && today.getFullYear() === year) cl += " today";
+                let cl = "cal-day current-month";
+                if(today.getMonth()===month && today.getDate()===i) cl += " today";
                 html += `<div class="${cl}">${i}</div>`;
             }
             document.getElementById('calendarDays').innerHTML = html;
         }
 
         function checkFirstTime() {
-            if(!localStorage.getItem('webnote_v4_pro')) {
+            if(!localStorage.getItem('webnote_v3')) {
                 const modal = document.getElementById('welcomeModal');
                 modal.classList.add('open'); modal.style.display = 'grid';
             }
@@ -976,10 +869,10 @@
         window.closeModal = () => {
             document.getElementById('welcomeModal').classList.remove('open');
             setTimeout(() => document.getElementById('welcomeModal').style.display = 'none', 300);
-            localStorage.setItem('webnote_v4_pro', 'true');
+            localStorage.setItem('webnote_v3', 'true');
         };
         window.logout = () => signOut(auth);
 
     </script>
 </body>
-                                                           </html>
+    </html>

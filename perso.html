@@ -98,6 +98,7 @@
     }
     body.light-mode .weather-badge { background: rgba(255,255,255,0.5); }
     .weather-location { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+    .weather-comment { font-size: 0.75rem; color: var(--primary); font-style: italic; margin-top: 2px; text-align: right; }
 
     .theme-toggle-btn {
         width: 36px; height: 36px; border-radius: 50%;
@@ -111,7 +112,11 @@
         background: linear-gradient(135deg, #0a84ff, #5e5ce6);
         border-radius: 50%; display: grid; place-items: center; color: white; font-weight: 600;
         box-shadow: 0 10px 20px rgba(10, 132, 255, 0.3); border: 2px solid rgba(255,255,255,0.2);
+        cursor: pointer; position: relative; overflow: hidden; transition: 0.3s;
     }
+    .avatar-circle:hover { transform: scale(1.05); }
+    .avatar-circle img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .avatar-circle i { font-size: 1.8rem; display: none; }
 
     .glass-input {
         background: var(--input-bg); border: none; color: var(--text-main);
@@ -130,15 +135,19 @@
 
     .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
 
-    .timer-display { font-size: 2.8rem; font-weight: 700; text-align: center; margin: 15px 0; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
-    .timer-controls { display: flex; gap: 12px; justify-content: center; }
+    .timer-display { font-size: 2.8rem; font-weight: 700; text-align: center; margin: 5px 0 15px 0; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
+    .timer-controls { display: flex; gap: 12px; justify-content: center; margin-bottom: 15px; }
     .timer-btn { width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(255,255,255,0.1); color: var(--text-main); cursor: pointer; display: grid; place-items: center; transition: 0.2s; }
     .timer-btn:hover { background: var(--primary); color: white; }
+    .timer-setup { display: flex; justify-content: center; gap: 8px; align-items: center; }
 
     .progress-track { height: 6px; background: rgba(128,128,128,0.2); border-radius: 100px; overflow: hidden; margin-top: 10px; }
     .progress-fill { height: 100%; background: var(--primary); width: 0%; border-radius: 100px; transition: width 1s var(--ease-apple); }
-    .congrats-box { background: rgba(48, 209, 88, 0.15); padding: 15px; border-radius: 16px; text-align: center; margin-top: 15px; animation: slideUpFade 0.5s ease; }
-    .congrats-text { font-weight: 700; color: var(--success); font-size: 0.95rem; }
+    
+    .focus-gallery-grid { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+    .focus-gallery-grid::-webkit-scrollbar { display: none; }
+    .focus-gallery-img { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; border: 1px solid var(--glass-border); flex-shrink: 0; transition: 0.2s; cursor: pointer; }
+    .focus-gallery-img:hover { transform: scale(1.1); }
 
     .tabs-nav { display: flex; gap: 5px; background: rgba(118, 118, 128, 0.12); padding: 4px; border-radius: 12px; width: fit-content; }
     .tab-btn { background: none; border: none; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; cursor: pointer; padding: 6px 16px; border-radius: 8px; transition: 0.3s; }
@@ -179,27 +188,49 @@
 
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 200; display: none; place-items: center; opacity: 0; transition: opacity 0.3s; padding: 20px; }
     .modal-overlay.open { display: grid; opacity: 1; }
-    .modal-card { background: rgba(30, 30, 35, 0.85); backdrop-filter: blur(50px); width: 100%; max-width: 400px; padding: 30px; border-radius: 30px; border: 1px solid var(--glass-border); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+    .modal-card { background: rgba(30, 30, 35, 0.85); backdrop-filter: blur(50px); width: 100%; max-width: 400px; padding: 30px; border-radius: 30px; border: 1px solid var(--glass-border); box-shadow: 0 25px 50px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto; }
     body.light-mode .modal-card { background: rgba(255,255,255,0.9); color: #000; }
+    
     .btn-primary { background: var(--primary); color: white; padding: 14px; border-radius: 16px; border: none; font-weight: 600; cursor: pointer; width: 100%; font-size: 1rem; margin-top: 20px; transition:0.2s; }
     .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
     .btn-danger { background: rgba(255, 69, 58, 0.15); color: #ff453a; padding: 12px; border-radius: 14px; border: none; font-weight: 600; cursor: pointer; width: 100%; margin-top: 10px; }
+    
     .form-group { margin-bottom: 20px; text-align: left; }
     .form-label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; margin-left: 5px; }
-    .icon-selector { display: flex; gap: 12px; margin-top: 10px; justify-content: center; }
+    .icon-selector { display: flex; gap: 12px; margin-top: 10px; justify-content: center; flex-wrap: wrap; }
     .icon-option { width: 45px; height: 45px; border-radius: 12px; cursor: pointer; display: grid; place-items: center; border: 2px solid transparent; background: rgba(128,128,128,0.15); transition: 0.2s; font-size: 1.1rem; }
     .icon-option.selected { border-color: var(--primary); background: rgba(10, 132, 255, 0.15); transform: scale(1.1); color: var(--primary); }
 
-    @media (max-width: 700px) { :root { --container-padding: 15px; } .header-area { flex-direction: column; align-items: flex-start; } .weather-widget-container { width: 100%; align-items: flex-start; margin-top: 10px; } .weather-location { text-align: left; } }
+    /* Custom Toast Animations */
+    #toastContainer { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+    .toast-msg { background: rgba(30, 30, 35, 0.95); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); color: white; padding: 15px 25px; border-radius: 100px; font-weight: 600; font-size: 0.95rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 10px; animation: popIn 0.5s var(--ease-apple) forwards; opacity: 0; }
+    body.light-mode .toast-msg { background: white; color: black; border-color: rgba(0,0,0,0.1); }
+    @keyframes popIn { 0% { opacity: 0; transform: translateY(20px) scale(0.9); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes fadeOut { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-20px) scale(0.9); } }
+
+    @keyframes successBurst {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); filter: brightness(1.5); }
+        100% { transform: scale(1); }
+    }
+    .anim-burst { animation: successBurst 0.6s ease-out; }
+
+    @media (max-width: 700px) { :root { --container-padding: 15px; } .header-area { flex-direction: column; align-items: flex-start; } .weather-widget-container { width: 100%; align-items: flex-start; margin-top: 10px; } .weather-location, .weather-comment { text-align: left; } }
 </style>
 </head>
 <body>
+
+<div id="toastContainer"></div>
 
 <div class="dashboard-container">
     
     <header class="glass-panel header-area fade-in-stagger" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
         <div style="display: flex; align-items: center; gap: 15px;">
-            <div class="avatar-circle" id="userInitials" style="width: 60px; height: 60px; font-size: 1.5rem;">U</div>
+            <div class="avatar-circle" id="avatarDisplay" style="width: 60px; height: 60px;" onclick="openAvatarModal()" title="Modifier la photo de profil">
+                <span id="userInitials" style="font-size: 1.5rem;">U</span>
+                <img id="userAvatarImg" alt="Avatar">
+                <i id="userAvatarIcon" class="fas fa-user"></i>
+            </div>
             <div>
                 <h1 id="userGreeting" style="font-size: 1.5rem; margin-bottom: 5px;">Bonjour, <span id="userName">Utilisateur</span></h1>
                 <p id="memberSince" style="color: var(--text-muted); font-size: 0.85rem;">Membre depuis...</p>
@@ -230,11 +261,12 @@
             <div class="weather-location" id="weatherLocation" style="margin-top: 5px;">
                 <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> Localisation...
             </div>
+            <div class="weather-comment" id="weatherComment"></div>
         </div>
     </header>
 
     <div class="tools-grid fade-in-stagger delay-1">
-        <div class="glass-panel">
+        <div class="glass-panel" id="focusPanel">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                 <h3 style="font-size:1rem; font-weight:700;">Focus du mois</h3>
                 <i class="fas fa-pen" style="color:var(--text-muted); cursor:pointer; font-size:0.8rem;" onclick="editGoal()" title="Modifier l'objectif"></i>
@@ -247,29 +279,52 @@
                 </div>
                 <div class="progress-track"><div class="progress-fill" id="goalBar"></div></div>
                 
-                <div id="congratsMessage" class="congrats-box" style="display:none;">
-                    <div class="congrats-text"><i class="fas fa-trophy"></i> Excellente performance</div>
-                </div>
-                <button id="btnValidateGoal" onclick="checkGoalDay()" class="glass-input btn-action" style="margin-top:15px; background:var(--primary); color:white; border:none;">
-                    <i class="fas fa-check"></i> Valider une session
+                <button id="btnValidateGoal" onclick="checkGoalDay()" class="glass-input btn-action" style="margin-top:15px; background:var(--primary); color:white; border:none; width: 100%;">
+                    <i class="fas fa-check"></i> Valider la session du jour
                 </button>
+                
+                <div style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <span style="font-size:0.85rem; color:var(--text-muted);"><i class="fas fa-images"></i> Inspiration</span>
+                        <button onclick="document.getElementById('focusImageInput').click()" style="background:none; border:none; color:var(--primary); cursor:pointer; font-weight:600; font-size:0.8rem;">+ Ajouter</button>
+                    </div>
+                    <input type="file" id="focusImageInput" accept="image/*" style="display:none;" onchange="previewFocusImage(event)">
+                    
+                    <div id="focusImagePreviewContainer" style="display:none; text-align:center; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 14px; margin-bottom: 10px;">
+                        <img id="focusImagePreview" style="max-width:100%; max-height: 150px; border-radius:10px; margin-bottom: 10px; object-fit: contain;">
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn-action" onclick="saveFocusImage()" style="flex:1; background:var(--primary); color:white; padding: 8px;">Valider l'image</button>
+                            <button class="btn-action" onclick="cancelFocusImage()" style="flex:1; background:rgba(255,255,255,0.1); padding: 8px;">Annuler</button>
+                        </div>
+                    </div>
+
+                    <div id="focusImagesGrid" class="focus-gallery-grid"></div>
+                </div>
             </div>
             
             <div id="goalSetup">
                 <div style="display:flex; gap:10px; margin-bottom:10px;">
-                    <input type="text" id="newGoalName" placeholder="Objectif..." class="glass-input">
+                    <input type="text" id="newGoalName" placeholder="Objectif (ex: Apprendre Python)..." class="glass-input">
                     <input type="number" id="newGoalDays" placeholder="Nb Jours" class="glass-input" style="width:100px;">
                 </div>
                 <button onclick="setNewGoal()" class="glass-input btn-action" style="width:100%; background:var(--primary); color:white;">Définir</button>
             </div>
         </div>
 
-        <div class="glass-panel" style="text-align:center;">
+        <div class="glass-panel" style="text-align:center; display: flex; flex-direction: column; justify-content: center;">
             <h3 style="font-size:1rem; margin-bottom:5px; font-weight:700;"><i class="fas fa-hourglass-half" style="color:var(--primary); margin-right:5px;"></i> Timer Focus</h3>
             <div class="timer-display" id="timerDisplay">25:00</div>
+            
             <div class="timer-controls">
                 <button class="timer-btn" onclick="toggleTimer()" id="timerPlayBtn"><i class="fas fa-play"></i></button>
                 <button class="timer-btn" onclick="resetTimer()"><i class="fas fa-redo"></i></button>
+            </div>
+
+            <div class="timer-setup">
+                <span style="font-size: 0.85rem; color: var(--text-muted);">Durée :</span>
+                <input type="number" id="customTimerInput" class="glass-input" value="25" min="1" max="120" style="width:70px; padding: 6px 10px; text-align: center;">
+                <span style="font-size: 0.85rem; color: var(--text-muted);">min</span>
+                <button onclick="applyCustomTimer()" class="btn-action" style="padding: 6px 12px; font-size: 0.8rem; background: rgba(255,255,255,0.1);">Appliquer</button>
             </div>
         </div>
     </div>
@@ -357,6 +412,28 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="avatarModal">
+    <div class="modal-card">
+        <h3 style="margin-bottom:20px; font-weight:700; text-align: center;">Photo de Profil</h3>
+        
+        <div class="form-group">
+            <label class="form-label">Importer une photo</label>
+            <input type="file" id="customAvatarInput" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
+            <button onclick="document.getElementById('customAvatarInput').click()" class="glass-input btn-action" style="width:100%; display:flex; justify-content:center; align-items:center; gap:10px;">
+                <i class="fas fa-camera"></i> Galerie / Caméra
+            </button>
+        </div>
+
+        <div class="form-group" style="margin-top:25px;">
+            <label class="form-label">Ou choisir une icône pro</label>
+            <div class="icon-selector" id="avatarIconSelector">
+                </div>
+        </div>
+        
+        <button class="glass-input" onclick="closeAvatarModal()" style="margin-top:25px; border:none; background:rgba(255,255,255,0.1); cursor:pointer; font-weight:600; width:100%;">Fermer</button>
+    </div>
+</div>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -394,14 +471,35 @@
     ];
     let selectedIconIdx = 0;
 
+    // --- AVATAR PRESETS ---
+    const avatarPresets = [
+        { icon: 'fa-user-tie', desc: 'Pro Masc' }, { icon: 'fa-user-nurse', desc: 'Pro Fém' }, { icon: 'fa-user-graduate', desc: 'Étudiant' },
+        { icon: 'fa-cat', desc: 'Chat' }, { icon: 'fa-dog', desc: 'Chien' }, { icon: 'fa-dove', desc: 'Oiseau' },
+        { icon: 'fa-leaf', desc: 'Feuille' }, { icon: 'fa-seedling', desc: 'Plante' }, { icon: 'fa-tree', desc: 'Arbre' }
+    ];
+
+    // --- TOAST NOTIFICATIONS ---
+    function showToast(message, icon = "fa-info-circle", color = "var(--primary)") {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = 'toast-msg';
+        toast.innerHTML = `<i class="fas ${icon}" style="color:${color}; font-size:1.2rem;"></i> <span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.animation = "fadeOut 0.5s forwards";
+            setTimeout(() => toast.remove(), 500);
+        }, 3500);
+    }
+
     // --- AUTH & INIT ---
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             currentUser = user;
             initUI(user);
             initListeners();
+            initAvatarSelector();
         } else {
-            window.location.href = "index.html"; // Redirection si non connecté
+            window.location.href = "index.html";
         }
     });
 
@@ -414,7 +512,7 @@
         document.getElementById('memberSince').innerText = `Membre depuis ${diffDays} jour(s)`;
         updateGreeting();
 
-        // Météo
+        // Météo Améliorée
         if(navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(async (pos) => {
                 try {
@@ -422,11 +520,28 @@
                     const resW = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
                     const dataW = await resW.json();
                     
-                    document.getElementById('weatherTemp').innerText = Math.round(dataW.current_weather.temperature) + "°C";
+                    const temp = Math.round(dataW.current_weather.temperature);
+                    document.getElementById('weatherTemp').innerText = temp + "°C";
                     const code = dataW.current_weather.weathercode;
-                    let icon = code < 3 ? "fa-sun" : code < 50 ? "fa-cloud" : "fa-cloud-rain";
+                    
+                    let icon = "fa-cloud";
+                    let text = "Nuageux";
+                    let comment = "Une bonne journée pour rester focus !";
+
+                    if (code < 3) {
+                        icon = "fa-sun"; text = "Beau temps"; 
+                        comment = temp > 25 ? "Pensez à bien vous hydrater 💧" : "Profitez bien du soleil ☀️ !";
+                    } else if (code >= 50 && code < 70) {
+                        icon = "fa-cloud-rain"; text = "Pluvieux";
+                        comment = "Temps idéal pour avancer sur vos projets ☕";
+                    } else if (code >= 70) {
+                        icon = "fa-snowflake"; text = "Froid / Neige";
+                        comment = "Restez au chaud et productif ❄️";
+                    }
+
                     document.getElementById('weatherIcon').className = `fas ${icon}`;
-                    document.getElementById('weatherText').innerText = code < 3 ? "Beau temps" : "Nuageux";
+                    document.getElementById('weatherText').innerText = text;
+                    document.getElementById('weatherComment').innerText = comment;
 
                     const resLoc = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
                     const dataLoc = await resLoc.json();
@@ -453,10 +568,18 @@
 
     // --- FIREBASE LISTENERS ---
     function initListeners() {
-        // Ojectifs
+        // Profil, Objectifs et Avatar
         onSnapshot(doc(db, "user_profiles", currentUser.uid), (docSnap) => {
             if (docSnap.exists()) {
                 const data = docSnap.data();
+                
+                // MAJ Avatar
+                updateAvatarUI(data.avatarType, data.avatarValue);
+
+                // MAJ Galerie Focus
+                if(data.focusImages) renderFocusGallery(data.focusImages);
+
+                // MAJ Objectif
                 if(data.activeGoal) {
                     document.getElementById('goalSetup').style.display = 'none';
                     document.getElementById('goalDisplay').style.display = 'block';
@@ -465,14 +588,25 @@
                     document.getElementById('goalBar').style.width = percent + "%";
                     document.getElementById('goalPercent').innerText = Math.round(percent) + "%";
                     
+                    const btn = document.getElementById('btnValidateGoal');
+                    const todayStr = new Date().toDateString();
+                    
                     if(percent >= 100) {
-                        document.getElementById('congratsMessage').style.display = 'block';
-                        document.getElementById('btnValidateGoal').style.display = 'none';
+                        btn.innerHTML = `<i class="fas fa-trophy"></i> Objectif Atteint !`;
+                        btn.style.background = "var(--success)";
                         document.getElementById('goalBar').style.background = "var(--success)";
-                    } else {
-                        document.getElementById('congratsMessage').style.display = 'none';
-                        document.getElementById('btnValidateGoal').style.display = 'block';
+                        btn.disabled = true;
+                    } else if (data.activeGoal.lastUpdated === todayStr) {
+                        btn.innerHTML = `<i class="fas fa-check-double"></i> Validé pour aujourd'hui`;
+                        btn.style.background = "rgba(255,255,255,0.1)";
+                        btn.style.color = "var(--text-main)";
                         document.getElementById('goalBar').style.background = "var(--primary)";
+                    } else {
+                        btn.innerHTML = `<i class="fas fa-check"></i> Valider la session du jour`;
+                        btn.style.background = "var(--primary)";
+                        btn.style.color = "white";
+                        document.getElementById('goalBar').style.background = "var(--primary)";
+                        btn.disabled = false;
                     }
                 }
             }
@@ -489,7 +623,7 @@
         switchTab('today'); 
     }
 
-    // --- GESTION DES NOTES (Avec Date et Heure) ---
+    // --- GESTION DES NOTES ---
     const noteArea = document.getElementById('noteArea');
     
     noteArea.addEventListener('input', () => {
@@ -538,6 +672,57 @@
         }
     };
 
+    // --- AVATAR SYSTEM ---
+    function initAvatarSelector() {
+        const container = document.getElementById('avatarIconSelector');
+        container.innerHTML = avatarPresets.map(preset => `
+            <div class="icon-option" onclick="saveAvatar('icon', '${preset.icon}')" title="${preset.desc}">
+                <i class="fas ${preset.icon}"></i>
+            </div>
+        `).join('');
+    }
+
+    window.openAvatarModal = () => document.getElementById('avatarModal').classList.add('open');
+    window.closeAvatarModal = () => document.getElementById('avatarModal').classList.remove('open');
+
+    window.handleAvatarUpload = (event) => {
+        const file = event.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            // Optionnel : on pourrait redimensionner via Canvas ici pour éviter les gros fichiers
+            saveAvatar('image', e.target.result);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    window.saveAvatar = async (type, value) => {
+        if(!currentUser) return;
+        await setDoc(doc(db, "user_profiles", currentUser.uid), { avatarType: type, avatarValue: value }, { merge: true });
+        closeAvatarModal();
+        showToast("Photo de profil mise à jour !", "fa-check-circle", "var(--success)");
+    };
+
+    function updateAvatarUI(type, value) {
+        const initEl = document.getElementById('userInitials');
+        const imgEl = document.getElementById('userAvatarImg');
+        const iconEl = document.getElementById('userAvatarIcon');
+        
+        initEl.style.display = 'none';
+        imgEl.style.display = 'none';
+        iconEl.style.display = 'none';
+
+        if(type === 'image' && value) {
+            imgEl.src = value;
+            imgEl.style.display = 'block';
+        } else if (type === 'icon' && value) {
+            iconEl.className = `fas ${value}`;
+            iconEl.style.display = 'block';
+        } else {
+            initEl.style.display = 'block';
+        }
+    }
+
     // --- PLANNING & RECURRENCE ---
     function renderSchedule() {
         const container = document.getElementById('scheduleContainer');
@@ -548,7 +733,7 @@
             const isToday = index === todayIndex;
             const tasks = scheduleData[day] || [];
             tasks.sort((a, b) => a.start.localeCompare(b.start));
-
+            
             let taskHtml = "";
             if(tasks.length === 0) taskHtml = `<div class="empty-day">Aucune activité prévue</div>`;
             else {
@@ -573,18 +758,20 @@
             </div>`;
             container.insertAdjacentHTML('beforeend', dayHtml);
         });
+        renderIconSelector();
     }
 
     function renderIconSelector() {
         const container = document.getElementById('iconSelector');
+        if(!container) return;
         container.innerHTML = iconPresets.map((preset, idx) => `
-            <div class="icon-option ${idx === selectedIconIdx ? 'selected' : ''}" style="color:${preset.color}" onclick="selectIcon(${idx})">
+            <div class="icon-option ${idx === selectedIconIdx ? 'selected' : ''}" style="color:${preset.color}" onclick="selectTaskIcon(${idx})">
                 <i class="fas ${preset.icon}"></i>
             </div>
         `).join('');
     }
 
-    window.selectIcon = (idx) => {
+    window.selectTaskIcon = (idx) => {
         selectedIconIdx = idx;
         renderIconSelector();
     };
@@ -603,7 +790,7 @@
             document.getElementById('taskInputEnd').value = "10:00";
             recurSelect.disabled = false; 
             recurSelect.value = "once";
-            selectIcon(0);
+            selectTaskIcon(0);
             btnDelete.style.display = 'none';
         } else {
             const task = scheduleData[day][index];
@@ -613,7 +800,7 @@
             document.getElementById('taskInputEnd').value = task.end;
             recurSelect.disabled = true; 
             const iconIdx = iconPresets.findIndex(p => p.icon === task.icon);
-            selectIcon(iconIdx >= 0 ? iconIdx : 0);
+            selectTaskIcon(iconIdx >= 0 ? iconIdx : 0);
             btnDelete.style.display = 'block';
         }
         modal.classList.add('open');
@@ -653,6 +840,7 @@
 
         await setDoc(doc(db, "user_schedule", currentUser.uid), scheduleData);
         closeTaskModal();
+        showToast("Activité enregistrée avec succès !", "fa-check", "var(--success)");
     };
 
     window.deleteTask = async () => {
@@ -664,7 +852,7 @@
         }
     };
 
-    // --- OBJECTIFS (GOALS) ---
+    // --- OBJECTIFS (GOALS) & GALERIE ---
     window.editGoal = () => {
         document.getElementById('goalDisplay').style.display = 'none';
         document.getElementById('goalSetup').style.display = 'block';
@@ -675,22 +863,94 @@
     window.setNewGoal = async () => {
         const name = document.getElementById('newGoalName').value;
         const days = parseInt(document.getElementById('newGoalDays').value);
-        if(name && days) await setDoc(doc(db, "user_profiles", currentUser.uid), { activeGoal: { name, target: days, current: 0, lastUpdated: null } }, { merge: true });
+        if(name && days) {
+            await setDoc(doc(db, "user_profiles", currentUser.uid), { activeGoal: { name, target: days, current: 0, lastUpdated: null } }, { merge: true });
+            showToast("Nouvel objectif défini ! 🚀", "fa-rocket");
+        }
     };
 
     window.checkGoalDay = async () => {
         const snap = await getDoc(doc(db, "user_profiles", currentUser.uid));
         const data = snap.data().activeGoal;
         const todayStr = new Date().toDateString();
+        
         if(data.lastUpdated !== todayStr) {
             await setDoc(doc(db, "user_profiles", currentUser.uid), { activeGoal: { ...data, current: Math.min(data.current + 1, data.target), lastUpdated: todayStr } }, { merge: true });
-        } else alert("Déjà validé aujourd'hui !");
+            
+            // Animation Stylée
+            const panel = document.getElementById('focusPanel');
+            panel.classList.add('anim-burst');
+            setTimeout(() => panel.classList.remove('anim-burst'), 600);
+            showToast("Session validée ! Excellent travail 🔥", "fa-fire", "#ff9f0a");
+            
+        } else {
+            // Message pro et encourageant si déjà fait
+            showToast("Tâche déjà accomplie ! Revenez demain pour la suite 🚀", "fa-calendar-check", "var(--primary)");
+        }
     };
 
-    // --- TIMER POMODORO ---
+    // Gestion des images Focus
+    let tempBase64FocusImg = null;
+
+    window.previewFocusImage = (event) => {
+        const file = event.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            tempBase64FocusImg = e.target.result;
+            document.getElementById('focusImagePreview').src = tempBase64FocusImg;
+            document.getElementById('focusImagePreviewContainer').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    };
+
+    window.cancelFocusImage = () => {
+        tempBase64FocusImg = null;
+        document.getElementById('focusImagePreviewContainer').style.display = 'none';
+        document.getElementById('focusImageInput').value = "";
+    };
+
+    window.saveFocusImage = async () => {
+        if(!currentUser || !tempBase64FocusImg) return;
+        const snap = await getDoc(doc(db, "user_profiles", currentUser.uid));
+        const data = snap.data() || {};
+        const images = data.focusImages || [];
+        
+        // Ajout au début du tableau (limite à 10 pour ne pas saturer Firebase)
+        images.unshift(tempBase64FocusImg);
+        if(images.length > 10) images.pop(); 
+
+        await setDoc(doc(db, "user_profiles", currentUser.uid), { focusImages: images }, { merge: true });
+        cancelFocusImage();
+        showToast("Image ajoutée à votre galerie d'inspiration !", "fa-image");
+    };
+
+    function renderFocusGallery(images) {
+        const grid = document.getElementById('focusImagesGrid');
+        if(!images || images.length === 0) {
+            grid.innerHTML = `<span style="font-size:0.8rem; color:var(--text-muted); font-style:italic;">Aucune image pour le moment.</span>`;
+            return;
+        }
+        grid.innerHTML = images.map(imgSrc => `
+            <img src="${imgSrc}" class="focus-gallery-img" onclick="window.open('${imgSrc}', '_blank')">
+        `).join('');
+    }
+
+    // --- TIMER POMODORO PERSONNALISABLE ---
     let timerInterval = null;
     let timerSeconds = 25 * 60;
     let isTimerRunning = false;
+    let customInitialTime = 25 * 60;
+
+    window.applyCustomTimer = () => {
+        if(isTimerRunning) return showToast("Mettez en pause avant de modifier", "fa-exclamation-triangle", "var(--danger)");
+        let val = parseInt(document.getElementById('customTimerInput').value);
+        if(!val || val < 1) val = 1;
+        customInitialTime = val * 60;
+        timerSeconds = customInitialTime;
+        updateTimerDisplay();
+        showToast(`Minuteur réglé sur ${val} minutes`, "fa-clock");
+    };
 
     window.toggleTimer = () => {
         const btnIcon = document.querySelector('#timerPlayBtn i');
@@ -709,9 +969,16 @@
                     clearInterval(timerInterval);
                     isTimerRunning = false;
                     btnIcon.className = "fas fa-play";
-                    alert("Session terminée ! Prenez une pause.");
-                    timerSeconds = 25 * 60;
+                    showToast("Session de Focus terminée ! Prenez une pause ☕", "fa-bell", "var(--primary)");
+                    timerSeconds = customInitialTime;
                     updateTimerDisplay();
+                    
+                    // Notification système si autorisée
+                    if (Notification.permission === "granted") {
+                        new Notification("Focus Terminé", { body: "Prenez une pause bien méritée !" });
+                    } else if (Notification.permission !== "denied") {
+                        Notification.requestPermission();
+                    }
                 }
             }, 1000);
         }
@@ -720,7 +987,7 @@
     window.resetTimer = () => {
         clearInterval(timerInterval);
         isTimerRunning = false;
-        timerSeconds = 25 * 60;
+        timerSeconds = customInitialTime;
         updateTimerDisplay();
         document.querySelector('#timerPlayBtn i').className = "fas fa-play";
     };
@@ -745,7 +1012,7 @@
         for(let i=0; i<firstDayIndex; i++) html += `<div></div>`;
         for(let i=1; i<=daysInMonth; i++) {
             let cl = "cal-day current-month";
-            if(today.getMonth()===month && today.getDate()===i) cl += " today";
+            if(today.getMonth()===month && today.getDate()===i && today.getFullYear()===year) cl += " today";
             html += `<div class="${cl}">${i}</div>`;
         }
         document.getElementById('calendarDays').innerHTML = html;
@@ -764,4 +1031,4 @@
 
 </script>
 </body>
-            </html>
+    </html>

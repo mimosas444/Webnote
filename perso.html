@@ -12,61 +12,46 @@
     :root {
         /* --- THEME DARK (iOS Dark Mode - Défaut) --- */
         --bg-deep: #000000;
-        /* Fond avec des nuances subtiles style Apple */
         --bg-gradient: radial-gradient(circle at 0% 0%, #2c1e4a 0%, #000000 40%), radial-gradient(circle at 100% 100%, #1e3a8a 0%, #000000 40%);
-        
-        /* Glassmorphism iOS Pro */
         --glass-surface: rgba(30, 30, 35, 0.70);
         --glass-border: rgba(255, 255, 255, 0.12);
         --glass-highlight: rgba(255, 255, 255, 0.2);
-        --blur-amount: 50px; /* Flou intense */
-        --saturation: 180%; /* Vibrance */
-        
-        --primary: #0a84ff; /* Bleu iOS système */
+        --blur-amount: 50px;
+        --saturation: 180%;
+        --primary: #0a84ff;
         --primary-hover: #007aff;
         --primary-glow: rgba(10, 132, 255, 0.3);
-        
         --text-main: #ffffff;
         --text-inv: #000000;
-        --text-muted: #8e8e93; /* Gris système iOS */
-        
+        --text-muted: #8e8e93;
         --input-bg: rgba(118, 118, 128, 0.24);
         --btn-bg: #ffffff;
         --btn-text: #000000;
-
-        --success: #30d158; /* Vert iOS */
-        --danger: #ff453a;  /* Rouge iOS */
-        
+        --success: #30d158;
+        --danger: #ff453a;
         --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
-        
         --container-padding: 24px;
         --card-radius: 24px;
         --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
-    /* --- THEME LIGHT (iOS Light Mode) --- */
     body.light-mode {
         --bg-deep: #f2f2f7;
         --bg-gradient: radial-gradient(circle at 50% 0%, #e0e7ff 0%, #f2f2f7 60%);
-        
         --glass-surface: rgba(255, 255, 255, 0.65);
         --glass-border: rgba(0, 0, 0, 0.05);
         --glass-highlight: rgba(255, 255, 255, 0.9);
         --blur-amount: 40px;
-        
         --primary: #007aff;
         --primary-hover: #0062cc;
-        
         --text-main: #000000;
         --text-inv: #ffffff;
         --text-muted: #86868b;
-
         --input-bg: rgba(118, 118, 128, 0.12);
         --btn-bg: #007aff;
         --btn-text: #ffffff;
     }
 
-    /* --- GLOBAL --- */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-stack); -webkit-tap-highlight-color: transparent; }
 
     body {
@@ -80,7 +65,6 @@
         transition: background 0.5s ease, color 0.3s ease;
     }
 
-    /* Animations fluides */
     @keyframes slideUpFade { 
         from { opacity: 0; transform: translateY(30px) scale(0.98); } 
         to { opacity: 1; transform: translateY(0) scale(1); } 
@@ -88,13 +72,11 @@
     .fade-in-stagger { animation: slideUpFade 0.7s var(--ease-apple) forwards; opacity: 0; }
     .delay-1 { animation-delay: 0.1s; } .delay-2 { animation-delay: 0.15s; } .delay-3 { animation-delay: 0.2s; } .delay-4 { animation-delay: 0.25s; }
 
-    /* --- LAYOUT --- */
     .dashboard-container {
-        width: 100%; max-width: 1200px;
-        display: grid; grid-template-columns: 340px 1fr; grid-template-rows: auto 1fr; gap: 20px;
+        width: 100%; max-width: 1000px;
+        display: flex; flex-direction: column; gap: 20px;
     }
 
-    /* CARTE EFFET VERRE PRO */
     .glass-panel {
         background: var(--glass-surface);
         backdrop-filter: blur(var(--blur-amount)) saturate(var(--saturation));
@@ -106,52 +88,31 @@
         transition: transform 0.3s var(--ease-apple), box-shadow 0.3s;
         display: flex; flex-direction: column;
     }
-    .glass-panel:hover { 
-        border-color: var(--glass-highlight); 
-        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.2);
-    }
+    .glass-panel:hover { border-color: var(--glass-highlight); box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.2); }
 
-    /* --- HEADER --- */
-    .header-area {
-        grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: flex-end;
-        padding-bottom: 10px; margin-bottom: 5px;
-    }
-    .welcome-text h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.5px; line-height: 1.1; }
-    .welcome-text p { color: var(--text-muted); font-size: 1rem; margin-top: 4px; font-weight: 500; }
-    
-    .weather-widget-container { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-    .weather-top-row { display: flex; align-items: center; gap: 12px; }
-    
+    .weather-widget-container { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
     .weather-badge {
-        background: rgba(255,255,255,0.08); padding: 6px 16px; border-radius: 100px;
-        display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 0.9rem;
+        background: rgba(255,255,255,0.08); padding: 8px 16px; border-radius: 100px;
+        display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 0.95rem;
         border: 1px solid var(--glass-border); backdrop-filter: blur(10px);
     }
     body.light-mode .weather-badge { background: rgba(255,255,255,0.5); }
+    .weather-location { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
 
-    .weather-location { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; display:flex; align-items:center; gap:5px; }
-
-    /* BOUTON THEME */
     .theme-toggle-btn {
         width: 36px; height: 36px; border-radius: 50%;
         background: rgba(255,255,255,0.1); border: none;
-        color: var(--text-main); cursor: pointer; display: grid; place-items: center;
-        transition: 0.3s;
+        color: var(--text-main); cursor: pointer; display: grid; place-items: center; transition: 0.3s;
     }
     .theme-toggle-btn:hover { background: rgba(255,255,255,0.2); }
     body.light-mode .theme-toggle-btn { background: rgba(0,0,0,0.05); }
 
-    /* --- SIDEBAR --- */
-    .sidebar-col { display: flex; flex-direction: column; gap: 20px; }
-    
     .avatar-circle {
-        width: 80px; height: 80px; margin: 0 auto 16px; 
-        background: linear-gradient(135deg, #0a84ff, #5e5ce6); /* Gradient iOS */
-        border-radius: 50%; display: grid; place-items: center; font-size: 1.8rem; color: white; font-weight: 600;
+        background: linear-gradient(135deg, #0a84ff, #5e5ce6);
+        border-radius: 50%; display: grid; place-items: center; color: white; font-weight: 600;
         box-shadow: 0 10px 20px rgba(10, 132, 255, 0.3); border: 2px solid rgba(255,255,255,0.2);
     }
-    
-    /* INPUTS & BUTTONS */
+
     .glass-input {
         background: var(--input-bg); border: none; color: var(--text-main);
         padding: 12px 16px; border-radius: 14px; outline: none; width: 100%; font-size: 1rem; transition: 0.2s;
@@ -161,14 +122,14 @@
     
     .btn-action {
         background: var(--btn-bg); color: var(--btn-text);
-        border: none; cursor: pointer; font-weight: 600; font-size: 0.95rem;
-        border-radius: 14px;
+        border: none; cursor: pointer; font-weight: 600; font-size: 0.95rem; border-radius: 14px;
         transition: transform 0.2s var(--ease-apple), opacity 0.2s;
     }
     .btn-action:hover { transform: scale(1.02); opacity: 0.9; }
     .btn-action:active { transform: scale(0.98); }
 
-    /* FOCUS TIMER */
+    .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+
     .timer-display { font-size: 2.8rem; font-weight: 700; text-align: center; margin: 15px 0; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
     .timer-controls { display: flex; gap: 12px; justify-content: center; }
     .timer-btn { width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(255,255,255,0.1); color: var(--text-main); cursor: pointer; display: grid; place-items: center; transition: 0.2s; }
@@ -176,68 +137,37 @@
 
     .progress-track { height: 6px; background: rgba(128,128,128,0.2); border-radius: 100px; overflow: hidden; margin-top: 10px; }
     .progress-fill { height: 100%; background: var(--primary); width: 0%; border-radius: 100px; transition: width 1s var(--ease-apple); }
-
-    /* MESSAGE FELICITATIONS */
-    .congrats-box {
-        background: rgba(48, 209, 88, 0.15);
-        border: none;
-        padding: 15px; border-radius: 16px; text-align: center; margin-top: 15px;
-        animation: slideUpFade 0.5s ease;
-    }
+    .congrats-box { background: rgba(48, 209, 88, 0.15); padding: 15px; border-radius: 16px; text-align: center; margin-top: 15px; animation: slideUpFade 0.5s ease; }
     .congrats-text { font-weight: 700; color: var(--success); font-size: 0.95rem; }
-    .congrats-sub { font-size: 0.8rem; color: var(--text-muted); }
 
-    /* --- MAIN --- */
-    .main-col { display: flex; flex-direction: column; gap: 20px; }
-    .tabs-nav { display: flex; gap: 5px; margin-bottom: 15px; background: rgba(118, 118, 128, 0.12); padding: 4px; border-radius: 12px; width: fit-content; }
-    .tab-btn { 
-        background: none; border: none; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; cursor: pointer; 
-        padding: 6px 16px; border-radius: 8px; transition: 0.3s; 
-    }
+    .tabs-nav { display: flex; gap: 5px; background: rgba(118, 118, 128, 0.12); padding: 4px; border-radius: 12px; width: fit-content; }
+    .tab-btn { background: none; border: none; color: var(--text-muted); font-size: 0.85rem; font-weight: 500; cursor: pointer; padding: 6px 16px; border-radius: 8px; transition: 0.3s; }
     .tab-btn.active { color: var(--text-main); background: rgba(118, 118, 128, 0.3); font-weight: 600; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
     body.light-mode .tab-btn.active { background: #fff; color: #000; }
+    .notepad-area { width: 100%; flex: 1; min-height: 200px; background: transparent; border: none; color: var(--text-main); font-size: 1.1rem; line-height: 1.6; resize: vertical; outline: none; font-family: var(--font-stack); }
 
-    .notepad-area { width: 100%; flex: 1; min-height: 150px; background: transparent; border: none; color: var(--text-main); font-size: 1.1rem; line-height: 1.6; resize: none; outline: none; font-family: var(--font-stack); }
-
-    /* --- PLANNING --- */
     .week-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .week-info { font-size: 1.1rem; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
-    .current-date-badge { background: var(--primary); color: white; font-size: 0.8rem; padding: 4px 12px; border-radius: 100px; font-weight: 600; }
-
+    
     .schedule-grid { display: flex; flex-direction: column; gap: 15px; }
-    .day-row { 
-        background: rgba(255,255,255,0.03); 
-        border-radius: 18px; 
-        transition: 0.2s; overflow: hidden; 
-    }
+    .day-row { background: rgba(255,255,255,0.03); border-radius: 18px; transition: 0.2s; overflow: hidden; }
     .day-row:hover { background: rgba(255,255,255,0.06); }
     body.light-mode .day-row { background: rgba(255,255,255,0.6); }
-
     .day-header { padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
     .day-name { font-weight: 700; font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
     .day-name.active-day { color: var(--primary); }
-    
     .add-task-btn { background: rgba(255,255,255,0.1); border: none; color: var(--text-main); cursor: pointer; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; transition: 0.2s; }
     .add-task-btn:hover { background: var(--primary); color: white; transform: rotate(90deg); }
-
     .task-list { padding: 10px 15px; display: grid; gap: 8px; }
     .empty-day { padding: 10px; text-align: center; font-size: 0.85rem; color: var(--text-muted); opacity: 0.8; }
-
-    .task-item { 
-        background: rgba(44, 44, 46, 0.4); 
-        padding: 12px 16px; border-radius: 14px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; 
-        border-left: 4px solid var(--task-color, #555); 
-    }
+    .task-item { background: rgba(44, 44, 46, 0.4); padding: 12px 16px; border-radius: 14px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; border-left: 4px solid var(--task-color, #555); }
     body.light-mode .task-item { background: rgba(255,255,255,0.8); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-    
     .task-item:hover { transform: translateX(5px); background: rgba(44, 44, 46, 0.8); }
-    
     .task-icon-box { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; background: rgba(255,255,255,0.1); color: var(--task-color); font-size: 1rem; }
     .task-details { flex: 1; }
     .task-time { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-bottom: 2px; }
     .task-title { font-size: 0.95rem; font-weight: 600; color: var(--text-main); }
 
-    /* --- CALENDAR --- */
     .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .cal-nav-btn { background: rgba(255,255,255,0.1); border: none; color: var(--text-main); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; }
     .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
@@ -247,632 +177,591 @@
     .cal-day.current-month { color: var(--text-main); }
     .cal-day.today { background: var(--primary); color: white; font-weight: 700; box-shadow: 0 4px 12px var(--primary-glow); }
 
-    /* --- MODALS --- */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 200; display: none; place-items: center; opacity: 0; transition: opacity 0.3s; padding: 20px; }
     .modal-overlay.open { display: grid; opacity: 1; }
-    
-    .modal-card { 
-        background: rgba(30, 30, 35, 0.85); backdrop-filter: blur(50px);
-        width: 100%; max-width: 400px; padding: 30px; border-radius: 30px; 
-        border: 1px solid var(--glass-border); box-shadow: 0 25px 50px rgba(0,0,0,0.5); 
-        text-align: center;
-    }
+    .modal-card { background: rgba(30, 30, 35, 0.85); backdrop-filter: blur(50px); width: 100%; max-width: 400px; padding: 30px; border-radius: 30px; border: 1px solid var(--glass-border); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
     body.light-mode .modal-card { background: rgba(255,255,255,0.9); color: #000; }
-
     .btn-primary { background: var(--primary); color: white; padding: 14px; border-radius: 16px; border: none; font-weight: 600; cursor: pointer; width: 100%; font-size: 1rem; margin-top: 20px; transition:0.2s; }
     .btn-primary:hover { opacity: 0.9; transform: scale(1.02); }
-
     .btn-danger { background: rgba(255, 69, 58, 0.15); color: #ff453a; padding: 12px; border-radius: 14px; border: none; font-weight: 600; cursor: pointer; width: 100%; margin-top: 10px; }
-
     .form-group { margin-bottom: 20px; text-align: left; }
     .form-label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; margin-left: 5px; }
-    
     .icon-selector { display: flex; gap: 12px; margin-top: 10px; justify-content: center; }
-    .icon-option { width: 45px; height: 45px; border-radius: 12px; cursor: pointer; display: grid; place-items: center; border: 2px solid transparent; background: rgba(128,128,128,0.15); transition: 0.2s; color: var(--text-muted); font-size: 1.1rem; }
+    .icon-option { width: 45px; height: 45px; border-radius: 12px; cursor: pointer; display: grid; place-items: center; border: 2px solid transparent; background: rgba(128,128,128,0.15); transition: 0.2s; font-size: 1.1rem; }
     .icon-option.selected { border-color: var(--primary); background: rgba(10, 132, 255, 0.15); transform: scale(1.1); color: var(--primary); }
 
-    @media (max-width: 968px) { .dashboard-container { grid-template-columns: 1fr; } .sidebar-col { flex-direction: row; flex-wrap: wrap; } .profile-card, .goal-tracker, .focus-timer { flex: 1; min-width: 300px; } }
-    @media (max-width: 700px) { :root { --container-padding: 15px; } body { display: block; } .dashboard-container { display: flex; flex-direction: column; } .header-area { flex-direction: column; align-items: flex-start; gap: 15px; } .weather-widget-container { width: 100%; align-items: center; } .sidebar-col { flex-direction: column; } }
+    @media (max-width: 700px) { :root { --container-padding: 15px; } .header-area { flex-direction: column; align-items: flex-start; } .weather-widget-container { width: 100%; align-items: flex-start; margin-top: 10px; } .weather-location { text-align: left; } }
 </style>
 </head>
 <body>
 
-    <div class="dashboard-container">
+<div class="dashboard-container">
+    
+    <header class="glass-panel header-area fade-in-stagger" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="avatar-circle" id="userInitials" style="width: 60px; height: 60px; font-size: 1.5rem;">U</div>
+            <div>
+                <h1 id="userGreeting" style="font-size: 1.5rem; margin-bottom: 5px;">Bonjour, <span id="userName">Utilisateur</span></h1>
+                <p id="memberSince" style="color: var(--text-muted); font-size: 0.85rem;">Membre depuis...</p>
+            </div>
+        </div>
         
-        <header class="header-area fade-in-stagger">
-            <div class="welcome-text">
-                <h1 id="userGreeting">Bonjour.</h1>
-                <p>Votre espace productivité <i class="fas fa-rocket" style="color:var(--primary); font-size:0.9rem;"></i></p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <button class="theme-toggle-btn" onclick="toggleTheme()" title="Changer le thème">
+                <i class="fas fa-sun" id="themeIcon"></i>
+            </button>
+            <a href="dashboard.html" class="btn-action" style="padding: 10px 15px; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-comments"></i> Retour Chat
+            </a>
+            <button onclick="exportPlanningPDF()" class="btn-action" style="padding: 10px 15px; border: 1px solid var(--glass-border); display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-file-pdf" style="color:#ff375f;"></i> PDF
+            </button>
+            <button onclick="logout()" class="btn-action" style="padding: 10px 15px; color: #ff453a; background: rgba(255, 69, 58, 0.1);">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </button>
+        </div>
+
+        <div class="weather-widget-container">
+            <div class="weather-badge">
+                <i id="weatherIcon" class="fas fa-circle-notch fa-spin"></i>
+                <span id="weatherTemp">--°C</span>
+                <span id="weatherText" style="margin-left: 10px; font-weight: 400;">Chargement...</span>
+            </div>
+            <div class="weather-location" id="weatherLocation" style="margin-top: 5px;">
+                <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> Localisation...
+            </div>
+        </div>
+    </header>
+
+    <div class="tools-grid fade-in-stagger delay-1">
+        <div class="glass-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h3 style="font-size:1rem; font-weight:700;">Focus du mois</h3>
+                <i class="fas fa-pen" style="color:var(--text-muted); cursor:pointer; font-size:0.8rem;" onclick="editGoal()" title="Modifier l'objectif"></i>
             </div>
             
-            <div class="weather-widget-container">
-                <div class="weather-top-row">
-                    <button class="theme-toggle-btn" onclick="toggleTheme()" title="Changer le thème">
-                        <i class="fas fa-sun" id="themeIcon"></i>
-                    </button>
-                    
-                    <div class="weather-badge">
-                        <i id="weatherIcon" class="fas fa-circle-notch fa-spin"></i>
-                        <span id="weatherTemp">--°C</span>
-                        <div style="width:1px; height:15px; background:var(--text-muted); margin:0 5px; opacity:0.3;"></div>
-                        <span id="weatherText" style="font-weight:400;">Chargement...</span>
-                    </div>
+            <div id="goalDisplay" style="display:none;">
+                <div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:5px;">
+                    <span id="goalTitleDisplay" style="font-weight:600;">Titre</span>
+                    <span id="goalPercent" style="font-weight:700; color:var(--primary);">0%</span>
                 </div>
-                <div class="weather-location" id="weatherLocation">
-                    <i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> Localisation...
-                </div>
-            </div>
-        </header>
-
-        <aside class="sidebar-col">
-            <div class="glass-panel profile-card fade-in-stagger delay-1">
-                <div class="avatar-circle" id="userInitials">U</div>
-                <h2 id="userName" style="font-size:1.3rem; font-weight:700; text-align:center;">Utilisateur</h2>
-                <div class="seniority-badge" id="memberSince" style="color:var(--text-muted); font-size:0.85rem; text-align:center; margin-bottom:20px;">Membre depuis ...</div>
+                <div class="progress-track"><div class="progress-fill" id="goalBar"></div></div>
                 
-                <div style="display: grid; gap: 10px;">
-                    <a href="dashboard.html" class="glass-input btn-action" style="text-decoration:none; text-align:center; display:flex; justify-content:center; align-items:center; gap:8px;">
-                        <i class="fas fa-comments"></i> Retour Chat
-                    </a>
-                    
-                    <button onclick="exportPlanningPDF()" class="glass-input btn-action" style="color:var(--text-main); border:1px solid var(--glass-border);">
-                         <i class="fas fa-file-pdf" style="color:#ff375f; margin-right:8px;"></i> Exporter en PDF
-                    </button>
-
-                    <button onclick="logout()" class="glass-input btn-action" style="color:#ff453a; background: rgba(255, 69, 58, 0.08);">
-                        Déconnexion
-                    </button>
+                <div id="congratsMessage" class="congrats-box" style="display:none;">
+                    <div class="congrats-text"><i class="fas fa-trophy"></i> Excellente performance</div>
                 </div>
+                <button id="btnValidateGoal" onclick="checkGoalDay()" class="glass-input btn-action" style="margin-top:15px; background:var(--primary); color:white; border:none;">
+                    <i class="fas fa-check"></i> Valider une session
+                </button>
             </div>
-
-            <div class="glass-panel goal-tracker fade-in-stagger delay-2">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <h3 style="font-size:1rem; font-weight:700;">Focus du mois</h3>
-                    <i class="fas fa-pen" style="color:var(--text-muted); cursor:pointer; font-size:0.8rem;" onclick="editGoal()" title="Modifier l'objectif"></i>
-                </div>
-                
-                <div id="goalDisplay" style="display:none;">
-                    <div style="display:flex; justify-content:space-between; font-size:0.9rem; margin-bottom:5px;">
-                        <span id="goalTitleDisplay" style="font-weight:600;">Titre</span>
-                        <span id="goalPercent" style="font-weight:700; color:var(--primary);">0%</span>
-                    </div>
-                    <div class="progress-track"><div class="progress-fill" id="goalBar"></div></div>
-                    
-                    <div id="congratsMessage" class="congrats-box" style="display:none;">
-                        <div class="congrats-text"><i class="fas fa-trophy"></i> Excellente performance</div>
-                        <div class="congrats-sub">Objectif mensuel atteint avec succès.</div>
-                    </div>
-
-                    <button id="btnValidateGoal" onclick="checkGoalDay()" class="glass-input btn-action" style="margin-top:20px; background:var(--primary); color:white; border:none; box-shadow: 0 4px 15px var(--primary-glow);">
-                        <i class="fas fa-check"></i> Valider une session
-                    </button>
-                </div>
-                
-                <div id="goalSetup">
-                    <div style="display:flex; gap:10px; margin-bottom:10px;">
-                        <input type="text" id="newGoalName" placeholder="Objectif..." class="glass-input">
-                        <input type="number" id="newGoalDays" placeholder="Nb" class="glass-input" style="width:70px;">
-                    </div>
-                    <button onclick="setNewGoal()" class="glass-input btn-action" style="width:100%; background:var(--primary); color:white;">Définir</button>
-                </div>
-            </div>
-
-            <div class="glass-panel focus-timer fade-in-stagger delay-2" style="text-align:center;">
-                <h3 style="font-size:1rem; margin-bottom:10px; font-weight:700;"><i class="fas fa-hourglass-half" style="color:var(--primary); margin-right:5px;"></i> Timer Focus</h3>
-                <div class="timer-display" id="timerDisplay">25:00</div>
-                <div class="timer-controls">
-                    <button class="timer-btn" onclick="toggleTimer()" id="timerPlayBtn"><i class="fas fa-play"></i></button>
-                    <button class="timer-btn" onclick="resetTimer()"><i class="fas fa-redo"></i></button>
-                </div>
-                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:15px; font-weight:500;">Session de 25 minutes</div>
-            </div>
-        </aside>
-
-        <main class="main-col">
             
-            <div class="glass-panel fade-in-stagger delay-2">
-                <div class="tabs-nav">
-                    <button class="tab-btn active" onclick="switchTab('today')">Aujourd'hui</button>
-                    <button class="tab-btn" onclick="switchTab('yesterday')">Hier</button>
-                    <button class="tab-btn" onclick="switchTab('archive')">Mémo</button>
-                    <span id="saveIndicator" style="margin-left:auto; font-size:0.8rem; color:var(--success); opacity:0; transition:0.3s; display:flex; align-items:center; gap:5px;">
-                        <i class="fas fa-check-circle"></i> Sauvegardé
-                    </span>
+            <div id="goalSetup">
+                <div style="display:flex; gap:10px; margin-bottom:10px;">
+                    <input type="text" id="newGoalName" placeholder="Objectif..." class="glass-input">
+                    <input type="number" id="newGoalDays" placeholder="Nb Jours" class="glass-input" style="width:100px;">
                 </div>
-                <textarea id="noteArea" class="notepad-area" placeholder="Notez vos pensées ici..."></textarea>
+                <button onclick="setNewGoal()" class="glass-input btn-action" style="width:100%; background:var(--primary); color:white;">Définir</button>
             </div>
+        </div>
 
-            <div class="glass-panel fade-in-stagger delay-3">
-                <div class="week-header">
-                    <div class="week-info">
-                        <i class="fas fa-calendar-week" style="color:var(--primary);"></i>
-                        <span id="weekRangeDisplay">Semaine...</span>
-                    </div>
-                    <div class="current-date-badge" id="currentDateBadge">Auj. 10 Jan</div>
-                </div>
-                
-                <div class="schedule-grid" id="scheduleContainer">
-                    <div style="text-align:center; padding:30px; color:var(--text-muted);">Chargement du planning...</div>
-                </div>
+        <div class="glass-panel" style="text-align:center;">
+            <h3 style="font-size:1rem; margin-bottom:5px; font-weight:700;"><i class="fas fa-hourglass-half" style="color:var(--primary); margin-right:5px;"></i> Timer Focus</h3>
+            <div class="timer-display" id="timerDisplay">25:00</div>
+            <div class="timer-controls">
+                <button class="timer-btn" onclick="toggleTimer()" id="timerPlayBtn"><i class="fas fa-play"></i></button>
+                <button class="timer-btn" onclick="resetTimer()"><i class="fas fa-redo"></i></button>
             </div>
-
-            <div class="glass-panel fade-in-stagger delay-4">
-                <div class="calendar-header">
-                    <h3 id="calMonthYear" style="text-transform:capitalize; font-size:1.2rem; font-weight:700;">Mois</h3>
-                    <div style="display:flex; gap:8px;">
-                        <button class="cal-nav-btn" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
-                        <button class="cal-nav-btn" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
-                    </div>
-                </div>
-                <div class="calendar-grid">
-                    <div class="cal-day-name">Dim</div><div class="cal-day-name">Lun</div><div class="cal-day-name">Mar</div>
-                    <div class="cal-day-name">Mer</div><div class="cal-day-name">Jeu</div><div class="cal-day-name">Ven</div><div class="cal-day-name">Sam</div>
-                </div>
-                <div class="calendar-grid" id="calendarDays"></div>
-            </div>
-
-        </main>
-    </div>
-
-    <div class="modal-overlay" id="welcomeModal">
-        <div class="modal-card">
-            <div style="width:60px; height:60px; background:var(--primary); border-radius:50%; margin:0 auto 20px; display:grid; place-items:center; font-size:1.5rem; color:white;">
-                <i class="fas fa-hand-sparkles"></i>
-            </div>
-            <h2 style="margin-bottom:10px; font-weight:800;">Bienvenue</h2>
-            <p style="color:var(--text-muted); line-height:1.6; font-size:1rem;">Configurez votre semaine, suivez vos objectifs et restez productif.</p>
-            <button class="btn-primary" onclick="closeModal()">C'est parti</button>
         </div>
     </div>
 
-    <div class="modal-overlay" id="taskModal">
-        <div class="modal-card">
-            <h3 id="modalTaskTitle" style="margin-bottom:25px; font-weight:700;">Nouvelle Activité</h3>
-            <div class="form-group">
-                <label class="form-label">Titre de l'activité</label>
-                <input type="text" id="taskInputTitle" class="glass-input" placeholder="Ex: Réunion Projet">
+    <div class="glass-panel fade-in-stagger delay-2">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <div class="tabs-nav" style="margin: 0;">
+                <button class="tab-btn active" onclick="switchTab('today')">Aujourd'hui</button>
+                <button class="tab-btn" onclick="switchTab('archive')">Mémo Global</button>
             </div>
-            <div class="form-group">
-                <div style="display:flex; gap:15px;">
-                    <div style="flex:1;">
-                        <label class="form-label">Début</label>
-                        <input type="time" id="taskInputStart" class="glass-input">
-                    </div>
-                    <div style="flex:1;">
-                        <label class="form-label">Fin</label>
-                        <input type="time" id="taskInputEnd" class="glass-input">
-                    </div>
-                </div>
+            <span id="saveIndicator" style="font-size: 0.85rem; color: var(--text-muted); opacity: 0; transition: 0.3s; display: flex; align-items: center; gap: 5px;">
+                <i class="fas fa-check-circle" style="color: var(--success);"></i> Sauvegardé à <span id="saveTimestamp">--:--</span>
+            </span>
+        </div>
+        <textarea id="noteArea" class="notepad-area" placeholder="Écrivez vos pensées ici... Sauvegarde automatique activée."></textarea>
+    </div>
+
+    <div class="glass-panel fade-in-stagger delay-3">
+        <div class="week-header">
+            <div class="week-info">
+                <i class="fas fa-tasks" style="color:var(--primary);"></i>
+                <span>Mon Emploi du Temps</span>
             </div>
-            <div class="form-group">
-                <label class="form-label">Type & Couleur</label>
-                <div class="icon-selector" id="iconSelector"></div>
-            </div>
-            <button class="btn-primary" onclick="saveTask()">Enregistrer</button>
-            <button class="btn-danger" id="btnDeleteTask" onclick="deleteTask()" style="display:none;">Supprimer</button>
-            <button class="glass-input" onclick="closeTaskModal()" style="margin-top:15px; border:none; background:transparent; cursor:pointer; color:var(--text-muted); font-weight:600;">Annuler</button>
+        </div>
+        <div class="schedule-grid" id="scheduleContainer">
+            <div style="text-align:center; padding:30px; color:var(--text-muted);">Chargement du planning...</div>
         </div>
     </div>
 
-    <script type="module">
-        // --- CONFIG FIREBASE ---
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    <div class="glass-panel fade-in-stagger delay-4" style="max-width: 500px; margin: 0 auto; width: 100%;">
+        <div class="calendar-header">
+            <h3 id="calMonthYear" style="text-transform:capitalize; font-size:1.2rem; font-weight:700;">Mois</h3>
+            <div style="display:flex; gap:8px;">
+                <button class="cal-nav-btn" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+                <button class="cal-nav-btn" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+        <div class="calendar-grid">
+            <div class="cal-day-name">Dim</div><div class="cal-day-name">Lun</div><div class="cal-day-name">Mar</div>
+            <div class="cal-day-name">Mer</div><div class="cal-day-name">Jeu</div><div class="cal-day-name">Ven</div><div class="cal-day-name">Sam</div>
+        </div>
+        <div class="calendar-grid" id="calendarDays"></div>
+    </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
-            authDomain: "webnote-9ea1e.firebaseapp.com",
-            projectId: "webnote-9ea1e",
-            storageBucket: "webnote-9ea1e.firebasestorage.app",
-            messagingSenderId: "869875049003",
-            appId: "1:869875049003:web:0f7334733cb313e426406e"
-        };
+</div>
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+<div class="modal-overlay" id="taskModal">
+    <div class="modal-card">
+        <h3 id="modalTaskTitle" style="margin-bottom:25px; font-weight:700; text-align: center;">Nouvelle Activité</h3>
+        
+        <div class="form-group">
+            <label class="form-label">Titre</label>
+            <input type="text" id="taskInputTitle" class="glass-input" placeholder="Ex: Réunion Projet">
+        </div>
+        
+        <div class="form-group" style="display:flex; gap:15px;">
+            <div style="flex:1;">
+                <label class="form-label">Heure de début</label>
+                <input type="time" id="taskInputStart" class="glass-input">
+            </div>
+            <div style="flex:1;">
+                <label class="form-label">Heure de fin</label>
+                <input type="time" id="taskInputEnd" class="glass-input">
+            </div>
+        </div>
 
-        let currentUser = null;
-        let currentTab = 'today';
-        let typingTimeout;
-        let currentDate = new Date();
+        <div class="form-group">
+            <label class="form-label">Récurrence</label>
+            <select id="taskRecurrence" class="glass-input" style="width: 100%; appearance: auto; color: var(--text-main); background: var(--input-bg);">
+                <option value="once">Une seule fois (Ce jour uniquement)</option>
+                <option value="daily">Tous les jours</option>
+                <option value="weekdays">Du Lundi au Vendredi</option>
+                <option value="weekends">Tous les week-ends</option>
+            </select>
+        </div>
 
-        // VARIABLES PLANNING
-        const daysOfWeek = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
-        let scheduleData = {};
-        let currentEditDay = null;
-        let currentEditIndex = null;
+        <div class="form-group">
+            <label class="form-label">Couleur & Icône</label>
+            <div class="icon-selector" id="iconSelector"></div>
+        </div>
+        
+        <button class="btn-primary" onclick="saveTask()">Enregistrer</button>
+        <button class="btn-danger" id="btnDeleteTask" onclick="deleteTask()" style="display:none;">Supprimer</button>
+        <button class="glass-input" onclick="closeTaskModal()" style="margin-top:15px; border:none; background:transparent; cursor:pointer; font-weight:600; text-align: center;">Annuler</button>
+    </div>
+</div>
 
-        // ICONS PRESETS (Couleurs iOS Vibrance)
-        const iconPresets = [
-            { icon: 'fa-briefcase', color: '#0a84ff' }, // System Blue
-            { icon: 'fa-dumbbell', color: '#ff9f0a' },  // System Orange
-            { icon: 'fa-book', color: '#bf5af2' },      // System Purple
-            { icon: 'fa-coffee', color: '#30d158' },    // System Green
-            { icon: 'fa-shopping-cart', color: '#ff375f' } // System Pink
-        ];
-        let selectedIconIdx = 0;
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // --- AUTH ---
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                initUI(user);
-                initListeners();
-                checkFirstTime();
-            } else {
-                window.location.href = "index.html";
+    const firebaseConfig = {
+        apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
+        authDomain: "webnote-9ea1e.firebaseapp.com",
+        projectId: "webnote-9ea1e",
+        storageBucket: "webnote-9ea1e.firebasestorage.app",
+        messagingSenderId: "869875049003",
+        appId: "1:869875049003:web:0f7334733cb313e426406e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
+    let currentTab = 'today';
+    let typingTimeout;
+    let currentDate = new Date();
+    
+    const daysOfWeek = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+    let scheduleData = {};
+    let currentEditDay = null;
+    let currentEditIndex = null;
+
+    const iconPresets = [
+        { icon: 'fa-briefcase', color: '#0a84ff' }, 
+        { icon: 'fa-dumbbell', color: '#ff9f0a' },  
+        { icon: 'fa-book', color: '#bf5af2' },      
+        { icon: 'fa-coffee', color: '#30d158' },    
+        { icon: 'fa-shopping-cart', color: '#ff375f' } 
+    ];
+    let selectedIconIdx = 0;
+
+    // --- AUTH & INIT ---
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUser = user;
+            initUI(user);
+            initListeners();
+        } else {
+            window.location.href = "index.html"; // Redirection si non connecté
+        }
+    });
+
+    function initUI(user) {
+        document.getElementById('userName').innerText = user.displayName || "Utilisateur";
+        document.getElementById('userInitials').innerText = (user.displayName || "U").charAt(0).toUpperCase();
+        
+        const creation = new Date(user.metadata.creationTime);
+        const diffDays = Math.ceil(Math.abs(new Date() - creation) / (1000 * 60 * 60 * 24)); 
+        document.getElementById('memberSince').innerText = `Membre depuis ${diffDays} jour(s)`;
+        updateGreeting();
+
+        // Météo
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                try {
+                    const { latitude, longitude } = pos.coords;
+                    const resW = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+                    const dataW = await resW.json();
+                    
+                    document.getElementById('weatherTemp').innerText = Math.round(dataW.current_weather.temperature) + "°C";
+                    const code = dataW.current_weather.weathercode;
+                    let icon = code < 3 ? "fa-sun" : code < 50 ? "fa-cloud" : "fa-cloud-rain";
+                    document.getElementById('weatherIcon').className = `fas ${icon}`;
+                    document.getElementById('weatherText').innerText = code < 3 ? "Beau temps" : "Nuageux";
+
+                    const resLoc = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                    const dataLoc = await resLoc.json();
+                    const city = dataLoc.address.city || dataLoc.address.town || "Ma Position";
+                    document.getElementById('weatherLocation').innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> ${city}`;
+                } catch(e) {}
+            });
+        }
+        renderCalendar();
+    }
+
+    window.updateGreeting = () => {
+        const hour = new Date().getHours();
+        let greeting = "Bonjour";
+        if(hour >= 18) greeting = "Bonsoir";
+        document.getElementById('userGreeting').innerHTML = `${greeting}, <span id="userName">${currentUser ? currentUser.displayName || "Utilisateur" : "Utilisateur"}</span>`;
+    };
+
+    window.toggleTheme = () => {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        document.getElementById('themeIcon').className = isLight ? 'fas fa-moon' : 'fas fa-sun';
+    };
+
+    // --- FIREBASE LISTENERS ---
+    function initListeners() {
+        // Ojectifs
+        onSnapshot(doc(db, "user_profiles", currentUser.uid), (docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                if(data.activeGoal) {
+                    document.getElementById('goalSetup').style.display = 'none';
+                    document.getElementById('goalDisplay').style.display = 'block';
+                    document.getElementById('goalTitleDisplay').innerText = data.activeGoal.name;
+                    const percent = Math.min((data.activeGoal.current / data.activeGoal.target) * 100, 100);
+                    document.getElementById('goalBar').style.width = percent + "%";
+                    document.getElementById('goalPercent').innerText = Math.round(percent) + "%";
+                    
+                    if(percent >= 100) {
+                        document.getElementById('congratsMessage').style.display = 'block';
+                        document.getElementById('btnValidateGoal').style.display = 'none';
+                        document.getElementById('goalBar').style.background = "var(--success)";
+                    } else {
+                        document.getElementById('congratsMessage').style.display = 'none';
+                        document.getElementById('btnValidateGoal').style.display = 'block';
+                        document.getElementById('goalBar').style.background = "var(--primary)";
+                    }
+                }
             }
         });
 
-        // --- UI INIT ---
-        function initUI(user) {
-            document.getElementById('userName').innerText = user.displayName || "Utilisateur";
-            document.getElementById('userInitials').innerText = (user.displayName || "U").charAt(0).toUpperCase();
-            
-            const creation = new Date(user.metadata.creationTime);
-            const diffDays = Math.ceil(Math.abs(new Date() - creation) / (1000 * 60 * 60 * 24)); 
-            document.getElementById('memberSince').innerText = `Membre depuis ${diffDays} jour(s)`;
+        // Planning
+        onSnapshot(doc(db, "user_schedule", currentUser.uid), (docSnap) => {
+            if(docSnap.exists()) scheduleData = docSnap.data();
+            else scheduleData = {};
+            renderSchedule();
+        });
 
-            const options = { month: 'short', day: 'numeric' };
-            document.getElementById('currentDateBadge').innerText = "Auj. " + new Date().toLocaleDateString('fr-FR', options);
-            document.getElementById('weekRangeDisplay').innerText = getWeekRange();
-            
-            updateGreeting();
-            
-            // Météo
-            if(navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (pos) => {
-                    try {
-                        const { latitude, longitude } = pos.coords;
-                        const resW = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
-                        const dataW = await resW.json();
-                        
-                        document.getElementById('weatherTemp').innerText = Math.round(dataW.current_weather.temperature) + "°C";
-                        const code = dataW.current_weather.weathercode;
-                        let icon = code < 3 ? "fa-sun" : code < 50 ? "fa-cloud" : "fa-cloud-rain";
-                        document.getElementById('weatherIcon').className = `fas ${icon}`;
-                        document.getElementById('weatherText').innerText = code < 3 ? "Beau temps" : "Nuageux";
+        // Notes Initiales
+        switchTab('today'); 
+    }
 
-                        const resLoc = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-                        const dataLoc = await resLoc.json();
-                        const city = dataLoc.address.city || dataLoc.address.town || "Ma Position";
-                        document.getElementById('weatherLocation').innerHTML = `<i class="fas fa-map-marker-alt" style="color:var(--primary);"></i> ${city}`;
-                    } catch(e) {}
+    // --- GESTION DES NOTES (Avec Date et Heure) ---
+    const noteArea = document.getElementById('noteArea');
+    
+    noteArea.addEventListener('input', () => {
+        document.getElementById('saveIndicator').style.opacity = '0';
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(saveNoteImmediate, 1000);
+    });
+
+    async function saveNoteImmediate() {
+        if(!currentUser) return;
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        const dateString = now.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+        const fullTimestamp = `${dateString} à ${timeString}`;
+
+        await setDoc(doc(db, "user_notes", currentUser.uid), { 
+            [currentTab]: noteArea.value,
+            [`${currentTab}_lastSaved`]: fullTimestamp
+        }, { merge: true });
+
+        document.getElementById('saveTimestamp').innerText = fullTimestamp;
+        document.getElementById('saveIndicator').style.opacity = '1';
+    }
+
+    window.switchTab = async (tabName) => {
+        await saveNoteImmediate();
+        currentTab = tabName;
+        document.querySelectorAll('.tab-btn').forEach(b => {
+            b.classList.remove('active');
+            if(b.innerText.toLowerCase().includes(tabName === 'today' ? "aujourd'hui" : "mémo")) b.classList.add('active');
+        });
+        
+        const snap = await getDoc(doc(db, "user_notes", currentUser.uid));
+        if (snap.exists()) {
+            const data = snap.data();
+            document.getElementById('noteArea').value = data[tabName] || "";
+            if(data[`${tabName}_lastSaved`]) {
+                document.getElementById('saveTimestamp').innerText = data[`${tabName}_lastSaved`];
+                document.getElementById('saveIndicator').style.opacity = '1';
+            } else {
+                document.getElementById('saveIndicator').style.opacity = '0';
+            }
+        } else {
+            document.getElementById('noteArea').value = "";
+            document.getElementById('saveIndicator').style.opacity = '0';
+        }
+    };
+
+    // --- PLANNING & RECURRENCE ---
+    function renderSchedule() {
+        const container = document.getElementById('scheduleContainer');
+        container.innerHTML = "";
+        const todayIndex = new Date().getDay(); 
+
+        daysOfWeek.forEach((day, index) => {
+            const isToday = index === todayIndex;
+            const tasks = scheduleData[day] || [];
+            tasks.sort((a, b) => a.start.localeCompare(b.start));
+
+            let taskHtml = "";
+            if(tasks.length === 0) taskHtml = `<div class="empty-day">Aucune activité prévue</div>`;
+            else {
+                tasks.forEach((task, tIndex) => {
+                    taskHtml += `
+                    <div class="task-item" style="--task-color: ${task.color}" onclick="openTaskModal('${day}', ${tIndex})">
+                        <div class="task-icon-box"><i class="fas ${task.icon}"></i></div>
+                        <div class="task-details">
+                            <div class="task-time">${task.start} - ${task.end}</div>
+                            <div class="task-title">${task.title}</div>
+                        </div>
+                    </div>`;
                 });
             }
-            renderCalendar();
-            renderIconSelector();
+            const dayHtml = `
+            <div class="day-row">
+                <div class="day-header">
+                    <span class="day-name ${isToday ? 'active-day' : ''}">${day} ${isToday ? '• Aujourd\'hui' : ''}</span>
+                    <button class="add-task-btn" onclick="openTaskModal('${day}', null)"><i class="fas fa-plus"></i></button>
+                </div>
+                <div class="task-list">${taskHtml}</div>
+            </div>`;
+            container.insertAdjacentHTML('beforeend', dayHtml);
+        });
+    }
+
+    function renderIconSelector() {
+        const container = document.getElementById('iconSelector');
+        container.innerHTML = iconPresets.map((preset, idx) => `
+            <div class="icon-option ${idx === selectedIconIdx ? 'selected' : ''}" style="color:${preset.color}" onclick="selectIcon(${idx})">
+                <i class="fas ${preset.icon}"></i>
+            </div>
+        `).join('');
+    }
+
+    window.selectIcon = (idx) => {
+        selectedIconIdx = idx;
+        renderIconSelector();
+    };
+
+    window.openTaskModal = (day, index) => {
+        currentEditDay = day;
+        currentEditIndex = index;
+        const modal = document.getElementById('taskModal');
+        const btnDelete = document.getElementById('btnDeleteTask');
+        const recurSelect = document.getElementById('taskRecurrence');
+
+        if (index === null) {
+            document.getElementById('modalTaskTitle').innerText = "Ajouter à " + day;
+            document.getElementById('taskInputTitle').value = "";
+            document.getElementById('taskInputStart').value = "09:00";
+            document.getElementById('taskInputEnd').value = "10:00";
+            recurSelect.disabled = false; 
+            recurSelect.value = "once";
+            selectIcon(0);
+            btnDelete.style.display = 'none';
+        } else {
+            const task = scheduleData[day][index];
+            document.getElementById('modalTaskTitle').innerText = "Modifier la tâche";
+            document.getElementById('taskInputTitle').value = task.title;
+            document.getElementById('taskInputStart').value = task.start;
+            document.getElementById('taskInputEnd').value = task.end;
+            recurSelect.disabled = true; 
+            const iconIdx = iconPresets.findIndex(p => p.icon === task.icon);
+            selectIcon(iconIdx >= 0 ? iconIdx : 0);
+            btnDelete.style.display = 'block';
+        }
+        modal.classList.add('open');
+    };
+
+    window.closeTaskModal = () => document.getElementById('taskModal').classList.remove('open');
+
+    window.saveTask = async () => {
+        if(!currentUser || !currentEditDay) return;
+        
+        const title = document.getElementById('taskInputTitle').value;
+        const start = document.getElementById('taskInputStart').value;
+        const end = document.getElementById('taskInputEnd').value;
+        const recurrence = document.getElementById('taskRecurrence').value;
+        const iconData = iconPresets[selectedIconIdx];
+
+        if(!title) return alert("Veuillez entrer un titre.");
+
+        const newTask = { title, start, end, icon: iconData.icon, color: iconData.color, id: Date.now() };
+        
+        if (!scheduleData) scheduleData = {};
+        daysOfWeek.forEach(d => { if(!scheduleData[d]) scheduleData[d] = []; });
+
+        if(currentEditIndex !== null) {
+            scheduleData[currentEditDay][currentEditIndex] = newTask;
+        } else {
+            if (recurrence === 'once') {
+                scheduleData[currentEditDay].push(newTask);
+            } else if (recurrence === 'daily') {
+                daysOfWeek.forEach(d => scheduleData[d].push(newTask));
+            } else if (recurrence === 'weekdays') {
+                ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi'].forEach(d => scheduleData[d].push(newTask));
+            } else if (recurrence === 'weekends') {
+                ['samedi', 'dimanche'].forEach(d => scheduleData[d].push(newTask));
+            }
         }
 
-        // --- EXPORT PDF ---
-        window.exportPlanningPDF = () => {
-            const element = document.querySelector('.dashboard-container');
-            const btn = event.currentTarget;
-            const originalText = btn.innerHTML;
-            
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Génération...';
+        await setDoc(doc(db, "user_schedule", currentUser.uid), scheduleData);
+        closeTaskModal();
+    };
 
-            const opt = {
-                margin:       [5, 5, 5, 5],
-                filename:     `Planning_WebNote_${new Date().toISOString().slice(0,10)}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
-            };
+    window.deleteTask = async () => {
+        if(!currentUser || !currentEditDay || currentEditIndex === null) return;
+        if(confirm("Supprimer cette activité ?")) {
+            scheduleData[currentEditDay].splice(currentEditIndex, 1);
+            await setDoc(doc(db, "user_schedule", currentUser.uid), scheduleData);
+            closeTaskModal();
+        }
+    };
 
-            html2pdf().set(opt).from(element).save().then(() => {
-                btn.innerHTML = originalText;
-            }).catch(err => {
-                console.error(err);
-                alert("Erreur export PDF");
-                btn.innerHTML = originalText;
-            });
-        };
+    // --- OBJECTIFS (GOALS) ---
+    window.editGoal = () => {
+        document.getElementById('goalDisplay').style.display = 'none';
+        document.getElementById('goalSetup').style.display = 'block';
+        const currentTitle = document.getElementById('goalTitleDisplay').innerText;
+        if(currentTitle !== "Titre") document.getElementById('newGoalName').value = currentTitle;
+    };
 
-        // --- GREETING & THEME ---
-        window.updateGreeting = () => {
-            const hour = new Date().getHours();
-            let greeting = "Bonjour";
-            if(hour >= 12 && hour < 18) greeting = "Bonne après-midi";
-            else if(hour >= 18) greeting = "Bonsoir";
-            document.getElementById('userGreeting').innerText = greeting + ".";
-        };
+    window.setNewGoal = async () => {
+        const name = document.getElementById('newGoalName').value;
+        const days = parseInt(document.getElementById('newGoalDays').value);
+        if(name && days) await setDoc(doc(db, "user_profiles", currentUser.uid), { activeGoal: { name, target: days, current: 0, lastUpdated: null } }, { merge: true });
+    };
 
-        window.toggleTheme = () => {
-            document.body.classList.toggle('light-mode');
-            const isLight = document.body.classList.contains('light-mode');
-            document.getElementById('themeIcon').className = isLight ? 'fas fa-moon' : 'fas fa-sun';
-        };
+    window.checkGoalDay = async () => {
+        const snap = await getDoc(doc(db, "user_profiles", currentUser.uid));
+        const data = snap.data().activeGoal;
+        const todayStr = new Date().toDateString();
+        if(data.lastUpdated !== todayStr) {
+            await setDoc(doc(db, "user_profiles", currentUser.uid), { activeGoal: { ...data, current: Math.min(data.current + 1, data.target), lastUpdated: todayStr } }, { merge: true });
+        } else alert("Déjà validé aujourd'hui !");
+    };
 
-        // --- POMODORO TIMER ---
-        let timerInterval = null;
-        let timerSeconds = 25 * 60;
-        let isTimerRunning = false;
+    // --- TIMER POMODORO ---
+    let timerInterval = null;
+    let timerSeconds = 25 * 60;
+    let isTimerRunning = false;
 
-        window.toggleTimer = () => {
-            const btnIcon = document.querySelector('#timerPlayBtn i');
-            if(isTimerRunning) {
-                clearInterval(timerInterval);
-                isTimerRunning = false;
-                btnIcon.className = "fas fa-play";
-            } else {
-                isTimerRunning = true;
-                btnIcon.className = "fas fa-pause";
-                timerInterval = setInterval(() => {
-                    if(timerSeconds > 0) {
-                        timerSeconds--;
-                        updateTimerDisplay();
-                    } else {
-                        clearInterval(timerInterval);
-                        isTimerRunning = false;
-                        btnIcon.className = "fas fa-play";
-                        alert("Session terminée ! Prenez une pause.");
-                        timerSeconds = 25 * 60;
-                        updateTimerDisplay();
-                    }
-                }, 1000);
-            }
-        };
-
-        window.resetTimer = () => {
+    window.toggleTimer = () => {
+        const btnIcon = document.querySelector('#timerPlayBtn i');
+        if(isTimerRunning) {
             clearInterval(timerInterval);
             isTimerRunning = false;
-            timerSeconds = 25 * 60;
-            updateTimerDisplay();
-            document.querySelector('#timerPlayBtn i').className = "fas fa-play";
-        };
-
-        function updateTimerDisplay() {
-            const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
-            const s = (timerSeconds % 60).toString().padStart(2, '0');
-            document.getElementById('timerDisplay').innerText = `${m}:${s}`;
-        }
-
-        // --- LISTENERS FIREBASE ---
-        function initListeners() {
-            onSnapshot(doc(db, "user_notes", currentUser.uid), (docSnap) => {
-                if (docSnap.exists() && document.activeElement !== document.getElementById('noteArea')) {
-                    document.getElementById('noteArea').value = docSnap.data()[currentTab] || "";
+            btnIcon.className = "fas fa-play";
+        } else {
+            isTimerRunning = true;
+            btnIcon.className = "fas fa-pause";
+            timerInterval = setInterval(() => {
+                if(timerSeconds > 0) {
+                    timerSeconds--;
+                    updateTimerDisplay();
+                } else {
+                    clearInterval(timerInterval);
+                    isTimerRunning = false;
+                    btnIcon.className = "fas fa-play";
+                    alert("Session terminée ! Prenez une pause.");
+                    timerSeconds = 25 * 60;
+                    updateTimerDisplay();
                 }
-            });
-
-            onSnapshot(doc(db, "user_profiles", currentUser.uid), (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    if(data.activeGoal) {
-                        document.getElementById('goalSetup').style.display = 'none';
-                        document.getElementById('goalDisplay').style.display = 'block';
-                        
-                        document.getElementById('goalTitleDisplay').innerText = data.activeGoal.name;
-                        const percent = Math.min((data.activeGoal.current / data.activeGoal.target) * 100, 100);
-                        
-                        document.getElementById('goalBar').style.width = percent + "%";
-                        document.getElementById('goalPercent').innerText = Math.round(percent) + "%";
-                        
-                        const congratsBox = document.getElementById('congratsMessage');
-                        const btnValidate = document.getElementById('btnValidateGoal');
-                        
-                        if(percent >= 100) {
-                            congratsBox.style.display = 'block';
-                            btnValidate.style.display = 'none';
-                            document.getElementById('goalBar').style.background = "var(--success)";
-                        } else {
-                            congratsBox.style.display = 'none';
-                            btnValidate.style.display = 'block';
-                            document.getElementById('goalBar').style.background = "var(--primary)";
-                        }
-                    }
-                }
-            });
-
-            onSnapshot(doc(db, "user_schedule", currentUser.uid), (docSnap) => {
-                if(docSnap.exists()) scheduleData = docSnap.data();
-                else scheduleData = {};
-                renderSchedule();
-            });
+            }, 1000);
         }
+    };
 
-        // --- PLANNING LOGIC ---
-        function getWeekRange() {
-            const curr = new Date();
-            const first = curr.getDate() - curr.getDay(); 
-            const last = first + 6; 
-            const firstDay = new Date(curr.setDate(first)).toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
-            const lastDay = new Date(curr.setDate(last)).toLocaleDateString('fr-FR', {day:'numeric', month:'short'});
-            return `${firstDay} au ${lastDay}`;
+    window.resetTimer = () => {
+        clearInterval(timerInterval);
+        isTimerRunning = false;
+        timerSeconds = 25 * 60;
+        updateTimerDisplay();
+        document.querySelector('#timerPlayBtn i').className = "fas fa-play";
+    };
+
+    function updateTimerDisplay() {
+        const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+        const s = (timerSeconds % 60).toString().padStart(2, '0');
+        document.getElementById('timerDisplay').innerText = `${m}:${s}`;
+    }
+
+    // --- CALENDRIER ---
+    window.changeMonth = (delta) => { currentDate.setMonth(currentDate.getMonth() + delta); renderCalendar(); };
+    
+    function renderCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        document.getElementById('calMonthYear').innerText = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' }).format(currentDate);
+        const firstDayIndex = new Date(year, month, 1).getDay(); 
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const today = new Date();
+        let html = "";
+        for(let i=0; i<firstDayIndex; i++) html += `<div></div>`;
+        for(let i=1; i<=daysInMonth; i++) {
+            let cl = "cal-day current-month";
+            if(today.getMonth()===month && today.getDate()===i) cl += " today";
+            html += `<div class="${cl}">${i}</div>`;
         }
+        document.getElementById('calendarDays').innerHTML = html;
+    }
 
-        function renderSchedule() {
-            const container = document.getElementById('scheduleContainer');
-            container.innerHTML = "";
-            const todayIndex = new Date().getDay(); 
+    // --- UTILS ---
+    window.exportPlanningPDF = () => {
+        const element = document.querySelector('.dashboard-container');
+        html2pdf().set({
+            margin: 5, filename: `Mon_Espace_WebNote.pdf`,
+            image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        }).from(element).save();
+    };
 
-            daysOfWeek.forEach((day, index) => {
-                const isToday = index === todayIndex;
-                const tasks = scheduleData[day] || [];
-                tasks.sort((a, b) => a.start.localeCompare(b.start));
+    window.logout = () => signOut(auth);
 
-                let taskHtml = "";
-                if(tasks.length === 0) taskHtml = `<div class="empty-day">Aucune activité prévue</div>`;
-                else {
-                    tasks.forEach((task, tIndex) => {
-                        taskHtml += `
-                        <div class="task-item" style="--task-color: ${task.color}" onclick="openTaskModal('${day}', ${tIndex})">
-                            <div class="task-icon-box"><i class="fas ${task.icon}"></i></div>
-                            <div class="task-details">
-                                <div class="task-time">${task.start} - ${task.end}</div>
-                                <div class="task-title">${task.title}</div>
-                            </div>
-                        </div>`;
-                    });
-                }
-                const dayHtml = `
-                <div class="day-row">
-                    <div class="day-header">
-                        <span class="day-name ${isToday ? 'active-day' : ''}">${day} ${isToday ? '(Aujourd\'hui)' : ''}</span>
-                        <button class="add-task-btn" onclick="openTaskModal('${day}', null)"><i class="fas fa-plus"></i></button>
-                    </div>
-                    <div class="task-list">${taskHtml}</div>
-                </div>`;
-                container.insertAdjacentHTML('beforeend', dayHtml);
-            });
-        }
-
-        // --- TASK MODAL ---
-        function renderIconSelector() {
-            const container = document.getElementById('iconSelector');
-            container.innerHTML = iconPresets.map((preset, idx) => `
-                <div class="icon-option ${idx === 0 ? 'selected' : ''}" style="color:${preset.color}" onclick="selectIcon(${idx})">
-                    <i class="fas ${preset.icon}"></i>
-                </div>
-            `).join('');
-        }
-
-        window.selectIcon = (idx) => {
-            selectedIconIdx = idx;
-            document.querySelectorAll('.icon-option').forEach((el, i) => el.classList.toggle('selected', i === idx));
-        };
-
-        window.openTaskModal = (day, index) => {
-            currentEditDay = day;
-            currentEditIndex = index;
-            const modal = document.getElementById('taskModal');
-            const btnDelete = document.getElementById('btnDeleteTask');
-
-            if (index === null) {
-                document.getElementById('modalTaskTitle').innerText = "Ajouter : " + day;
-                document.getElementById('taskInputTitle').value = "";
-                document.getElementById('taskInputStart').value = "09:00";
-                document.getElementById('taskInputEnd').value = "10:00";
-                selectIcon(0);
-                btnDelete.style.display = 'none';
-            } else {
-                const task = scheduleData[day][index];
-                document.getElementById('modalTaskTitle').innerText = "Modifier";
-                document.getElementById('taskInputTitle').value = task.title;
-                document.getElementById('taskInputStart').value = task.start;
-                document.getElementById('taskInputEnd').value = task.end;
-                const iconIdx = iconPresets.findIndex(p => p.icon === task.icon);
-                selectIcon(iconIdx >= 0 ? iconIdx : 0);
-                btnDelete.style.display = 'block';
-            }
-            modal.classList.add('open');
-            modal.style.display = 'grid';
-        };
-
-        window.closeTaskModal = () => {
-            document.getElementById('taskModal').classList.remove('open');
-            setTimeout(() => document.getElementById('taskModal').style.display = 'none', 300);
-        };
-
-        window.saveTask = async () => {
-            if(!currentUser || !currentEditDay) return;
-            const title = document.getElementById('taskInputTitle').value;
-            const start = document.getElementById('taskInputStart').value;
-            const end = document.getElementById('taskInputEnd').value;
-            const iconData = iconPresets[selectedIconIdx];
-
-            if(!title) return alert("Titre requis");
-
-            const newTask = { title, start, end, icon: iconData.icon, color: iconData.color };
-            let dayTasks = scheduleData[currentEditDay] || [];
-            if(currentEditIndex !== null) dayTasks[currentEditIndex] = newTask;
-            else dayTasks.push(newTask);
-
-            await setDoc(doc(db, "user_schedule", currentUser.uid), { [currentEditDay]: dayTasks }, { merge: true });
-            closeTaskModal();
-        };
-
-        window.deleteTask = async () => {
-            if(!currentUser || !currentEditDay || currentEditIndex === null) return;
-            if(confirm("Supprimer cette activité ?")) {
-                let dayTasks = scheduleData[currentEditDay];
-                dayTasks.splice(currentEditIndex, 1);
-                await setDoc(doc(db, "user_schedule", currentUser.uid), { [currentEditDay]: dayTasks }, { merge: true });
-                closeTaskModal();
-            }
-        };
-
-        // --- NOTES & GOALS ---
-        window.switchTab = async (tabName) => {
-            await saveNoteImmediate();
-            currentTab = tabName;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            const snap = await getDoc(doc(db, "user_notes", currentUser.uid));
-            document.getElementById('noteArea').value = snap.exists() ? (snap.data()[tabName] || "") : "";
-        };
-
-        const noteArea = document.getElementById('noteArea');
-        noteArea.addEventListener('input', () => {
-            document.getElementById('saveIndicator').style.opacity = '0';
-            clearTimeout(typingTimeout);
-            typingTimeout = setTimeout(saveNoteImmediate, 1000);
-        });
-
-        async function saveNoteImmediate() {
-            if(!currentUser) return;
-            await setDoc(doc(db, "user_notes", currentUser.uid), { [currentTab]: noteArea.value }, { merge: true });
-            document.getElementById('saveIndicator').style.opacity = '1';
-        }
-
-        window.editGoal = () => {
-            document.getElementById('goalDisplay').style.display = 'none';
-            document.getElementById('goalSetup').style.display = 'block';
-            const currentTitle = document.getElementById('goalTitleDisplay').innerText;
-            if(currentTitle !== "Titre") document.getElementById('newGoalName').value = currentTitle;
-        };
-
-        window.setNewGoal = async () => {
-            const name = document.getElementById('newGoalName').value;
-            const days = parseInt(document.getElementById('newGoalDays').value);
-            if(name && days) await setDoc(doc(db, "user_profiles", currentUser.uid), { activeGoal: { name, target: days, current: 0, lastUpdated: null } }, { merge: true });
-        };
-
-        window.checkGoalDay = async () => {
-            const snap = await getDoc(doc(db, "user_profiles", currentUser.uid));
-            const data = snap.data().activeGoal;
-            const todayStr = new Date().toDateString();
-            if(data.lastUpdated !== todayStr) {
-                await setDoc(doc(db, "user_profiles", currentUser.uid), { activeGoal: { ...data, current: Math.min(data.current + 1, data.target), lastUpdated: todayStr } }, { merge: true });
-            } else alert("Déjà validé aujourd'hui !");
-        };
-
-        // --- CALENDAR & UTILS ---
-        window.changeMonth = (delta) => { currentDate.setMonth(currentDate.getMonth() + delta); renderCalendar(); };
-        
-        function renderCalendar() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            document.getElementById('calMonthYear').innerText = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' }).format(currentDate);
-            const firstDayIndex = new Date(year, month, 1).getDay(); 
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const today = new Date();
-            let html = "";
-            for(let i=0; i<firstDayIndex; i++) html += `<div></div>`;
-            for(let i=1; i<=daysInMonth; i++) {
-                let cl = "cal-day current-month";
-                if(today.getMonth()===month && today.getDate()===i) cl += " today";
-                html += `<div class="${cl}">${i}</div>`;
-            }
-            document.getElementById('calendarDays').innerHTML = html;
-        }
-
-        function checkFirstTime() {
-            if(!localStorage.getItem('webnote_v3')) {
-                const modal = document.getElementById('welcomeModal');
-                modal.classList.add('open'); modal.style.display = 'grid';
-            }
-        }
-        window.closeModal = () => {
-            document.getElementById('welcomeModal').classList.remove('open');
-            setTimeout(() => document.getElementById('welcomeModal').style.display = 'none', 300);
-            localStorage.setItem('webnote_v3', 'true');
-        };
-        window.logout = () => signOut(auth);
-
-    </script>
+</script>
 </body>
-    </html>
+            </html>

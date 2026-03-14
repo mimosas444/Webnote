@@ -1,504 +1,1257 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>WebNote - Connexion Sécurisée</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>WebNote — Connexion</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden}
 
-  <style>
-    :root {
-      --font-main: 'Plus Jakarta Sans', sans-serif;
-      --accent: #6366f1;
-      --accent-glow: rgba(99, 102, 241, 0.4);
-    }
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;min-height:100vh;
+}
 
-    /* --- THÈMES DYNAMIQUES --- */
-    
-    /* MATIN (02h - 11h59) */
-    body.is-day {
-      --bg: linear-gradient(135deg, #e0f2fe 0%, #38bdf8 100%);
-      --card: rgba(255, 255, 255, 0.75);
-      --border: rgba(255, 255, 255, 0.6);
-      --text: #0f172a;
-      --text-dim: #475569;
-      --input: rgba(255, 255, 255, 0.6);
-      --widget-bg: rgba(255, 255, 255, 0.4);
-      --widget-text: #0f172a;
-      --celestial: radial-gradient(circle at 30% 30%, #fff7ed, #fcd34d);
-      --celestial-shadow: rgba(253, 186, 116, 0.6);
-      --celestial-anim: floatDay 8s infinite ease-in-out;
-    }
+/* ── CANVAS SKY ── */
+#skyCanvas{
+  position:fixed;inset:0;width:100%;height:100%;z-index:0;
+}
 
-    /* APRÈS-MIDI (12h - 17h59) */
-    body.is-afternoon {
-      --bg: linear-gradient(135deg, #fcd34d 0%, #f97316 50%, #db2777 100%);
-      --card: rgba(255, 255, 255, 0.65);
-      --border: rgba(255, 255, 255, 0.4);
-      --text: #4a044e;
-      --text-dim: #86198f;
-      --input: rgba(255, 255, 255, 0.5);
-      --widget-bg: rgba(255, 255, 255, 0.3);
-      --widget-text: #4a044e;
-      --celestial: radial-gradient(circle at 40% 40%, #fde047, #f97316);
-      --celestial-shadow: rgba(234, 88, 12, 0.8);
-      --celestial-anim: floatSunset 10s infinite cubic-bezier(0.4, 0, 0.2, 1);
-    }
+/* ── DATETIME WIDGET ── */
+.dt-widget{
+  position:fixed;top:24px;left:24px;z-index:20;
+  display:flex;flex-direction:column;gap:8px;
+}
+.dt-pill{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 16px;border-radius:20px;
+  font-size:.82rem;font-weight:600;letter-spacing:.2px;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--pill-border, rgba(255,255,255,.25));
+  background:var(--pill-bg, rgba(255,255,255,.15));
+  color:var(--pill-text, #fff);
+  animation:fadeSlideDown .8s cubic-bezier(.23,1,.32,1) both;
+  white-space:nowrap;
+}
+.dt-pill:nth-child(2){animation-delay:.1s}
+.dt-pill i{font-size:.8rem;opacity:.8}
+@keyframes fadeSlideDown{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
 
-    /* SOIR / NUIT (18h - 01h59) */
-    body.is-night {
-      --bg: linear-gradient(135deg, #0f172a 0%, #312e81 100%);
-      --card: rgba(15, 23, 42, 0.65);
-      --border: rgba(255, 255, 255, 0.1);
-      --text: #f8fafc;
-      --text-dim: #94a3b8;
-      --input: rgba(2, 6, 23, 0.4);
-      --widget-bg: rgba(15, 23, 42, 0.5);
-      --widget-text: #f8fafc;
-      --celestial: radial-gradient(circle at 30% 30%, #f8fafc, #94a3b8);
-      --celestial-shadow: rgba(148, 163, 184, 0.3);
-      --celestial-anim: floatNight 12s infinite ease-in-out;
-    }
+/* ── CARD ── */
+.card-wrap{
+  position:relative;z-index:10;
+  width:calc(100% - 32px);max-width:420px;
+  animation:cardReveal .9s cubic-bezier(.16,1,.3,1) both;
+  animation-delay:.15s;
+}
+@keyframes cardReveal{
+  from{opacity:0;transform:scale(.94) translateY(28px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    html { height: 100%; }
+.card{
+  background:var(--card-bg, rgba(255,255,255,.12));
+  backdrop-filter:blur(40px) saturate(160%);
+  -webkit-backdrop-filter:blur(40px) saturate(160%);
+  border:1px solid var(--card-border, rgba(255,255,255,.25));
+  border-radius:32px;
+  padding:38px 36px 32px;
+  box-shadow:0 32px 80px -12px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.3);
+  transition:background .6s, border .6s;
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 55%);
+  pointer-events:none;
+}
 
-    body {
-      font-family: var(--font-main);
-      background: var(--bg);
-      /* Modification Responsive : min-height et fixed pour couvrir tout l'écran mobile */
-      min-height: 100vh;
-      width: 100%;
-      background-attachment: fixed;
-      background-size: cover;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow-x: hidden; /* Cache le débordement horizontal uniquement */
-      transition: background 1.5s ease-in-out;
-    }
+/* ── LOGO ── */
+.logo-row{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.logo-icon{
+  width:46px;height:46px;border-radius:14px;
+  background:linear-gradient(135deg,#6366f1,#a855f7);
+  display:grid;place-items:center;color:#fff;font-size:1.1rem;
+  box-shadow:0 8px 24px rgba(99,102,241,.45);flex-shrink:0;
+}
+.logo-text{font-size:1.4rem;font-weight:900;letter-spacing:-1px;color:var(--card-text,#fff);line-height:1}
+.logo-sub{font-size:.72rem;font-weight:500;color:var(--card-text-dim,rgba(255,255,255,.6));margin-top:2px}
 
-    /* --- WIDGET DATE & HEURE --- */
-    .datetime-widget {
-      position: absolute;
-      top: 30px; left: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      z-index: 20;
-    }
-    
-    /* Responsive position for widget on mobile */
-    @media (max-width: 600px) {
-        .datetime-widget { top: 15px; left: 15px; }
-        .dt-row { padding: 8px 12px; font-size: 0.8rem; }
-    }
+/* ── GREETING ── */
+.greeting{
+  margin-bottom:24px;
+}
+.greeting h2{
+  font-size:1.7rem;font-weight:800;letter-spacing:-1px;
+  color:var(--card-text,#fff);line-height:1.1;margin-bottom:5px;
+}
+.greeting p{font-size:.88rem;color:var(--card-text-dim,rgba(255,255,255,.65));line-height:1.5}
 
-    .dt-row {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 18px;
-      background: var(--widget-bg);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      color: var(--widget-text);
-      font-weight: 600;
-      font-size: 0.9rem;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      animation: fadeInDown 1s ease-out;
-    }
+/* ── METHOD TABS ── */
+.method-tabs{
+  display:flex;background:rgba(0,0,0,.15);border-radius:12px;padding:3px;
+  margin-bottom:20px;gap:2px;
+  border:1px solid var(--card-border,rgba(255,255,255,.15));
+}
+.m-tab{
+  flex:1;padding:8px;border:none;background:transparent;
+  font-family:inherit;font-size:.8rem;font-weight:600;
+  color:var(--card-text-dim,rgba(255,255,255,.55));border-radius:9px;cursor:pointer;
+  transition:.25s;display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.m-tab.active{
+  background:rgba(255,255,255,.18);color:var(--card-text,#fff);
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
 
-    .dt-icon { width: 18px; height: 18px; opacity: 0.8; }
-    
-    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+/* ── FORM ── */
+.form-fields{display:flex;flex-direction:column;gap:12px;margin-bottom:14px}
 
-    /* --- OISEAUX (Visible seulement le jour) --- */
-    .bird-container {
-      position: absolute; top: 15%; left: -100px;
-      z-index: 2; opacity: 0;
-      pointer-events: none;
-    }
-    /* MODIFICATION : Durée passée à 20s pour espacer les passages */
-    body.is-day .bird-container { opacity: 0.8; animation: flyBird 20s linear infinite; }
-    
-    .bird-svg { width: 40px; height: 40px; fill: var(--text-dim); }
-    
-    /* MODIFICATION : L'oiseau traverse l'écran de 0% à 40%, puis attend (pause) jusqu'à 100% */
-    @keyframes flyBird {
-      0% { transform: translateX(-10vw) translateY(0) scale(0.8); }
-      10% { transform: translateX(20vw) translateY(-20px) scale(0.9); }
-      20% { transform: translateX(50vw) translateY(10px) scale(1); }
-      30% { transform: translateX(80vw) translateY(-15px) scale(0.9); }
-      40% { transform: translateX(120vw) translateY(0) scale(0.8); }
-      100% { transform: translateX(120vw) translateY(0) scale(0.8); } /* Pause */
-    }
+.field{
+  position:relative;
+  animation:fieldIn .4s cubic-bezier(.23,1,.32,1) both;
+}
+@keyframes fieldIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-    /* --- ÉTOILES FILANTES (Visible seulement la nuit) --- */
-    .shooting-star {
-      position: absolute;
-      top: 50%; left: 50%;
-      height: 2px;
-      background: linear-gradient(-45deg, rgba(255,255,255,1), rgba(255,255,255,0));
-      border-radius: 999px;
-      filter: drop-shadow(0 0 6px rgba(255,255,255,1));
-      /* MODIFICATION : Durée totale 10s pour espacer les apparitions */
-      animation: tail 10s ease-in-out infinite, shooting 10s ease-in-out infinite;
-      opacity: 0; z-index: 1;
-    }
+.field-icon{
+  position:absolute;left:15px;top:50%;transform:translateY(-50%);
+  color:var(--card-text-dim,rgba(255,255,255,.5));font-size:.88rem;
+  pointer-events:none;transition:color .2s;z-index:1;
+}
+.field input{
+  width:100%;padding:14px 44px;
+  background:var(--input-bg,rgba(255,255,255,.1));
+  border:1.5px solid var(--input-border,rgba(255,255,255,.15));
+  border-radius:14px;color:var(--card-text,#fff);
+  font-family:inherit;font-size:.92rem;font-weight:500;outline:none;
+  transition:border .25s,background .25s,box-shadow .25s;
+  -webkit-text-fill-color:var(--card-text,#fff);
+}
+.field input::placeholder{color:var(--card-text-dim,rgba(255,255,255,.4));-webkit-text-fill-color:var(--card-text-dim,rgba(255,255,255,.4))}
+.field input:focus{
+  border-color:rgba(139,92,246,.7);
+  background:var(--input-focus-bg,rgba(255,255,255,.15));
+  box-shadow:0 0 0 3px rgba(139,92,246,.18);
+}
+.field input:focus~.field-icon, .field:focus-within .field-icon{color:rgba(139,92,246,.9)}
 
-    body.is-night .shooting-star { display: block; }
-    body.is-day .shooting-star, body.is-afternoon .shooting-star { display: none; }
+.eye-btn{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:var(--card-text-dim,rgba(255,255,255,.4));
+  cursor:pointer;font-size:.88rem;padding:4px;transition:.2s;
+  display:flex;align-items:center;
+}
+.eye-btn:hover{color:var(--card-text,#fff)}
 
-    /* Décalage des délais pour ne pas qu'elles partent toutes en même temps dans le cycle de 10s */
-    .shooting-star:nth-child(1) { top: 0; left: 50%; width: 100px; animation-delay: 0s; }
-    .shooting-star:nth-child(2) { top: 20%; left: 80%; width: 150px; animation-delay: 3s; }
-    .shooting-star:nth-child(3) { top: 10%; left: 20%; width: 80px; animation-delay: 6s; }
+/* ── PASSWORD ANIMATION ── */
+.pass-wrap{position:relative}
+.pass-particles{
+  position:absolute;inset:0;border-radius:14px;
+  pointer-events:none;overflow:hidden;
+}
+.pass-particle{
+  position:absolute;bottom:10px;
+  width:5px;height:5px;border-radius:50%;
+  background:rgba(139,92,246,.7);
+  pointer-events:none;
+  animation:floatUp .7s ease-out forwards;
+}
+@keyframes floatUp{
+  0%{transform:translateY(0) scale(1);opacity:.9}
+  100%{transform:translateY(-50px) scale(0);opacity:0}
+}
+.lock-anim{
+  transition:transform .15s cubic-bezier(.34,1.56,.64,1);
+}
+.lock-anim.shake{
+  animation:lockShake .25s ease both;
+}
+@keyframes lockShake{
+  0%,100%{transform:translateY(-50%) rotate(0)}
+  20%{transform:translateY(-50%) rotate(-8deg)}
+  60%{transform:translateY(-50%) rotate(6deg)}
+  80%{transform:translateY(-50%) rotate(-3deg)}
+}
+.lock-anim.unlock{color:rgba(52,211,153,.9)!important}
 
-    /* MODIFICATION : L'animation se joue rapidement (0% à 10%) puis pause (10% à 100%) */
-    @keyframes tail {
-      0% { width: 0; }
-      5% { width: 100px; } /* Rapide */
-      10% { width: 0; }
-      100% { width: 0; } /* Pause */
-    }
-    @keyframes shooting {
-      0% { transform: translateX(0) translateY(0) rotate(45deg); opacity: 1; }
-      10% { transform: translateX(300px) translateY(300px) rotate(45deg); opacity: 0; } /* Rapide */
-      100% { transform: translateX(300px) translateY(300px) rotate(45deg); opacity: 0; } /* Pause */
-    }
+/* ── PASSWORD STRENGTH ── */
+.strength-bar{
+  height:3px;border-radius:2px;
+  background:rgba(255,255,255,.1);margin-top:6px;
+  overflow:hidden;
+}
+.strength-fill{
+  height:100%;width:0%;border-radius:2px;
+  transition:width .4s cubic-bezier(.23,1,.32,1),background .4s;
+}
+.strength-label{
+  font-size:.7rem;font-weight:600;margin-top:4px;
+  color:var(--card-text-dim,rgba(255,255,255,.5));
+  min-height:14px;transition:color .3s;
+}
 
-    /* --- ASTRE CÉLESTE --- */
-    .celestial-body {
-      position: absolute;
-      top: 10%; right: 10%;
-      width: 120px; height: 120px;
-      border-radius: 50%;
-      background: var(--celestial);
-      box-shadow: 0 0 60px var(--celestial-shadow), inset -10px -10px 20px rgba(0,0,0,0.1);
-      z-index: 1;
-      animation: var(--celestial-anim);
-      transition: all 1.5s ease;
-    }
-    
-    /* Responsive celestial body */
-    @media (max-width: 600px) {
-        .celestial-body { width: 80px; height: 80px; top: 5%; right: 5%; }
-    }
+/* ── UNIQUE ID BADGE ── */
+.uid-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 14px;border-radius:10px;
+  background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3);
+  font-size:.78rem;font-weight:700;color:rgba(167,139,250,.9);
+  margin-top:4px;cursor:pointer;transition:.2s;
+  user-select:none;
+}
+.uid-badge:hover{background:rgba(139,92,246,.25)}
+.uid-badge i{font-size:.75rem}
+.uid-num{letter-spacing:2px;font-size:.82rem}
 
-    @keyframes floatDay { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-15px) scale(1.05); } }
-    @keyframes floatSunset { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(20px) scale(0.95); } }
-    @keyframes floatNight { 0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.9; } 50% { transform: translate(-10px, -15px) rotate(5deg); opacity: 1; } }
+/* ── INFO BOX ── */
+.info-box{
+  background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.25);
+  border-radius:10px;padding:10px 13px;font-size:.78rem;
+  color:rgba(167,139,250,.9);line-height:1.5;margin-bottom:12px;
+  display:flex;gap:8px;align-items:flex-start;
+}
+.info-box i{flex-shrink:0;margin-top:1px;color:rgba(139,92,246,.8)}
 
-    /* --- DÉCOR DE FOND --- */
-    .star { position: absolute; background: white; border-radius: 50%; opacity: 0; transition: opacity 1s; }
-    body.is-night .star { opacity: 0.6; animation: twinkle var(--d) infinite alternate; }
-    body.is-day .star, body.is-afternoon .star { display: none; }
-    @keyframes twinkle { from { transform: scale(1); opacity: 0.3; } to { transform: scale(1.5); opacity: 0.9; } }
+/* ── SUBMIT BUTTON ── */
+.btn-submit{
+  width:100%;padding:15px;border:none;border-radius:15px;
+  background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  color:#fff;font-family:inherit;font-size:.97rem;font-weight:700;
+  cursor:pointer;transition:.25s cubic-bezier(.23,1,.32,1);
+  box-shadow:0 8px 24px rgba(99,102,241,.4);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  position:relative;overflow:hidden;
+}
+.btn-submit::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+  opacity:0;transition:opacity .2s;
+}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(99,102,241,.55)}
+.btn-submit:hover::before{opacity:1}
+.btn-submit:active{transform:translateY(0)}
+.btn-submit.loading{pointer-events:none;opacity:.85}
 
-    /* --- LOGIN CARD --- */
-    .login-card {
-      position: relative; z-index: 10;
-      width: 90%; max-width: 420px;
-      padding: 40px;
-      background: var(--card);
-      backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-      border: 1px solid var(--border);
-      border-radius: 32px;
-      box-shadow: 0 30px 60px -12px rgba(0,0,0,0.25);
-      animation: cardIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-      transition: background 0.5s, border 0.5s;
-      /* Responsive margin */
-      margin: 20px; 
-    }
+.spinner{
+  width:18px;height:18px;border:2.5px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin .7s linear infinite;display:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-    @keyframes cardIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+/* ── DIVIDER ── */
+.divider{
+  display:flex;align-items:center;gap:12px;
+  color:var(--card-text-dim,rgba(255,255,255,.35));
+  font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  margin:16px 0;
+}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--card-border,rgba(255,255,255,.15))}
 
-    .header-section { text-align: center; margin-bottom: 30px; }
-    .logo-box { 
-        width: 50px; height: 50px; background: var(--accent); 
-        border-radius: 14px; display: flex; align-items: center; 
-        justify-content: center; margin: 0 auto 15px; color: white; font-size: 1.5rem;
-        box-shadow: 0 8px 20px var(--accent-glow);
-    }
+/* ── GOOGLE BTN ── */
+.btn-google{
+  width:100%;padding:13px 16px;border-radius:14px;
+  background:rgba(255,255,255,.9);border:1px solid rgba(255,255,255,.4);
+  color:#1f2937;font-family:inherit;font-size:.88rem;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
+  transition:.25s;box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+.btn-google:hover{background:#fff;transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.15)}
 
-    h2 { font-size: 1.8rem; font-weight: 800; color: var(--text); letter-spacing: -0.5px; margin-bottom: 5px; }
-    .greeting-sub { color: var(--text-dim); font-size: 0.95rem; font-weight: 500; }
+/* ── ERROR ── */
+.error-box{
+  background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);
+  border-radius:10px;padding:10px 13px;font-size:.8rem;color:#fca5a5;
+  margin-bottom:12px;display:none;align-items:center;gap:8px;
+  animation:shake .35s ease;
+}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
-    /* --- INPUTS --- */
-    .input-group { position: relative; margin-bottom: 15px; }
-    .input-group input {
-      width: 100%; padding: 16px 20px 16px 50px;
-      background: var(--input); border: 1px solid var(--border);
-      border-radius: 16px; color: var(--text); outline: none;
-      transition: all 0.3s; font-size: 0.95rem; font-weight: 500;
-    }
-    .input-group input:focus { border-color: var(--accent); background: rgba(255,255,255,0.8); }
-    .input-group i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-dim); }
-    .toggle-pass { left: auto !important; right: 18px; cursor: pointer; }
+/* ── FOOTER ── */
+.card-footer{
+  margin-top:18px;text-align:center;
+  font-size:.85rem;color:var(--card-text-dim,rgba(255,255,255,.55));
+}
+.card-footer a{
+  color:rgba(167,139,250,.9);text-decoration:none;font-weight:700;cursor:pointer;
+  transition:.2s;
+}
+.card-footer a:hover{color:#fff}
 
-    .btn-main {
-      width: 100%; padding: 16px; background: var(--accent); color: white;
-      border: none; border-radius: 16px; font-weight: 700; cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-top: 10px; font-size: 1rem;
-    }
-    .btn-main:hover { transform: translateY(-2px); box-shadow: 0 10px 25px var(--accent-glow); }
+/* ── THEME VARS (set by JS) ── */
+body.t-morning{--pill-bg:rgba(255,255,255,.2);--pill-border:rgba(255,255,255,.3);--pill-text:#1e293b;--card-bg:rgba(255,255,255,.18);--card-border:rgba(255,255,255,.35);--card-text:#0f172a;--card-text-dim:rgba(15,23,42,.55);--input-bg:rgba(255,255,255,.25);--input-border:rgba(255,255,255,.4);--input-focus-bg:rgba(255,255,255,.35)}
+body.t-afternoon{--pill-bg:rgba(255,255,255,.18);--pill-border:rgba(255,255,255,.25);--pill-text:#431407;--card-bg:rgba(255,255,255,.15);--card-border:rgba(255,255,255,.3);--card-text:#1c0a00;--card-text-dim:rgba(28,10,0,.5);--input-bg:rgba(255,255,255,.2);--input-border:rgba(255,255,255,.35);--input-focus-bg:rgba(255,255,255,.28)}
+body.t-evening{--pill-bg:rgba(0,0,0,.2);--pill-border:rgba(255,200,100,.2);--pill-text:#fde68a;--card-bg:rgba(15,8,30,.45);--card-border:rgba(255,180,80,.15);--card-text:#fef3c7;--card-text-dim:rgba(254,243,199,.5);--input-bg:rgba(0,0,0,.25);--input-border:rgba(255,180,80,.2);--input-focus-bg:rgba(0,0,0,.32)}
+body.t-night{--pill-bg:rgba(15,12,40,.5);--pill-border:rgba(255,255,255,.08);--pill-text:#e2e8f0;--card-bg:rgba(8,6,24,.55);--card-border:rgba(255,255,255,.1);--card-text:#f1f5f9;--card-text-dim:rgba(241,245,249,.45);--input-bg:rgba(0,0,0,.3);--input-border:rgba(255,255,255,.1);--input-focus-bg:rgba(0,0,0,.4)}
 
-    .divider { margin: 25px 0; display: flex; align-items: center; color: var(--text-dim); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); margin: 0 15px; opacity: 0.5; }
-
-    /* --- GOOGLE BUTTON PRO --- */
-    .btn-google {
-      width: 100%; padding: 14px 16px; background: #ffffff; color: #1f2937;
-      border: 1px solid #e2e8f0; border-radius: 16px; font-weight: 600;
-      display: flex; align-items: center; justify-content: center; gap: 12px;
-      cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-    .btn-google:hover { background: #f8fafc; border-color: #cbd5e1; transform: translateY(-1px); }
-    .google-icon-svg { width: 22px; height: 22px; }
-
-    .footer-link { margin-top: 25px; text-align: center; font-size: 0.9rem; color: var(--text-dim); }
-    .footer-link a { color: var(--accent); text-decoration: none; font-weight: 700; cursor: pointer; }
-
-    #error-box { background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 12px; border-radius: 12px; font-size: 0.85rem; margin-bottom: 15px; display: none; text-align: center; border: 1px solid rgba(239, 68, 68, 0.2); }
-    
-    .spinner { display: none; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
+/* ── RESPONSIVE ── */
+@media(max-width:480px){
+  .card{padding:28px 22px 24px}
+  .card-wrap{width:calc(100% - 24px)}
+  .dt-widget{top:16px;left:16px}
+  .dt-pill{padding:7px 12px;font-size:.75rem}
+  .logo-text{font-size:1.2rem}
+  .greeting h2{font-size:1.45rem}
+  .method-tabs{gap:1px}
+  .m-tab{font-size:.73rem;padding:7px 4px}
+}
+</style>
 </head>
-<body class="is-night">
+<body>
 
-  <div class="datetime-widget">
-    <div class="dt-row">
-      <svg class="dt-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-      </svg>
-      <span id="date-display">-- -- --</span>
-    </div>
-    <div class="dt-row">
-      <svg class="dt-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-      <span id="time-display">--:--</span>
-    </div>
-  </div>
+<!-- SKY CANVAS -->
+<canvas id="skyCanvas"></canvas>
 
-  <div id="stars-container"></div>
-  
-  <div class="shooting-star"></div>
-  <div class="shooting-star"></div>
-  <div class="shooting-star"></div>
+<!-- DATETIME WIDGET -->
+<div class="dt-widget">
+  <div class="dt-pill"><i class="fas fa-calendar-alt"></i><span id="dateDisp">—</span></div>
+  <div class="dt-pill"><i class="fas fa-clock"></i><span id="timeDisp">—</span></div>
+</div>
 
-  <div class="bird-container">
-    <svg class="bird-svg" viewBox="0 0 512 512">
-      <path d="M496 16c-37.3 0-69.6 22-87.3 53.9-20.9-4.8-42.5-6.5-64.4-6.5-120.7 0-222 84.4-249.7 197.6-6.6-1.9-13.6-2.9-20.6-2.9C33.1 258.1 0 291.2 0 332.1c0 40.9 33.1 74 74 74 21.2 0 40.3-8.9 53.9-23.1C160.7 465.1 239.5 512 328 512c101.6 0 184-82.4 184-184 0-16.6-2.2-32.7-6.4-48.1C509.3 275.5 512 269.9 512 264c0-26.5-21.5-48-48-48-5.9 0-11.5 1.1-16.7 3.1C455 204.6 464 189.5 464 172.9c0-50.5-38.6-91.8-88-96.6C392.3 36.6 440.4 16 496 16zM156.9 281.3c21-72.1 82.3-126.9 157.6-139.1 1.7 8.5 2.7 17.3 2.7 26.4 0 57.3-39.7 105.1-92.4 119.2-22.3 5.9-44.5 1.3-64-5.3-.9-.4-2-.8-2.9-1.2h-1z"/>
-    </svg>
-  </div>
-  <div class="bird-container" style="top: 25%; left: -200px; animation-delay: 5s;">
-    <svg class="bird-svg" viewBox="0 0 512 512" style="transform: scale(0.7);">
-      <path d="M496 16c-37.3 0-69.6 22-87.3 53.9-20.9-4.8-42.5-6.5-64.4-6.5-120.7 0-222 84.4-249.7 197.6-6.6-1.9-13.6-2.9-20.6-2.9C33.1 258.1 0 291.2 0 332.1c0 40.9 33.1 74 74 74 21.2 0 40.3-8.9 53.9-23.1C160.7 465.1 239.5 512 328 512c101.6 0 184-82.4 184-184 0-16.6-2.2-32.7-6.4-48.1C509.3 275.5 512 269.9 512 264c0-26.5-21.5-48-48-48-5.9 0-11.5 1.1-16.7 3.1C455 204.6 464 189.5 464 172.9c0-50.5-38.6-91.8-88-96.6C392.3 36.6 440.4 16 496 16zM156.9 281.3c21-72.1 82.3-126.9 157.6-139.1 1.7 8.5 2.7 17.3 2.7 26.4 0 57.3-39.7 105.1-92.4 119.2-22.3 5.9-44.5 1.3-64-5.3-.9-.4-2-.8-2.9-1.2h-1z"/>
-    </svg>
-  </div>
+<!-- CARD -->
+<div class="card-wrap">
+  <div class="card">
 
-  <div class="celestial-body"></div>
-
-  <div class="login-card">
-    <div class="header-section">
-      <div class="logo-box"><i class="fas fa-feather-pointed"></i></div>
-      <h2 id="greeting">Bonsoir</h2>
-      <p class="greeting-sub" id="subtitle">Heureux de vous revoir sur WebNote.</p>
+    <!-- Logo -->
+    <div class="logo-row">
+      <div class="logo-icon"><i class="fas fa-feather-pointed"></i></div>
+      <div>
+        <div class="logo-text">WebNote</div>
+        <div class="logo-sub">Votre espace productivité</div>
+      </div>
     </div>
 
-    <div id="error-box"></div>
+    <!-- Greeting -->
+    <div class="greeting">
+      <h2 id="greetingH">Bonsoir 👋</h2>
+      <p id="greetingP">Heureux de vous revoir sur WebNote.</p>
+    </div>
 
+    <!-- Method tabs -->
+    <div class="method-tabs">
+      <button class="m-tab active" id="tabUser" onclick="setMethod('user')">
+        <i class="fas fa-fingerprint"></i> Identifiant
+      </button>
+      <button class="m-tab" id="tabEmail" onclick="setMethod('email')">
+        <i class="fas fa-envelope"></i> Email
+      </button>
+    </div>
+
+    <!-- Error -->
+    <div class="error-box" id="errBox"><i class="fas fa-exclamation-triangle"></i><span id="errTxt"></span></div>
+
+    <!-- Form -->
     <form id="authForm" onsubmit="return false;">
-      <div class="input-group" id="user-field" style="display: none;">
-        <i class="fas fa-at"></i>
-        <input type="text" id="username" placeholder="Pseudo unique">
-      </div>
-      
-      <div class="input-group">
-        <i class="fas fa-envelope"></i>
-        <input type="email" id="email" placeholder="Email" required>
-      </div>
-      
-      <div class="input-group">
-        <i class="fas fa-lock"></i>
-        <input type="password" id="password" placeholder="Mot de passe" required>
-        <i class="fas fa-eye toggle-pass" id="eye"></i>
+      <div class="form-fields" id="formFields">
+        <!-- JS injects fields here -->
       </div>
 
-      <button type="submit" id="btnSubmit" class="btn-main">
-        <span id="btnText">Se connecter</span>
+      <!-- Unique ID display (register only) -->
+      <div id="uidRow" style="display:none;margin-bottom:14px">
+        <div class="info-box">
+          <i class="fas fa-info-circle"></i>
+          <span>Votre identifiant unique vous permet de vous connecter depuis n'importe quel appareil. Notez-le précieusement.</span>
+        </div>
+        <div class="uid-badge" onclick="regenUid()" title="Regénérer">
+          <i class="fas fa-hashtag"></i>
+          <span class="uid-num" id="uidDisplay">—</span>
+          <i class="fas fa-refresh" style="opacity:.6;font-size:.7rem"></i>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" id="btnSubmit" onclick="handleAuth()">
+        <i class="fas fa-arrow-right-to-bracket" id="btnIcon"></i>
+        <span id="btnTxt">Se connecter</span>
         <div class="spinner" id="spinner"></div>
       </button>
     </form>
 
     <div class="divider">ou</div>
-    
-    <button id="googleBtn" class="btn-google">
-      <svg class="google-icon-svg" viewBox="0 0 48 48">
-        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
-        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
-        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24s.92 7.54 2.56 10.78l7.97-6.19z"></path>
-        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+
+    <button class="btn-google" onclick="googleAuth()">
+      <svg width="20" height="20" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24s.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
       </svg>
-      <span>Continuer avec Google</span>
+      Continuer avec Google
     </button>
 
-    <div class="footer-link">
-      <span id="toggleText">Pas de compte ?</span> 
-      <a id="btnToggle">Créer un profil</a>
+    <div class="card-footer">
+      <span id="footerTxt">Pas de compte ?</span>
+      <a id="footerLink" onclick="toggleMode()"> Créer un profil</a>
     </div>
+
   </div>
+</div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
-      authDomain: "webnote-9ea1e.firebaseapp.com",
-      projectId: "webnote-9ea1e",
-      storageBucket: "webnote-9ea1e.firebasestorage.app",
-      messagingSenderId: "869875049003",
-      appId: "1:869875049003:web:0f7334733cb313e426406e"
+const firebaseConfig = {
+  apiKey:"AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
+  authDomain:"webnote-9ea1e.firebaseapp.com",
+  projectId:"webnote-9ea1e",
+  storageBucket:"webnote-9ea1e.firebasestorage.app",
+  messagingSenderId:"869875049003",
+  appId:"1:869875049003:web:0f7334733cb313e426406e"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+// ── STATE ──
+let isLogin = true;
+let method = 'user'; // 'user' or 'email'
+let generatedUid = '';
+
+// ── UID GENERATOR ──
+function genUid() {
+  const a = Math.floor(1000 + Math.random()*9000);
+  const b = Math.floor(1000 + Math.random()*9000);
+  return `${a}-${b}`;
+}
+window.regenUid = () => {
+  generatedUid = genUid();
+  document.getElementById('uidDisplay').textContent = generatedUid;
+  const badge = document.querySelector('.uid-badge');
+  badge.style.transform = 'scale(.95)';
+  setTimeout(() => badge.style.transform = '', 150);
+};
+
+// ── RENDER FIELDS ──
+function renderFields() {
+  const container = document.getElementById('formFields');
+  container.innerHTML = '';
+
+  if (method === 'user') {
+    if (isLogin) {
+      // Login: pseudo + optional uid code + password
+      container.innerHTML = `
+        <div class="field" style="animation-delay:0s">
+          <i class="fas fa-at field-icon"></i>
+          <input type="text" id="f-pseudo" placeholder="Votre pseudo" autocomplete="username">
+        </div>
+        <div class="field" style="animation-delay:.05s">
+          <i class="fas fa-hashtag field-icon"></i>
+          <input type="text" id="f-uidcode" placeholder="Code identifiant (ex: 4821-7635)" autocomplete="off" maxlength="9">
+        </div>
+        <div class="field pass-wrap" style="animation-delay:.1s">
+          <i class="fas fa-lock field-icon lock-anim" id="lockIcon"></i>
+          <input type="password" id="f-pass" placeholder="Mot de passe" autocomplete="current-password">
+          <button type="button" class="eye-btn" id="eyeBtn"><i class="fas fa-eye" id="eyeIcon"></i></button>
+          <div class="pass-particles" id="passParticles"></div>
+        </div>`;
+    } else {
+      // Register: pseudo + password + confirm
+      container.innerHTML = `
+        <div class="field" style="animation-delay:0s">
+          <i class="fas fa-user field-icon"></i>
+          <input type="text" id="f-pseudo" placeholder="Choisissez un pseudo" autocomplete="username">
+        </div>
+        <div class="field pass-wrap" style="animation-delay:.05s">
+          <i class="fas fa-lock field-icon lock-anim" id="lockIcon"></i>
+          <input type="password" id="f-pass" placeholder="Mot de passe" autocomplete="new-password">
+          <button type="button" class="eye-btn" id="eyeBtn"><i class="fas fa-eye" id="eyeIcon"></i></button>
+          <div class="pass-particles" id="passParticles"></div>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+        <div class="strength-label" id="strengthLabel"></div>
+        <div class="field" style="animation-delay:.1s">
+          <i class="fas fa-lock-open field-icon"></i>
+          <input type="password" id="f-pass2" placeholder="Confirmer le mot de passe" autocomplete="new-password">
+        </div>
+        <div class="field" style="animation-delay:.15s">
+          <i class="fas fa-envelope field-icon"></i>
+          <input type="email" id="f-email" placeholder="Email (optionnel, pour récupération)">
+        </div>`;
+    }
+  } else {
+    // Email method
+    container.innerHTML = `
+      <div class="field" style="animation-delay:0s">
+        <i class="fas fa-envelope field-icon"></i>
+        <input type="email" id="f-email" placeholder="Adresse email" autocomplete="email">
+      </div>
+      ${!isLogin ? `<div class="field" style="animation-delay:.05s">
+        <i class="fas fa-user field-icon"></i>
+        <input type="text" id="f-pseudo" placeholder="Votre pseudo" autocomplete="username">
+      </div>` : ''}
+      <div class="field pass-wrap" style="animation-delay:${!isLogin ? '.1' : '.05'}s">
+        <i class="fas fa-lock field-icon lock-anim" id="lockIcon"></i>
+        <input type="password" id="f-pass" placeholder="Mot de passe" autocomplete="${isLogin ? 'current' : 'new'}-password">
+        <button type="button" class="eye-btn" id="eyeBtn"><i class="fas fa-eye" id="eyeIcon"></i></button>
+        <div class="pass-particles" id="passParticles"></div>
+      </div>
+      ${!isLogin ? `<div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+      <div class="strength-label" id="strengthLabel"></div>` : ''}`;
+  }
+
+  // Show/hide UID row
+  const uidRow = document.getElementById('uidRow');
+  if (method === 'user' && !isLogin) {
+    uidRow.style.display = 'block';
+    if (!generatedUid) regenUid();
+    else document.getElementById('uidDisplay').textContent = generatedUid;
+  } else {
+    uidRow.style.display = 'none';
+  }
+
+  // Bind password events
+  bindPassEvents();
+}
+
+// ── PASSWORD EVENTS ──
+function bindPassEvents() {
+  const passInput = document.getElementById('f-pass');
+  const eyeBtn = document.getElementById('eyeBtn');
+  const lockIcon = document.getElementById('lockIcon');
+
+  if (!passInput) return;
+
+  passInput.addEventListener('input', () => {
+    spawnParticles();
+    animateLock();
+    updateStrength(passInput.value);
+  });
+
+  if (eyeBtn) {
+    eyeBtn.onclick = () => {
+      const t = passInput.type === 'password' ? 'text' : 'password';
+      passInput.type = t;
+      document.getElementById('eyeIcon').className = t === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
     };
+  }
+}
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
+function spawnParticles() {
+  const container = document.getElementById('passParticles');
+  if (!container) return;
+  for (let i = 0; i < 3; i++) {
+    const p = document.createElement('div');
+    p.className = 'pass-particle';
+    p.style.left = (10 + Math.random() * 80) + '%';
+    p.style.animationDelay = (Math.random() * .2) + 's';
+    const colors = ['rgba(139,92,246,.8)', 'rgba(167,139,250,.7)', 'rgba(196,181,253,.6)', 'rgba(99,102,241,.8)'];
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.width = p.style.height = (3 + Math.random() * 4) + 'px';
+    container.appendChild(p);
+    setTimeout(() => p.remove(), 900);
+  }
+}
 
-    // --- ANIMATION ÉTOILES (Seulement visibles la nuit grâce au CSS) ---
-    const container = document.getElementById('stars-container');
-    for (let i = 0; i < 50; i++) {
-      const star = document.createElement('div');
-      star.className = 'star';
-      star.style.left = Math.random() * 100 + '%';
-      star.style.top = Math.random() * 100 + '%';
-      star.style.width = star.style.height = Math.random() * 3 + 'px';
-      star.style.setProperty('--d', (Math.random() * 3 + 2) + 's');
-      container.appendChild(star);
+let lockTimeout;
+function animateLock() {
+  const lock = document.getElementById('lockIcon');
+  if (!lock) return;
+  lock.classList.remove('shake');
+  void lock.offsetWidth;
+  lock.classList.add('shake');
+  clearTimeout(lockTimeout);
+  lockTimeout = setTimeout(() => lock.classList.remove('shake'), 300);
+  // Check if pass input has value → unlock color
+  const val = document.getElementById('f-pass')?.value || '';
+  lock.classList.toggle('unlock', val.length >= 6);
+}
+
+function updateStrength(val) {
+  const fill = document.getElementById('strengthFill');
+  const label = document.getElementById('strengthLabel');
+  if (!fill || !label) return;
+  let score = 0;
+  if (val.length >= 8) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  const levels = [
+    { w: '0%', c: 'transparent', t: '' },
+    { w: '25%', c: '#ef4444', t: 'Trop faible' },
+    { w: '50%', c: '#f97316', t: 'Faible' },
+    { w: '75%', c: '#fbbf24', t: 'Moyen' },
+    { w: '100%', c: '#34d399', t: 'Fort 🔒' },
+  ];
+  const l = val.length === 0 ? levels[0] : levels[Math.max(1, score + 1)] || levels[4];
+  fill.style.width = l.w;
+  fill.style.background = l.c;
+  label.textContent = l.t;
+  label.style.color = l.c;
+}
+
+// ── AUTH ──
+window.handleAuth = async () => {
+  const btn = document.getElementById('btnSubmit');
+  setLoading(true);
+  hideError();
+
+  try {
+    if (isLogin) {
+      await doLogin();
+    } else {
+      await doRegister();
     }
+    window.location.href = "dashboard.html";
+  } catch (e) {
+    showError(getFriendlyError(e.code || e.message));
+    setLoading(false);
+  }
+};
 
-    // --- GESTION DATE ET HEURE ---
-    function updateClock() {
-      const now = new Date();
-      
-      const dateOptions = { weekday: 'long', day: 'numeric', month: 'long' };
-      const dateString = now.toLocaleDateString('fr-FR', dateOptions);
-      
-      const timeString = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+async function doLogin() {
+  if (method === 'user') {
+    const pseudo = document.getElementById('f-pseudo')?.value?.trim();
+    const code = document.getElementById('f-uidcode')?.value?.trim();
+    const pass = document.getElementById('f-pass')?.value;
+    if (!pseudo || !code || !pass) throw {code:'missing-fields'};
 
-      // Mettre la première lettre du jour en majuscule
-      document.getElementById('date-display').innerText = dateString.charAt(0).toUpperCase() + dateString.slice(1);
-      document.getElementById('time-display').innerText = timeString;
+    // Look up Firestore for user with this pseudo + code
+    const snap = await getDoc(doc(db, 'usernames', `${pseudo.toLowerCase()}_${code}`));
+    if (!snap.exists()) throw {code:'user-not-found'};
+    const { email } = snap.data();
+    await signInWithEmailAndPassword(auth, email, pass);
+    localStorage.setItem('wn_pseudo', pseudo);
+  } else {
+    const email = document.getElementById('f-email')?.value?.trim();
+    const pass = document.getElementById('f-pass')?.value;
+    if (!email || !pass) throw {code:'missing-fields'};
+    await signInWithEmailAndPassword(auth, email, pass);
+  }
+}
+
+async function doRegister() {
+  const pass = document.getElementById('f-pass')?.value;
+  let email, pseudo;
+
+  if (method === 'user') {
+    pseudo = document.getElementById('f-pseudo')?.value?.trim();
+    const pass2 = document.getElementById('f-pass2')?.value;
+    const optEmail = document.getElementById('f-email')?.value?.trim();
+    if (!pseudo || !pass) throw {code:'missing-fields'};
+    if (pass !== pass2) throw {code:'pass-mismatch'};
+    if (pass.length < 6) throw {code:'weak-password'};
+
+    // Email for Firebase: use optional email or derive from pseudo+uid
+    email = optEmail || `${pseudo.toLowerCase().replace(/[^a-z0-9]/g,'_')}_${generatedUid.replace('-','')}@webnote.internal`;
+
+    // Check uniqueness
+    const key = `${pseudo.toLowerCase()}_${generatedUid}`;
+    const snap = await getDoc(doc(db, 'usernames', key));
+    if (snap.exists()) { regenUid(); throw {code:'id-taken'}; }
+
+    const res = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(res.user, { displayName: pseudo });
+    await setDoc(doc(db, 'users', res.user.uid), {
+      pseudo, uid: res.user.uid, code: generatedUid, email: optEmail || null,
+      createdAt: serverTimestamp()
+    });
+    await setDoc(doc(db, 'usernames', key), { email, uid: res.user.uid, pseudo });
+    localStorage.setItem('wn_pseudo', pseudo);
+    localStorage.setItem('wn_code', generatedUid);
+  } else {
+    email = document.getElementById('f-email')?.value?.trim();
+    pseudo = document.getElementById('f-pseudo')?.value?.trim();
+    if (!email || !pass) throw {code:'missing-fields'};
+    const res = await createUserWithEmailAndPassword(auth, email, pass);
+    if (pseudo) await updateProfile(res.user, { displayName: pseudo });
+    await setDoc(doc(db,'users',res.user.uid), {
+      pseudo: pseudo || null, uid: res.user.uid, email, createdAt: serverTimestamp()
+    });
+  }
+}
+
+window.googleAuth = async () => {
+  try {
+    const res = await signInWithPopup(auth, provider);
+    await setDoc(doc(db,'users',res.user.uid), {
+      pseudo: res.user.displayName, email: res.user.email, uid: res.user.uid,
+      createdAt: serverTimestamp()
+    }, {merge:true});
+    window.location.href = "dashboard.html";
+  } catch(e) { showError(getFriendlyError(e.code)); }
+};
+
+function getFriendlyError(code) {
+  const map = {
+    'missing-fields': 'Veuillez remplir tous les champs requis.',
+    'pass-mismatch': 'Les mots de passe ne correspondent pas.',
+    'weak-password': 'Mot de passe trop court (6 caractères min).',
+    'id-taken': 'Ce code est déjà pris. Un nouveau a été généré.',
+    'user-not-found': 'Identifiant ou code introuvable.',
+    'auth/wrong-password': 'Mot de passe incorrect.',
+    'auth/user-not-found': 'Aucun compte avec cet identifiant.',
+    'auth/email-already-in-use': 'Cet email est déjà utilisé.',
+    'auth/invalid-email': 'Email invalide.',
+    'auth/network-request-failed': 'Erreur réseau. Vérifiez votre connexion.',
+  };
+  return map[code] || 'Une erreur est survenue. Réessayez.';
+}
+
+function setLoading(val) {
+  const btn = document.getElementById('btnSubmit');
+  document.getElementById('spinner').style.display = val ? 'block' : 'none';
+  document.getElementById('btnTxt').style.display = val ? 'none' : 'block';
+  document.getElementById('btnIcon').style.display = val ? 'none' : 'block';
+  btn.classList.toggle('loading', val);
+}
+function showError(msg) {
+  const b = document.getElementById('errBox');
+  document.getElementById('errTxt').textContent = msg;
+  b.style.display = 'flex';
+  b.style.animation = 'none'; void b.offsetWidth; b.style.animation = '';
+}
+function hideError() { document.getElementById('errBox').style.display = 'none'; }
+
+// ── TOGGLE MODE ──
+window.toggleMode = () => {
+  isLogin = !isLogin;
+  renderFields();
+  document.getElementById('btnTxt').textContent = isLogin ? 'Se connecter' : 'Créer mon compte';
+  document.getElementById('btnIcon').className = isLogin ? 'fas fa-arrow-right-to-bracket' : 'fas fa-user-plus';
+  document.getElementById('greetingP').textContent = isLogin ? 'Heureux de vous revoir sur WebNote.' : 'Rejoignez l\'aventure WebNote.';
+  document.getElementById('footerTxt').textContent = isLogin ? 'Pas de compte ?' : 'Déjà inscrit ?';
+  document.getElementById('footerLink').textContent = isLogin ? ' Créer un profil' : ' Se connecter';
+  hideError();
+};
+
+window.setMethod = (m) => {
+  method = m;
+  document.getElementById('tabUser').classList.toggle('active', m === 'user');
+  document.getElementById('tabEmail').classList.toggle('active', m === 'email');
+  renderFields();
+  hideError();
+};
+
+// ── INITIAL RENDER ──
+renderFields();
+
+
+// ── CLOCK & THEME ──
+const MONTHS = ['janv','févr','mars','avr','mai','juin','juil','août','sept','oct','nov','déc'];
+const DAYS_FR = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+
+function updateClock() {
+  const n = new Date();
+  const d = `${DAYS_FR[n.getDay()]} ${n.getDate()} ${MONTHS[n.getMonth()]}`;
+  const t = n.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('dateDisp').textContent = d.charAt(0).toUpperCase()+d.slice(1);
+  document.getElementById('timeDisp').textContent = t;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+function setThemeAndGreeting() {
+  const h = new Date().getHours();
+  const body = document.body;
+  body.classList.remove('t-morning','t-afternoon','t-evening','t-night');
+  const h2 = document.getElementById('greetingH');
+  if (h >= 5 && h < 12) { body.classList.add('t-morning'); h2.textContent = 'Bonjour ☀️'; }
+  else if (h >= 12 && h < 18) { body.classList.add('t-afternoon'); h2.textContent = 'Bonne après-midi 🌤️'; }
+  else if (h >= 18 && h < 21) { body.classList.add('t-evening'); h2.textContent = 'Bonsoir 🌅'; }
+  else { body.classList.add('t-night'); h2.textContent = 'Bonne nuit 🌙'; }
+}
+setThemeAndGreeting();
+
+
+// ═══════════════════════════════════════════
+// ── CANVAS SKY ANIMATION ──
+// ═══════════════════════════════════════════
+const canvas = document.getElementById('skyCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, stars = [], shootingStars = [], birds = [], clouds = [];
+let animFrame;
+let phase = 'night'; // morning | afternoon | evening | night
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  initScene();
+}
+window.addEventListener('resize', resize);
+
+function getPhase() {
+  const h = new Date().getHours();
+  if (h >= 5 && h < 12) return 'morning';
+  if (h >= 12 && h < 18) return 'afternoon';
+  if (h >= 18 && h < 21) return 'evening';
+  return 'night';
+}
+
+// ── STARS ──
+function initStars() {
+  stars = [];
+  const count = Math.floor(W * H / 3000);
+  for (let i = 0; i < count; i++) {
+    stars.push({
+      x: Math.random() * W,
+      y: Math.random() * H * 0.85,
+      r: 0.3 + Math.random() * 1.8,
+      base: 0.2 + Math.random() * 0.8,
+      speed: 0.3 + Math.random() * 1.2,
+      phase: Math.random() * Math.PI * 2,
+      color: Math.random() > 0.8 ? '#b0c4ff' : Math.random() > 0.5 ? '#ffe4c4' : '#ffffff'
+    });
+  }
+}
+
+// ── SHOOTING STARS ──
+function spawnShootingStar() {
+  shootingStars.push({
+    x: W * 0.2 + Math.random() * W * 0.6,
+    y: Math.random() * H * 0.4,
+    len: 80 + Math.random() * 150,
+    speed: 8 + Math.random() * 10,
+    angle: Math.PI / 4 + (Math.random() - 0.5) * 0.4,
+    alpha: 1,
+    trail: []
+  });
+}
+
+// ── BIRDS ──
+function spawnBird() {
+  const y = H * 0.1 + Math.random() * H * 0.35;
+  const scale = 0.4 + Math.random() * 0.8;
+  birds.push({
+    x: -80, y,
+    speed: 1.2 + Math.random() * 2.5,
+    scale,
+    wingPhase: Math.random() * Math.PI * 2,
+    wingSpeed: 0.12 + Math.random() * 0.1,
+    yOffset: 0,
+    yOffsetSpeed: 0.008 + Math.random() * 0.005,
+    yOffsetPhase: Math.random() * Math.PI * 2,
+    opacity: 0.6 + Math.random() * 0.4
+  });
+}
+
+// ── CLOUDS ──
+function initClouds() {
+  clouds = [];
+  const count = 5 + Math.floor(Math.random() * 4);
+  for (let i = 0; i < count; i++) {
+    clouds.push({
+      x: Math.random() * W,
+      y: H * (0.05 + Math.random() * 0.45),
+      w: 80 + Math.random() * 200,
+      h: 30 + Math.random() * 60,
+      speed: 0.08 + Math.random() * 0.18,
+      alpha: 0.4 + Math.random() * 0.4
+    });
+  }
+}
+
+function initScene() {
+  phase = getPhase();
+  initStars();
+  initClouds();
+}
+
+// ── DRAW SKY GRADIENT ──
+function drawSky(t) {
+  let grad;
+  if (phase === 'morning') {
+    // Sunrise: deep blue-purple → orange → light blue
+    const progress = Math.min((new Date().getHours() * 60 + new Date().getMinutes() - 300) / 420, 1); // 5h→12h
+    grad = ctx.createLinearGradient(0, 0, 0, H);
+    if (progress < 0.2) {
+      // Early morning
+      grad.addColorStop(0, '#1a0533');
+      grad.addColorStop(0.4, '#c2410c');
+      grad.addColorStop(0.7, '#fb923c');
+      grad.addColorStop(1, '#fed7aa');
+    } else {
+      grad.addColorStop(0, `hsl(${195 + progress*20},70%,${40+progress*30}%)`);
+      grad.addColorStop(0.6, `hsl(${200+progress*15},60%,${55+progress*20}%)`);
+      grad.addColorStop(1, `hsl(${45},80%,${70+progress*15}%)`);
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+  } else if (phase === 'afternoon') {
+    grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, '#0369a1');
+    grad.addColorStop(0.5, '#38bdf8');
+    grad.addColorStop(1, '#bae6fd');
+  } else if (phase === 'evening') {
+    const mins = new Date().getHours() * 60 + new Date().getMinutes();
+    const p = Math.min((mins - 1080) / 180, 1); // 18h→21h
+    grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, `hsl(${240+p*20},${50+p*20}%,${20-p*8}%)`);
+    grad.addColorStop(0.3, `hsl(${280+p*10},60%,${25-p*5}%)`);
+    grad.addColorStop(0.6, `hsl(${15},80%,${45-p*15}%)`);
+    grad.addColorStop(0.8, `hsl(${25},85%,${55-p*20}%)`);
+    grad.addColorStop(1, `hsl(${35},70%,${50-p*15}%)`);
+  } else {
+    // Night
+    grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, '#02010a');
+    grad.addColorStop(0.3, '#0a0520');
+    grad.addColorStop(0.7, '#0f082e');
+    grad.addColorStop(1, '#1a0f3d');
+  }
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+}
 
-    // --- LOGIQUE HORAIRE & THÈME AMÉLIORÉE ---
-    function updateTheme() {
-      const hour = new Date().getHours();
-      const body = document.body;
-      const greeting = document.getElementById('greeting');
-      
-      body.classList.remove('is-day', 'is-afternoon', 'is-night');
+// ── AURORA (night only) ──
+function drawAurora(t) {
+  if (phase !== 'night') return;
+  for (let i = 0; i < 3; i++) {
+    const x = W * 0.3 + i * W * 0.2;
+    const y = H * 0.1;
+    const h = H * 0.25;
+    const wave = Math.sin(t * 0.0004 + i * 1.2) * 30;
+    const grad = ctx.createLinearGradient(x, y, x + wave, y + h);
+    const hues = [160, 200, 280];
+    grad.addColorStop(0, `hsla(${hues[i]},80%,60%,0)`);
+    grad.addColorStop(0.5, `hsla(${hues[i]},80%,60%,.04)`);
+    grad.addColorStop(1, `hsla(${hues[i]},80%,60%,0)`);
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    for (let x2 = 0; x2 <= W; x2 += 5) {
+      const sy = y + Math.sin(x2 * 0.005 + t * 0.0003 + i) * 40 + wave;
+      ctx.lineTo(x2, sy);
+    }
+    ctx.lineTo(W, y + h);
+    ctx.lineTo(0, y + h);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.restore();
+  }
+}
 
-      // 1. MATIN : 02h00 à 11h59
-      if (hour >= 2 && hour < 12) {
-        body.classList.add('is-day');
-        greeting.innerText = "Bonjour";
+// ── STARS ──
+function drawStars(t) {
+  if (phase === 'afternoon') return;
+  const alpha = phase === 'morning' ? 0.15 : phase === 'evening' ? 0.3 : 1;
+  stars.forEach(s => {
+    const tw = 0.5 + 0.5 * Math.sin(t * 0.001 * s.speed + s.phase);
+    const a = (s.base * tw) * alpha;
+    ctx.save();
+    ctx.globalAlpha = a;
+    // Draw star with cross glow for bright ones
+    if (s.r > 1.3 && phase === 'night') {
+      const g = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 3);
+      g.addColorStop(0, s.color);
+      g.addColorStop(1, 'transparent');
+      ctx.fillStyle = g;
+      ctx.fillRect(s.x - s.r * 3, s.y - s.r * 3, s.r * 6, s.r * 6);
+      // Cross spikes
+      ctx.globalAlpha = a * 0.5;
+      ctx.strokeStyle = s.color;
+      ctx.lineWidth = 0.5;
+      const spike = s.r * 4;
+      ctx.beginPath();
+      ctx.moveTo(s.x - spike, s.y); ctx.lineTo(s.x + spike, s.y);
+      ctx.moveTo(s.x, s.y - spike); ctx.lineTo(s.x, s.y + spike);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = a;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = s.color;
+    ctx.fill();
+    ctx.restore();
+  });
+}
+
+// ── SHOOTING STARS ──
+function drawShootingStars(t) {
+  if (phase !== 'night' && phase !== 'evening') return;
+  shootingStars = shootingStars.filter(ss => ss.alpha > 0.01);
+  shootingStars.forEach(ss => {
+    ss.trail.push({ x: ss.x, y: ss.y, alpha: ss.alpha });
+    if (ss.trail.length > 12) ss.trail.shift();
+
+    ss.x += Math.cos(ss.angle) * ss.speed;
+    ss.y += Math.sin(ss.angle) * ss.speed;
+    ss.alpha -= 0.02;
+
+    // Draw trail
+    ss.trail.forEach((pt, i) => {
+      const a = (i / ss.trail.length) * pt.alpha * 0.7;
+      ctx.save();
+      ctx.globalAlpha = a;
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.5 * (i / ss.trail.length);
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = '#a0c0ff';
+      if (i > 0) {
+        ctx.beginPath();
+        ctx.moveTo(ss.trail[i-1].x, ss.trail[i-1].y);
+        ctx.lineTo(pt.x, pt.y);
+        ctx.stroke();
       }
-      // 2. APRÈS-MIDI : 12h00 à 17h59
-      else if (hour >= 12 && hour < 18) {
-        body.classList.add('is-afternoon');
-        greeting.innerText = "Bonne après-midi";
-      }
-      // 3. SOIR/NUIT : 18h00 à 01h59
-      else {
-        body.classList.add('is-night');
-        greeting.innerText = "Bonsoir";
-      }
+      ctx.restore();
+    });
+
+    // Head glow
+    ctx.save();
+    ctx.globalAlpha = ss.alpha;
+    const g = ctx.createRadialGradient(ss.x, ss.y, 0, ss.x, ss.y, 6);
+    g.addColorStop(0, '#ffffff');
+    g.addColorStop(0.5, '#a0c0ff');
+    g.addColorStop(1, 'transparent');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(ss.x, ss.y, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  });
+}
+
+// ── MOON ──
+let moonPhaseAngle = 0;
+function drawMoon(t) {
+  if (phase !== 'night' && phase !== 'evening') return;
+  const alpha = phase === 'evening' ? 0.6 : 1;
+  const mx = W * 0.8 + Math.sin(t * 0.0001) * 6;
+  const my = H * 0.12 + Math.cos(t * 0.00008) * 5;
+  const mr = Math.min(W, H) * 0.065;
+
+  ctx.save();
+  ctx.globalAlpha = alpha;
+
+  // Outer glow
+  for (let gi = 4; gi >= 1; gi--) {
+    const gg = ctx.createRadialGradient(mx, my, mr * 0.8, mx, my, mr * (1 + gi * 0.5));
+    gg.addColorStop(0, `rgba(200,215,255,${0.06 / gi})`);
+    gg.addColorStop(1, 'transparent');
+    ctx.fillStyle = gg;
+    ctx.beginPath(); ctx.arc(mx, my, mr * (1 + gi * 0.5), 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Moon body
+  const moonGrad = ctx.createRadialGradient(mx - mr * 0.25, my - mr * 0.25, 0, mx, my, mr);
+  moonGrad.addColorStop(0, '#f8faff');
+  moonGrad.addColorStop(0.4, '#e8eeff');
+  moonGrad.addColorStop(0.8, '#c8d4f8');
+  moonGrad.addColorStop(1, '#9aadee');
+  ctx.fillStyle = moonGrad;
+  ctx.beginPath(); ctx.arc(mx, my, mr, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Craters
+  const craters = [
+    {ox:-0.25,oy:0.1,r:0.14},{ox:0.2,oy:-0.3,r:0.1},{ox:0.1,oy:0.35,r:0.08},
+    {ox:-0.1,oy:-0.2,r:0.06},{ox:0.35,oy:0.15,r:0.07}
+  ];
+  craters.forEach(c => {
+    const cx2 = mx + c.ox * mr, cy2 = my + c.oy * mr, cr = c.r * mr;
+    const cg = ctx.createRadialGradient(cx2 - cr*0.2, cy2 - cr*0.2, 0, cx2, cy2, cr);
+    cg.addColorStop(0, 'rgba(120,140,200,.25)');
+    cg.addColorStop(0.7, 'rgba(100,120,180,.12)');
+    cg.addColorStop(1, 'rgba(200,220,255,.08)');
+    ctx.fillStyle = cg;
+    ctx.beginPath(); ctx.arc(cx2, cy2, cr, 0, Math.PI * 2);
+    ctx.fill();
+    // Crater rim highlight
+    ctx.strokeStyle = 'rgba(255,255,255,.12)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  });
+
+  ctx.restore();
+}
+
+// ── SUN ──
+function drawSun(t) {
+  if (phase !== 'morning' && phase !== 'afternoon' && phase !== 'evening') return;
+  const mins = new Date().getHours() * 60 + new Date().getMinutes();
+  let sx, sy, intensity = 1;
+
+  if (phase === 'morning') {
+    const p = Math.min((mins - 300) / 420, 1);
+    sx = W * (0.15 + p * 0.25);
+    sy = H * (0.75 - p * 0.55);
+    intensity = 0.7 + p * 0.3;
+  } else if (phase === 'afternoon') {
+    sx = W * 0.7 + Math.sin(t * 0.0001) * 8;
+    sy = H * 0.12 + Math.cos(t * 0.00008) * 5;
+    intensity = 1;
+  } else {
+    const p = Math.min((mins - 1080) / 180, 1);
+    sx = W * (0.4 + p * 0.5);
+    sy = H * (0.12 + p * 0.75);
+    intensity = 1 - p * 0.7;
+  }
+
+  const sr = Math.min(W, H) * (phase === 'afternoon' ? 0.055 : 0.07);
+  ctx.save();
+
+  // Sun rays
+  const rayCount = 18;
+  for (let i = 0; i < rayCount; i++) {
+    const ang = (i / rayCount) * Math.PI * 2 + t * 0.0003;
+    const pulse = 1 + Math.sin(t * 0.001 + i) * 0.1;
+    const len1 = sr * (1.5 + (i % 2 === 0 ? 0.5 : 0)) * pulse;
+    const len2 = sr * (2.5 + (i % 2 === 0 ? 0.8 : 0)) * pulse;
+    const rg = ctx.createLinearGradient(
+      sx + Math.cos(ang) * len1, sy + Math.sin(ang) * len1,
+      sx + Math.cos(ang) * len2, sy + Math.sin(ang) * len2
+    );
+    const sunColor = phase === 'evening' ? 'rgba(255,120,50,' : 'rgba(255,220,60,';
+    rg.addColorStop(0, sunColor + (0.4 * intensity) + ')');
+    rg.addColorStop(1, sunColor + '0)');
+    ctx.beginPath();
+    ctx.moveTo(sx + Math.cos(ang) * len1, sy + Math.sin(ang) * len1);
+    ctx.lineTo(sx + Math.cos(ang) * len2, sy + Math.sin(ang) * len2);
+    ctx.strokeStyle = rg;
+    ctx.lineWidth = 2 + (i % 2 === 0 ? 1 : 0);
+    ctx.globalAlpha = intensity;
+    ctx.stroke();
+  }
+
+  // Sun outer glow
+  for (let gi = 5; gi >= 1; gi--) {
+    const gg = ctx.createRadialGradient(sx, sy, sr, sx, sy, sr * gi * 1.4);
+    const col = phase === 'evening' ? '255,100,20' : '255,210,50';
+    gg.addColorStop(0, `rgba(${col},${0.12 / gi * intensity})`);
+    gg.addColorStop(1, 'transparent');
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = gg;
+    ctx.beginPath(); ctx.arc(sx, sy, sr * gi * 1.4, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Sun body
+  const sg = ctx.createRadialGradient(sx - sr * 0.2, sy - sr * 0.2, 0, sx, sy, sr);
+  if (phase === 'evening') {
+    sg.addColorStop(0, '#fff0e0');
+    sg.addColorStop(0.5, '#ffb060');
+    sg.addColorStop(1, '#ff6020');
+  } else {
+    sg.addColorStop(0, '#fffde0');
+    sg.addColorStop(0.5, '#ffe040');
+    sg.addColorStop(1, '#ffb800');
+  }
+  ctx.globalAlpha = intensity;
+  ctx.fillStyle = sg;
+  ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+// ── CLOUDS ──
+function drawClouds(t) {
+  clouds.forEach(c => {
+    c.x += c.speed;
+    if (c.x - c.w > W) c.x = -c.w;
+    const cloudColor = phase === 'night' ? 'rgba(60,70,120,' : phase === 'evening' ? 'rgba(255,180,100,' : 'rgba(255,255,255,';
+    ctx.save();
+    ctx.globalAlpha = c.alpha * (phase === 'night' ? 0.3 : phase === 'evening' ? 0.6 : 0.85);
+    ctx.fillStyle = cloudColor + '1)';
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = cloudColor + '.3)';
+    drawCloudShape(c.x, c.y, c.w, c.h);
+    ctx.restore();
+  });
+}
+function drawCloudShape(x, y, w, h) {
+  ctx.beginPath();
+  const bumps = 5;
+  for (let i = 0; i <= bumps; i++) {
+    const bx = x + (i / bumps) * w;
+    const bh = (i === 0 || i === bumps) ? h * 0.3 : h * (0.5 + Math.sin(i * 1.2) * 0.3);
+    ctx.arc(bx, y, bh * 0.7, Math.PI, 0, false);
+  }
+  ctx.lineTo(x + w, y + h * 0.4);
+  ctx.lineTo(x, y + h * 0.4);
+  ctx.fill();
+}
+
+// ── BIRDS ──
+function drawBirds(t) {
+  if (phase !== 'morning' && phase !== 'afternoon') return;
+  birds = birds.filter(b => b.x < W + 100);
+  birds.forEach(b => {
+    b.x += b.speed;
+    b.wingPhase += b.wingSpeed;
+    b.yOffset = Math.sin(b.yOffsetPhase + t * b.yOffsetSpeed) * 15;
+
+    ctx.save();
+    ctx.globalAlpha = b.opacity;
+    ctx.translate(b.x, b.y + b.yOffset);
+    ctx.scale(b.scale, b.scale);
+    ctx.strokeStyle = phase === 'morning' ? 'rgba(20,30,60,.7)' : 'rgba(10,20,50,.6)';
+    ctx.lineWidth = 1.8;
+    ctx.lineCap = 'round';
+
+    // Animated wings - M shape
+    const wf = Math.sin(b.wingPhase) * 10;
+    ctx.beginPath();
+    ctx.moveTo(-20, wf);
+    ctx.quadraticCurveTo(-10, wf - 8, 0, 0);
+    ctx.quadraticCurveTo(10, wf - 8, 20, wf);
+    ctx.stroke();
+
+    ctx.restore();
+  });
+}
+
+// ── HORIZON GLOW ──
+function drawHorizonGlow() {
+  if (phase === 'night') return;
+  const hg = ctx.createLinearGradient(0, H * 0.55, 0, H);
+  if (phase === 'morning') {
+    hg.addColorStop(0, 'rgba(255,180,80,.0)');
+    hg.addColorStop(0.5, 'rgba(255,160,60,.15)');
+    hg.addColorStop(1, 'rgba(255,220,120,.35)');
+  } else if (phase === 'afternoon') {
+    hg.addColorStop(0, 'rgba(100,180,255,.0)');
+    hg.addColorStop(1, 'rgba(180,230,255,.2)');
+  } else {
+    hg.addColorStop(0, 'rgba(255,80,20,.0)');
+    hg.addColorStop(0.5, 'rgba(255,100,30,.2)');
+    hg.addColorStop(1, 'rgba(255,160,60,.4)');
+  }
+  ctx.fillStyle = hg;
+  ctx.fillRect(0, H * 0.55, W, H * 0.45);
+}
+
+// ── MAIN LOOP ──
+let lastShoot = 0, lastBird = 0;
+function loop(t) {
+  ctx.clearRect(0, 0, W, H);
+  drawSky(t);
+  drawAurora(t);
+  drawHorizonGlow();
+  drawStars(t);
+  drawMoon(t);
+  drawSun(t);
+  drawClouds(t);
+  drawShootingStars(t);
+  drawBirds(t);
+
+  // Spawn shooting stars
+  if ((phase === 'night' || phase === 'evening') && t - lastShoot > 4000 + Math.random() * 6000) {
+    spawnShootingStar();
+    lastShoot = t;
+  }
+  // Spawn birds
+  if ((phase === 'morning' || phase === 'afternoon') && t - lastBird > 3000 + Math.random() * 5000) {
+    spawnBird();
+    if (Math.random() > 0.5) {
+      setTimeout(spawnBird, 400 + Math.random() * 800);
+      setTimeout(spawnBird, 800 + Math.random() * 1200);
     }
+    lastBird = t;
+  }
 
-    updateTheme();
+  animFrame = requestAnimationFrame(loop);
+}
 
-    // --- UI LOGIC ---
-    let isLogin = true;
-    const btnToggle = document.getElementById('btnToggle');
-    const userField = document.getElementById('user-field');
-    const btnText = document.getElementById('btnText');
+resize();
+loop(0);
 
-    btnToggle.onclick = () => {
-      isLogin = !isLogin;
-      userField.style.display = isLogin ? 'none' : 'block';
-      btnText.innerText = isLogin ? "Se connecter" : "S'inscrire";
-      document.getElementById('subtitle').innerText = isLogin ? "Heureux de vous revoir." : "Rejoignez l'aventure WebNote.";
-      document.getElementById('toggleText').innerText = isLogin ? "Pas de compte ?" : "Déjà inscrit ?";
-      btnToggle.innerText = isLogin ? "Créer un profil" : "Se connecter";
-    };
-
-    document.getElementById('eye').onclick = function() {
-      const p = document.getElementById('password');
-      p.type = p.type === 'password' ? 'text' : 'password';
-      this.classList.toggle('fa-eye');
-      this.classList.toggle('fa-eye-slash');
-    };
-
-    // --- FIREBASE LOGIC ---
-    async function saveProfile(user, name) {
-      await setDoc(doc(db, "users", user.uid), {
-        username: name || user.displayName || "Anonyme",
-        email: user.email,
-        lastSeen: serverTimestamp()
-      }, { merge: true });
-      localStorage.setItem('webnote_username', name || user.displayName);
-    }
-
-    document.getElementById('btnSubmit').onclick = async () => {
-      const email = document.getElementById('email').value;
-      const pass = document.getElementById('password').value;
-      const nick = document.getElementById('username').value;
-
-      setLoading(true);
-      try {
-        if (isLogin) {
-          const res = await signInWithEmailAndPassword(auth, email, pass);
-          localStorage.setItem('webnote_username', res.user.displayName || "Ami");
-        } else {
-          const res = await createUserWithEmailAndPassword(auth, email, pass);
-          await updateProfile(res.user, { displayName: nick });
-          await saveProfile(res.user, nick);
-        }
-        window.location.href = "dashboard.html";
-      } catch (e) {
-        showError(e.message);
-        setLoading(false);
-      }
-    };
-
-    document.getElementById('googleBtn').onclick = async () => {
-      try {
-        const res = await signInWithPopup(auth, provider);
-        await saveProfile(res.user);
-        window.location.href = "dashboard.html";
-      } catch (e) { showError(e.message); }
-    };
-
-    function setLoading(val) {
-      document.getElementById('spinner').style.display = val ? 'block' : 'none';
-      btnText.style.display = val ? 'none' : 'block';
-    }
-
-    function showError(m) {
-      const b = document.getElementById('error-box');
-      b.innerText = m; b.style.display = 'block';
-    }
-  </script>
+</script>
 </body>
 </html>
+

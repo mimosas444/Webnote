@@ -514,6 +514,30 @@ textarea.msg-input::placeholder{color:var(--text-3)}
   .header{height:58px;padding:0 12px}
   .chat{padding:12px 10px 0}
 }
+
+/* ── ANIMATED SOLO EMOJI ── */
+.emoji-only-msg{background:transparent!important;border:none!important;box-shadow:none!important;padding:4px 6px!important}
+.emoji-only-msg .bubble-meta{opacity:.6;margin-top:2px}
+.solo-emoji{font-size:3.2rem;line-height:1.1;display:inline-block;animation:emojiBounce .55s cubic-bezier(.34,1.56,.64,1) both;cursor:default;user-select:none;filter:drop-shadow(0 4px 12px rgba(0,0,0,.25))}
+.solo-emoji:hover{animation:emojiBounce .55s both,emojiWiggle .4s .6s ease infinite alternate}
+@keyframes emojiBounce{0%{opacity:0;transform:scale(0) rotate(-15deg) translateY(20px)}60%{opacity:1;transform:scale(1.18) rotate(4deg) translateY(-6px)}80%{transform:scale(.92) rotate(-2deg) translateY(2px)}100%{opacity:1;transform:scale(1) rotate(0) translateY(0)}}
+@keyframes emojiWiggle{0%{transform:scale(1) rotate(-5deg)}100%{transform:scale(1.1) rotate(5deg)}}
+.emoji-anim-laugh{animation:emojiBounce .55s cubic-bezier(.34,1.56,.64,1) both,emojiLaugh 1s .6s ease infinite}
+@keyframes emojiLaugh{0%,100%{transform:scale(1) rotate(0)}25%{transform:scale(1.12) rotate(-8deg)}75%{transform:scale(1.12) rotate(8deg)}}
+.emoji-anim-fire{animation:emojiBounce .55s cubic-bezier(.34,1.56,.64,1) both,emojiFire .5s .6s ease infinite alternate}
+@keyframes emojiFire{0%{transform:scale(1) rotate(-3deg);filter:drop-shadow(0 0 8px #ff6b0088)}100%{transform:scale(1.1) rotate(3deg);filter:drop-shadow(0 0 20px #ff6b00cc)}}
+.emoji-anim-heart{animation:emojiBounce .55s cubic-bezier(.34,1.56,.64,1) both,emojiHeart .8s .6s ease infinite}
+@keyframes emojiHeart{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+.emoji-anim-cry{animation:emojiBounce .55s cubic-bezier(.34,1.56,.64,1) both,emojiCry 1.5s .6s ease infinite}
+@keyframes emojiCry{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.emoji-anim-star{animation:emojiBounce .55s cubic-bezier(.34,1.56,.64,1) both,emojiStar 2s .6s linear infinite}
+@keyframes emojiStar{from{transform:rotate(0) scale(1)}to{transform:rotate(360deg) scale(1)}}
+
+/* ── COMPACT MODE ── */
+body.compact .bubble{padding:7px 12px!important;font-size:.85rem!important}
+body.compact .msg-group{margin-bottom:6px}
+body.compact .solo-emoji{font-size:2.4rem}
+body.compact .msg-av{width:26px;height:26px;font-size:.68rem}
 </style>
 </head>
 <body>
@@ -542,22 +566,54 @@ textarea.msg-input::placeholder{color:var(--text-3)}
   <div class="menu-body">
     <div class="menu-section">
       <div class="menu-section-title">Navigation</div>
-      <a href="perso.html" class="menu-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 17.5c1.5 2.5 4 3 6 3"/><path d="M20 10c.2 2 .131 5.354 0 6"/><path d="M7.5 19.5C9 22 10.5 22 12 22"/><path d="M7 13.5C7 15.5 7 18.5 6 21"/><path d="M5.14 9.85a7 7 0 0 1 12.72 0"/></svg> Espace Privé</a>
-      <div class="menu-item" onclick="toggleSearch()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Rechercher</div>
-      <div class="menu-item" onclick="toggleMembers()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Membres <span class="badge" id="membersBadge">—</span></div>
+      <a href="perso.html" class="menu-item">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Espace Privé
+      </a>
+      <div class="menu-item" onclick="toggleSearch()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Rechercher
+      </div>
+      <div class="menu-item" onclick="toggleMembers()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Membres <span class="badge" id="membersBadge">—</span>
+      </div>
     </div>
     <div class="menu-divider"></div>
     <div class="menu-section">
-      <div class="menu-section-title">Options</div>
-      <div class="menu-item" onclick="toggleTheme()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/></svg> Changer de thème</div>
-      <div class="menu-item" onclick="toggleNotif()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> <span id="notifTxt">Activer sons</span></div>
-      <div class="menu-item" onclick="showEmojiPanel()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg> Emojis</div>
+      <div class="menu-section-title">Personnalisation</div>
+      <div class="menu-item" onclick="toggleTheme()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/></svg> Changer de thème
+      </div>
+      <div class="menu-item" onclick="toggleNotif()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> <span id="notifTxt">Activer sons</span>
+      </div>
+      <div class="menu-item" onclick="toggleCompact()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> <span id="compactTxt">Mode compact</span>
+      </div>
+      <div class="menu-item" onclick="showEmojiPanel()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg> Emojis
+      </div>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-section">
+      <div class="menu-section-title">Groupe</div>
+      <div class="menu-item" onclick="scrollToBottom();closeMenu()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg> Aller en bas
+      </div>
+      <div class="menu-item" onclick="clearMyMessages()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Effacer mes messages
+      </div>
+      <div class="menu-item" onclick="showGroupRules()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Règles du groupe
+      </div>
     </div>
     <div class="menu-divider"></div>
     <div class="menu-section">
       <div class="menu-section-title">Compte</div>
-      <div class="menu-item" onclick="copyUid()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copier mon pseudo</div>
-      <div class="menu-item danger" onclick="doSignOut()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Déconnexion</div>
+      <div class="menu-item" onclick="copyUid()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copier mon pseudo
+      </div>
+      <div class="menu-item danger" onclick="doSignOut()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Déconnexion
+      </div>
     </div>
   </div>
 </div>
@@ -653,14 +709,18 @@ textarea.msg-input::placeholder{color:var(--text-3)}
 
 <!-- ══ CONTEXT MENU ══ -->
 <div class="ctx-menu" id="ctxMenu">
-  <div class="ctx-emojis">
+  <div class="ctx-emojis" style="flex-wrap:wrap;max-width:280px">
     <div class="ctx-emoji" onclick="addReaction('❤️')">❤️</div>
     <div class="ctx-emoji" onclick="addReaction('😂')">😂</div>
-    <div class="ctx-emoji" onclick="addReaction('😮')">😮</div>
+    <div class="ctx-emoji" onclick="addReaction('😍')">😍</div>
     <div class="ctx-emoji" onclick="addReaction('🔥')">🔥</div>
     <div class="ctx-emoji" onclick="addReaction('👏')">👏</div>
-    <div class="ctx-emoji" onclick="addReaction('👎')">👎</div>
+    <div class="ctx-emoji" onclick="addReaction('😮')">😮</div>
     <div class="ctx-emoji" onclick="addReaction('😢')">😢</div>
+    <div class="ctx-emoji" onclick="addReaction('🤣')">🤣</div>
+    <div class="ctx-emoji" onclick="addReaction('💯')">💯</div>
+    <div class="ctx-emoji" onclick="addReaction('👍')">👍</div>
+    <div class="ctx-emoji" onclick="addReaction('👎')">👎</div>
     <div class="ctx-emoji" onclick="addReaction('🙏')">🙏</div>
   </div>
   <div class="ctx-item" onclick="ctxReply()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg> Répondre</div>
@@ -714,6 +774,7 @@ let filteredEmojis=[...EMOJIS];
 const savedTheme=localStorage.getItem('theme')||'dark';
 document.body.setAttribute('data-theme',savedTheme);
 requestAnimationFrame(()=>updateThemeIcon(savedTheme));
+applyCompact();
 window.toggleTheme=()=>{
   const t=document.body.getAttribute('data-theme')==='light'?'dark':'light';
   document.body.setAttribute('data-theme',t);localStorage.setItem('theme',t);
@@ -908,9 +969,12 @@ function buildMsg(id,data,isMine,showName){
     <div class="msg-row">
       ${!isMine?`<div class="msg-av" style="background:${col}">${(data.senderName||'A').charAt(0).toUpperCase()}</div>`:''}
       <div>
-        <div class="bubble" id="bbl-${id}">
+        <div class="bubble ${isSoloEmoji(data.content||'')?'emoji-only-msg':''}" id="bbl-${id}">
           ${replyHtml}
-          <span class="msg-text" id="txt-${id}">${formatText(esc(data.content||''))}</span>
+          ${isSoloEmoji(data.content||'')?
+            `<span class="solo-emoji ${getEmojiAnimClass(data.content)}" id="txt-${id}">${esc(data.content)}</span>`:
+            `<span class="msg-text" id="txt-${id}">${formatText(esc(data.content||''))}</span>`
+          }
           <div class="bubble-meta">
             ${data.edited?'<span class="meta-edited">modifié</span>':''}
             <span class="meta-time">${time}</span>
@@ -924,6 +988,20 @@ function buildMsg(id,data,isMine,showName){
   </div>`;
 }
 
+// Emoji-only detection
+const EMOJI_RE=/^(\p{Emoji_Presentation}|\p{Extended_Pictographic})(\uFE0F)?(\u20E3|\u200D(\p{Emoji_Presentation}|\p{Extended_Pictographic})(\uFE0F)?)*$/u;
+const EMOJI_ANIM_MAP={'😂':'emoji-anim-laugh','🤣':'emoji-anim-laugh','❤️':'emoji-anim-heart','🧡':'emoji-anim-heart','💛':'emoji-anim-heart','💚':'emoji-anim-heart','💙':'emoji-anim-heart','💜':'emoji-anim-heart','🖤':'emoji-anim-heart','🤍':'emoji-anim-heart','❤':'emoji-anim-heart','🔥':'emoji-anim-fire','😭':'emoji-anim-cry','😢':'emoji-anim-cry','⭐':'emoji-anim-star','🌟':'emoji-anim-star','✨':'emoji-anim-star','💫':'emoji-anim-star'};
+function isSoloEmoji(s){
+  const t=s.trim();
+  // Check if it's only emoji chars (1-3 emojis)
+  const noText=t.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D\u20E3\s]/gu,'');
+  const emojiCount=[...t.matchAll(/\p{Emoji_Presentation}|\p{Extended_Pictographic}/gu)].length;
+  return noText.length===0&&emojiCount>=1&&emojiCount<=3&&t.length<=12;
+}
+function getEmojiAnimClass(s){
+  for(const[em,cls]of Object.entries(EMOJI_ANIM_MAP)){if(s.includes(em))return cls;}
+  return '';
+}
 function formatText(t){
   return t
     .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
@@ -1057,6 +1135,9 @@ async function loadPinned(){
       $('pinnedText').textContent=(d.text||'').substring(0,60);
     }
   }catch(e){}
+  // Hide unpin button for non-admin
+  const unpinBtn=document.getElementById('unpinBtn');
+  if(unpinBtn)unpinBtn.style.display=isAdmin()?'flex':'none';
 }
 window.scrollToMsg=id=>{const el=document.getElementById('mg-'+id);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.transition='background .3s';el.style.background='rgba(99,102,241,.15)';setTimeout(()=>el.style.background='',1500);}};
 
@@ -1116,7 +1197,7 @@ chatEl.addEventListener('touchstart',e=>{
   const mg=e.target.closest('.msg-group[data-msgid]');
   if(!mg)return;
   lpTarget=mg;
-  lpTimer=setTimeout(()=>{showMsgActions(mg);vibrateShort();},500);
+  lpTimer=setTimeout(()=>{showMsgActions(mg);vibrateShort();},900);
 },{passive:true});
 chatEl.addEventListener('touchend',()=>{clearTimeout(lpTimer);lpTimer=null;},{passive:true});
 chatEl.addEventListener('touchmove',()=>{clearTimeout(lpTimer);lpTimer=null;},{passive:true});
@@ -1182,23 +1263,47 @@ function listenPresence(){
     $('statOnline').textContent=online;
     $('membersBadge').textContent=members.length;
     $('membersCount').textContent=members.length;
+    // Admin sees online count in head, others just total count
+    const headEl=document.querySelector('.members-head span');
+    if(headEl){
+      if(isAdmin()) headEl.innerHTML='Membres (<span id="membersCount">'+members.length+'</span>) · <span style="color:var(--success);font-size:.75rem">'+online+' en ligne</span>';
+      else headEl.innerHTML='Membres (<span id="membersCount">'+members.length+'</span>)';
+    }
     renderMembers(members);
   });
 }
 function renderMembers(members){
-  const list=$('membersList');list.innerHTML='';
+  const list=$('membersList');
+  list.innerHTML='';
+  const admin=isAdmin();
+
+  if(!admin){
+    // Non-admin: affiche uniquement le nombre de membres en ligne
+    const online=members.filter(m=>m.isOnline).length;
+    const total=members.length;
+    list.innerHTML='<div style="padding:32px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px">'
+      +'<div style="width:64px;height:64px;border-radius:50%;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.22);display:grid;place-items:center">'
+      +'<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'
+      +'</div>'
+      +'<div style="font-size:2.8rem;font-weight:900;color:var(--success);line-height:1">'+online+'</div>'
+      +'<div style="font-size:.82rem;color:var(--text-2)">membre'+(online!==1?'s':'')+' en ligne</div>'
+      +'</div>';
+    return;
+  }
+
+  // Admin: liste complete avec statuts
   members.sort((a,b)=>b.isOnline-a.isOnline).forEach(m=>{
     const col=avColor(m.uid||'x');
-    list.insertAdjacentHTML('beforeend',`<div class="member-row">
-      <div class="member-av" style="background:${col}">
-        ${(m.name||'?').charAt(0).toUpperCase()}
-        <div class="member-status ${m.isOnline?'on':''}"></div>
-      </div>
-      <div class="member-info">
-        <div class="member-name">${esc(m.name||'Anonyme')}</div>
-        <div class="member-role">${m.isOnline?'En ligne':'Hors ligne'}</div>
-      </div>
-    </div>`);
+    list.insertAdjacentHTML('beforeend','<div class="member-row">'
+      +'<div class="member-av" style="background:'+col+'">'
+      +((m.name||'?').charAt(0).toUpperCase())
+      +'<div class="member-status '+(m.isOnline?'on':'')+'"></div>'
+      +'</div>'
+      +'<div class="member-info">'
+      +'<div class="member-name">'+esc(m.name||'Anonyme')+'</div>'
+      +'<div class="member-role" style="color:'+(m.isOnline?'var(--success)':'var(--text-3)')+'">'+( m.isOnline?'● En ligne':'○ Hors ligne')+'</div>'
+      +'</div>'
+      +'</div>');
   });
 }
 
@@ -1213,6 +1318,36 @@ function listenTyping(){
   });
 }
 
+
+/* ── COMPACT MODE ── */
+let compactMode=localStorage.getItem('compact')==='1';
+function applyCompact(){
+  document.body.classList.toggle('compact',compactMode);
+  $('compactTxt').textContent=compactMode?'Mode normal':'Mode compact';
+}
+window.toggleCompact=()=>{compactMode=!compactMode;localStorage.setItem('compact',compactMode?'1':'0');applyCompact();closeMenu();showToast(compactMode?'Mode compact activé':'Mode normal activé');};
+
+/* ── CLEAR MY MESSAGES ── */
+window.clearMyMessages=async()=>{
+  closeMenu();
+  if(!confirm('Supprimer tous vos messages ? Cette action est irréversible.'))return;
+  const q=query(collection(db,'messages'));
+  const snap=await getDocs(q);
+  const mine=snap.docs.filter(d=>d.data().senderId===me.uid);
+  if(mine.length===0){showToast('Aucun message à supprimer','fa-info-circle','var(--accent)');return;}
+  for(const d of mine)await deleteDoc(doc(db,'messages',d.id));
+  showToast(mine.length+' message(s) supprimé(s)','fa-trash','var(--danger)');
+};
+
+/* ── GROUP RULES ── */
+window.showGroupRules=()=>{
+  closeMenu();
+  const ov=document.createElement('div');ov.className='modal-overlay open';
+  ov.style.cssText='position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px';
+  ov.innerHTML='<div class="modal" style="max-width:400px"><div class="modal-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Règles du groupe</div><div style="font-size:.85rem;line-height:1.7;color:var(--text-2)"><p>📌 <strong>WebNote</strong> est un espace ouvert à tous les membres inscrits.</p><br><p>✅ Soyez respectueux et bienveillants.</p><p>✅ Partagez vos idées, projets, réflexions.</p><p>✅ Utilisez les réactions pour interagir.</p><br><p>❌ Pas de spam ni contenu inapproprié.</p><p>❌ Pas de publicité sans accord.</p><p>❌ Pas d'attaque personnelle.</p><br><p style="color:var(--accent);font-size:.78rem">Les modérateurs peuvent supprimer tout message sans préavis.</p></div><div class="modal-footer"><button class="modal-btn primary" onclick="this.closest('.modal-overlay').remove()">Compris !</button></div></div>';
+  ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});
+  document.body.appendChild(ov);
+};
 /* ── SCROLL ── */
 const chat=$('chat');
 chat.addEventListener('scroll',()=>{
@@ -1246,4 +1381,3 @@ $('editModal').addEventListener('click',e=>{if(e.target===$('editModal'))closeMo
 </script>
 </body>
 </html>
-

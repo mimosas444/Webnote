@@ -605,26 +605,19 @@ window.handleAuth = async () => {
   }
 };
 
-// Génère un email interne déterministe à partir du pseudo + code
-// La même combinaison pseudo+code donne toujours le même email → pas besoin de Firestore pour se connecter
-function buildEmail(pseudo, code) {
-  const p = pseudo.toLowerCase().replace(/[^a-z0-9]/g, '');
-  const c = code.replace(/[^0-9]/g, '');
-  return `wn.${p}.${c}@webnote-users.com`;
-}
-
 async function doLogin() {
   if (method === 'user') {
     const pseudo = document.getElementById('f-pseudo')?.value?.trim();
     const code = document.getElementById('f-uidcode')?.value?.trim();
     const pass = document.getElementById('f-pass')?.value;
     if (!pseudo || !code || !pass) throw {code:'missing-fields'};
-    if (!/^\d{4}-\d{4}$/.test(code)) throw {code:'invalid-code-format'};
-    // On reconstruit l'email directement → aucune lecture Firestore avant auth
-    const email = buildEmail(pseudo, code);
+
+    // Look up Firestore for user with this pseudo + code
+    const snap = await getDoc(doc(db, 'usernames', `${pseudo.toLowerCase()}_${code}`));
+    if (!snap.exists()) throw {code:'user-not-found'};
+    const { email } = snap.data();
     await signInWithEmailAndPassword(auth, email, pass);
     localStorage.setItem('wn_pseudo', pseudo);
-    localStorage.setItem('wn_code', code);
   } else {
     const email = document.getElementById('f-email')?.value?.trim();
     const pass = document.getElementById('f-pass')?.value;
@@ -644,77 +637,34 @@ async function doRegister() {
     if (!pseudo || !pass) throw {code:'missing-fields'};
     if (pass !== pass2) throw {code:'pass-mismatch'};
     if (pass.length < 6) throw {code:'weak-password'};
-    if (pseudo.length < 3) throw {code:'pseudo-too-short'};
 
-    // Email déterministe (pseudo + code généré)
-    email = buildEmail(pseudo, generatedUid);
+    // Email for Firebase: use optional email or derive from pseudo+uid
+    email = optEmail || `${pseudo.toLowerCase().replace(/[^a-z0-9]/g,'_')}_${generatedUid.replace('-','')}@webnote.internal`;
 
-    // Crée le compte Firebase Auth
-    let res;
-    try {
-      res = await createUserWithEmailAndPassword(auth, email, pass);
-    } catch(e) {
-      // Si email déjà utilisé → le pseudo+code existe déjà, regénérer le code
-      if (e.code === 'auth/email-already-in-use') {
-        regenUid();
-        throw {code:'id-taken'};
-      }
-      throw e;
-    }
+    // Check uniqueness
+    const key = `${pseudo.toLowerCase()}_${generatedUid}`;
+    const snap = await getDoc(doc(db, 'usernames', key));
+    if (snap.exists()) { regenUid(); throw {code:'id-taken'}; }
 
+    const res = await createUserWithEmailAndPassword(auth, email, pass);
     await updateProfile(res.user, { displayName: pseudo });
-    // Sauvegarde Firestore après authentification (règles de sécurité respectées)
     await setDoc(doc(db, 'users', res.user.uid), {
-      pseudo,
-      uid: res.user.uid,
-      code: generatedUid,
-      recoveryEmail: optEmail || null,
+      pseudo, uid: res.user.uid, code: generatedUid, email: optEmail || null,
       createdAt: serverTimestamp()
     });
+    await setDoc(doc(db, 'usernames', key), { email, uid: res.user.uid, pseudo });
     localStorage.setItem('wn_pseudo', pseudo);
     localStorage.setItem('wn_code', generatedUid);
-
-    // Afficher le code à l'utilisateur
-    showCodeReminder(pseudo, generatedUid);
-    await new Promise(r => setTimeout(r, 3500)); // laisse le temps de lire
-
   } else {
     email = document.getElementById('f-email')?.value?.trim();
     pseudo = document.getElementById('f-pseudo')?.value?.trim();
     if (!email || !pass) throw {code:'missing-fields'};
     const res = await createUserWithEmailAndPassword(auth, email, pass);
     if (pseudo) await updateProfile(res.user, { displayName: pseudo });
-    await setDoc(doc(db, 'users', res.user.uid), {
+    await setDoc(doc(db,'users',res.user.uid), {
       pseudo: pseudo || null, uid: res.user.uid, email, createdAt: serverTimestamp()
     });
   }
-}
-
-// Affiche un rappel du code unique après inscription
-function showCodeReminder(pseudo, code) {
-  const overlay = document.createElement('div');
-  overlay.style.cssText = `position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.7);backdrop-filter:blur(12px);padding:20px`;
-  overlay.innerHTML = \`
-    <div style="background:rgba(14,10,35,.95);border:1px solid rgba(139,92,246,.4);border-radius:24px;padding:32px;max-width:380px;width:100%;text-align:center;box-shadow:0 30px 60px rgba(0,0,0,.5)">
-      <div style="font-size:2.5rem;margin-bottom:12px">🔐</div>
-      <h3 style="font-size:1.2rem;font-weight:800;color:#f1f5f9;margin-bottom:8px">Bienvenue, \${pseudo} !</h3>
-      <p style="color:rgba(241,245,249,.55);font-size:.85rem;line-height:1.6;margin-bottom:20px">
-        Notez votre code identifiant. Vous en aurez besoin pour vous connecter sur un autre appareil.
-      </p>
-      <div style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3);border-radius:14px;padding:16px;margin-bottom:20px">
-        <div style="font-size:.72rem;font-weight:700;color:rgba(167,139,250,.7);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Votre code unique</div>
-        <div style="font-size:1.6rem;font-weight:900;color:#a78bfa;letter-spacing:4px">\${code}</div>
-        <div style="font-size:.72rem;color:rgba(167,139,250,.5);margin-top:4px">pseudo : <strong style="color:rgba(167,139,250,.8)">\${pseudo}</strong></div>
-      </div>
-      <p style="color:rgba(251,191,36,.7);font-size:.78rem;margin-bottom:16px"><i>⚠️ Conservez ce code, il ne peut pas être récupéré.</i></p>
-      <div style="height:4px;border-radius:2px;background:rgba(139,92,246,.2);overflow:hidden">
-        <div id="codeTimerBar" style="height:100%;width:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);transition:width 3.5s linear"></div>
-      </div>
-    </div>
-  \`;
-  document.body.appendChild(overlay);
-  requestAnimationFrame(() => { document.getElementById('codeTimerBar').style.width = '0%'; });
-  setTimeout(() => overlay.remove(), 3600);
 }
 
 window.googleAuth = async () => {
@@ -730,22 +680,18 @@ window.googleAuth = async () => {
 
 function getFriendlyError(code) {
   const map = {
-    'missing-fields':          'Veuillez remplir tous les champs requis.',
-    'pass-mismatch':           'Les mots de passe ne correspondent pas.',
-    'weak-password':           'Mot de passe trop court (6 caractères min).',
-    'pseudo-too-short':        'Le pseudo doit faire au moins 3 caractères.',
-    'invalid-code-format':     'Format de code invalide. Ex : 4821-7635',
-    'id-taken':                'Ce code existe déjà. Un nouveau code a été généré, réessayez.',
-    'user-not-found':          'Pseudo ou code introuvable.',
-    'auth/wrong-password':     'Mot de passe incorrect.',
-    'auth/invalid-credential': 'Pseudo, code ou mot de passe incorrect.',
-    'auth/user-not-found':     'Aucun compte trouvé avec ces identifiants.',
-    'auth/email-already-in-use': 'Ce pseudo+code est déjà pris.',
-    'auth/invalid-email':      "Format d'email invalide.",
-    'auth/too-many-requests':  'Trop de tentatives. Réessayez dans quelques minutes.',
+    'missing-fields': 'Veuillez remplir tous les champs requis.',
+    'pass-mismatch': 'Les mots de passe ne correspondent pas.',
+    'weak-password': 'Mot de passe trop court (6 caractères min).',
+    'id-taken': 'Ce code est déjà pris. Un nouveau a été généré.',
+    'user-not-found': 'Identifiant ou code introuvable.',
+    'auth/wrong-password': 'Mot de passe incorrect.',
+    'auth/user-not-found': 'Aucun compte avec cet identifiant.',
+    'auth/email-already-in-use': 'Cet email est déjà utilisé.',
+    'auth/invalid-email': 'Email invalide.',
     'auth/network-request-failed': 'Erreur réseau. Vérifiez votre connexion.',
   };
-  return map[code] || ('Erreur : ' + code);
+  return map[code] || 'Une erreur est survenue. Réessayez.';
 }
 
 function setLoading(val) {
@@ -1308,4 +1254,3 @@ loop(0);
 </script>
 </body>
 </html>
-

@@ -542,22 +542,22 @@ textarea.msg-input::placeholder{color:var(--text-3)}
   <div class="menu-body">
     <div class="menu-section">
       <div class="menu-section-title">Navigation</div>
-      <a href="perso.html" class="menu-item"><i class="fas fa-fingerprint"></i> Espace Privé</a>
-      <div class="menu-item" onclick="toggleSearch()"><i class="fas fa-search"></i> Rechercher</div>
-      <div class="menu-item" onclick="toggleMembers()"><i class="fas fa-users"></i> Membres <span class="badge" id="membersBadge">—</span></div>
+      <a href="perso.html" class="menu-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 17.5c1.5 2.5 4 3 6 3"/><path d="M20 10c.2 2 .131 5.354 0 6"/><path d="M7.5 19.5C9 22 10.5 22 12 22"/><path d="M7 13.5C7 15.5 7 18.5 6 21"/><path d="M5.14 9.85a7 7 0 0 1 12.72 0"/></svg> Espace Privé</a>
+      <div class="menu-item" onclick="toggleSearch()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Rechercher</div>
+      <div class="menu-item" onclick="toggleMembers()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Membres <span class="badge" id="membersBadge">—</span></div>
     </div>
     <div class="menu-divider"></div>
     <div class="menu-section">
       <div class="menu-section-title">Options</div>
-      <div class="menu-item" onclick="toggleTheme()"><i class="fas fa-circle-half-stroke"></i> Changer de thème</div>
-      <div class="menu-item" onclick="toggleNotif()"><i class="fas fa-bell" id="notifIco"></i> <span id="notifTxt">Activer sons</span></div>
-      <div class="menu-item" onclick="showEmojiPanel()"><i class="fas fa-face-smile"></i> Emojis</div>
+      <div class="menu-item" onclick="toggleTheme()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/></svg> Changer de thème</div>
+      <div class="menu-item" onclick="toggleNotif()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> <span id="notifTxt">Activer sons</span></div>
+      <div class="menu-item" onclick="showEmojiPanel()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg> Emojis</div>
     </div>
     <div class="menu-divider"></div>
     <div class="menu-section">
       <div class="menu-section-title">Compte</div>
-      <div class="menu-item" onclick="copyUid()"><i class="fas fa-copy"></i> Copier mon pseudo</div>
-      <div class="menu-item danger" onclick="doSignOut()"><i class="fas fa-sign-out-alt"></i> Déconnexion</div>
+      <div class="menu-item" onclick="copyUid()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copier mon pseudo</div>
+      <div class="menu-item danger" onclick="doSignOut()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Déconnexion</div>
     </div>
   </div>
 </div>
@@ -566,7 +566,7 @@ textarea.msg-input::placeholder{color:var(--text-3)}
 <div class="members-panel" id="membersPanel">
   <div class="members-head">
     <span>Membres (<span id="membersCount">0</span>)</span>
-    <div class="h-btn" onclick="toggleMembers()" style="width:28px;height:28px;border-radius:7px"><i class="fas fa-times" style="font-size:.75rem"></i></div>
+    <div class="h-btn" onclick="toggleMembers()" style="width:28px;height:28px;border-radius:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
   </div>
   <div class="members-list" id="membersList"></div>
 </div>
@@ -574,9 +574,9 @@ textarea.msg-input::placeholder{color:var(--text-3)}
 <!-- ══ HEADER ══ -->
 <header class="header" id="mainHeader">
   <div class="header-left">
-    <button class="h-btn" onclick="openMenu()"><i class="fas fa-bars-staggered"></i></button>
+    <button class="h-btn" onclick="openMenu()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="21" y2="12"/><line x1="9" y1="18" x2="21" y2="18"/></svg></button>
     <a class="logo" href="#">
-      <div class="logo-icon"><i class="fas fa-feather-pointed"></i></div>
+      <div class="logo-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg></div>
       <span class="logo-text">WebNote</span>
     </a>
     <div class="group-info" onclick="toggleMembers()">
@@ -588,8 +588,10 @@ textarea.msg-input::placeholder{color:var(--text-3)}
     </div>
   </div>
   <div class="header-right">
-    <button class="h-btn" onclick="toggleSearch()" id="searchBtn"><i class="fas fa-search"></i></button>
-    <button class="h-btn" onclick="toggleMembers()" id="membersBtn"><i class="fas fa-users"></i></button>
+    <button class="h-btn" onclick="toggleTheme()" id="themeBtn" title="Changer le thème">
+      <span id="themeIcon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+    </button>
+    <button class="h-btn" onclick="toggleMembers()" id="membersBtn" title="Membres"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>
     <div class="h-btn" id="clockWidget" style="width:auto;padding:0 10px;border-radius:11px;cursor:default;gap:6px;display:flex;align-items:center">
       <span id="clock" style="font-size:.82rem;font-weight:700"></span>
     </div>
@@ -598,24 +600,24 @@ textarea.msg-input::placeholder{color:var(--text-3)}
 
 <!-- ══ SEARCH BAR ══ -->
 <div class="search-bar" id="searchBar">
-  <i class="fas fa-search" style="color:var(--text-3);font-size:.85rem"></i>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
   <input class="search-input" id="searchInput" placeholder="Rechercher dans le chat..." oninput="searchMessages()">
   <span class="search-matches" id="searchMatches"></span>
-  <button class="h-btn" onclick="toggleSearch()" style="width:30px;height:30px;border-radius:8px"><i class="fas fa-times" style="font-size:.75rem"></i></button>
+  <button class="h-btn" onclick="toggleSearch()" style="width:30px;height:30px;border-radius:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
 </div>
 
 <!-- ══ PINNED BAR ══ -->
-<div class="pinned-bar" id="pinnedBar" onclick="scrollToPinned()">
-  <i class="fas fa-thumbtack pin-icon"></i>
+<div class="pinned-bar" id="pinnedBar" onclick="scrollToPinned()" style="display:none">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>
   <div class="pin-text"><strong>Épinglé :</strong> <span id="pinnedText">—</span></div>
-  <i class="fas fa-times pin-close" onclick="unpin(event)"></i>
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
 </div>
 
 <!-- ══ CHAT ══ -->
 <div class="chat-wrap">
   <div class="chat" id="chat">
     <div class="welcome-card" id="welcomeCard">
-      <i class="fas fa-comments"></i>
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>
       <h3>Bienvenue dans WebNote 👋</h3>
       <p>Espace de discussion ouvert à tous les membres.<br>Soyez respectueux et bienveillants.</p>
     </div>
@@ -624,7 +626,7 @@ textarea.msg-input::placeholder{color:var(--text-3)}
 
 <!-- ══ SCROLL BUTTON ══ -->
 <button class="scroll-btn" id="scrollBtn" onclick="scrollToBottom()">
-  <i class="fas fa-chevron-down" style="color:#fff;font-size:.9rem;pointer-events:none"></i>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
   <span class="unread-cnt" id="unreadCnt" style="display:none"></span>
 </button>
 
@@ -639,13 +641,13 @@ textarea.msg-input::placeholder{color:var(--text-3)}
       <div class="reply-bar-name" id="replyBarName">—</div>
       <div class="reply-bar-text" id="replyBarText">—</div>
     </div>
-    <button class="reply-close" onclick="cancelReply()"><i class="fas fa-times"></i></button>
+    <button class="reply-close" onclick="cancelReply()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   </div>
   <div class="input-bar">
-    <button class="ib-btn" onclick="showEmojiPanel()" title="Emojis"><i class="fas fa-face-smile"></i></button>
+    <button class="ib-btn" onclick="showEmojiPanel()" title="Emojis"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></button>
     <textarea class="msg-input" id="msgInput" rows="1" placeholder="Message au groupe..."></textarea>
-    <button class="ib-btn" onclick="toggleAttach()" title="Joindre" id="attachBtn"><i class="fas fa-paperclip"></i></button>
-    <button class="send-btn" id="sendBtn" disabled><i class="fas fa-paper-plane"></i></button>
+    <button class="ib-btn" onclick="toggleAttach()" title="Joindre" id="attachBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+    <button class="send-btn" id="sendBtn" disabled><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="#fff" stroke="none"/></svg></button>
   </div>
 </div>
 
@@ -661,12 +663,12 @@ textarea.msg-input::placeholder{color:var(--text-3)}
     <div class="ctx-emoji" onclick="addReaction('😢')">😢</div>
     <div class="ctx-emoji" onclick="addReaction('🙏')">🙏</div>
   </div>
-  <div class="ctx-item" onclick="ctxReply()"><i class="fas fa-reply"></i> Répondre</div>
-  <div class="ctx-item" onclick="ctxCopy()"><i class="fas fa-copy"></i> Copier le texte</div>
-  <div class="ctx-item" onclick="ctxPin()"><i class="fas fa-thumbtack"></i> Épingler</div>
-  <div class="ctx-item" id="ctxEditBtn" onclick="ctxEdit()"><i class="fas fa-pen"></i> Modifier</div>
+  <div class="ctx-item" onclick="ctxReply()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg> Répondre</div>
+  <div class="ctx-item" onclick="ctxCopy()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copier le texte</div>
+  <div class="ctx-item" onclick="ctxPin()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg> Épingler</div>
+  <div class="ctx-item" id="ctxEditBtn" onclick="ctxEdit()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> Modifier</div>
   <div class="ctx-sep"></div>
-  <div class="ctx-item danger" id="ctxDeleteBtn" onclick="ctxDelete()"><i class="fas fa-trash"></i> Supprimer</div>
+  <div class="ctx-item danger" id="ctxDeleteBtn" onclick="ctxDelete()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Supprimer</div>
 </div>
 
 <!-- ══ EMOJI PANEL ══ -->
@@ -678,17 +680,17 @@ textarea.msg-input::placeholder{color:var(--text-3)}
 <!-- ══ EDIT MODAL ══ -->
 <div class="modal-overlay" id="editModal">
   <div class="modal">
-    <div class="modal-title"><i class="fas fa-pen"></i> Modifier le message</div>
+    <div class="modal-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> Modifier le message</div>
     <textarea class="modal-textarea" id="editTextarea" rows="3"></textarea>
     <div class="modal-footer">
       <button class="modal-btn cancel" onclick="closeModal()">Annuler</button>
-      <button class="modal-btn primary" onclick="saveEdit()"><i class="fas fa-check"></i> Enregistrer</button>
+      <button class="modal-btn primary" onclick="saveEdit()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Enregistrer</button>
     </div>
   </div>
 </div>
 
 <!-- ══ TOAST ══ -->
-<div class="toast" id="toast"><i class="fas fa-check-circle" style="color:var(--success)"></i><span id="toastMsg">—</span></div>
+<div class="toast" id="toast"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span id="toastMsg">—</span></div>
 
 <!-- ══════════════════════════════════════
      FIREBASE + LOGIC
@@ -711,7 +713,20 @@ let filteredEmojis=[...EMOJIS];
 /* ── THEME ── */
 const savedTheme=localStorage.getItem('theme')||'dark';
 document.body.setAttribute('data-theme',savedTheme);
-window.toggleTheme=()=>{const t=document.body.getAttribute('data-theme')==='light'?'dark':'light';document.body.setAttribute('data-theme',t);localStorage.setItem('theme',t);closeMenu();};
+requestAnimationFrame(()=>updateThemeIcon(savedTheme));
+window.toggleTheme=()=>{
+  const t=document.body.getAttribute('data-theme')==='light'?'dark':'light';
+  document.body.setAttribute('data-theme',t);localStorage.setItem('theme',t);
+  updateThemeIcon(t);closeMenu();
+};
+function updateThemeIcon(t){
+  const icon=$('themeIcon');if(!icon)return;
+  if(t==='light'){
+    icon.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  } else {
+    icon.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+  }
+}
 
 /* ── CLOCK ── */
 function tick(){const n=new Date();$('clock').textContent=n.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
@@ -749,42 +764,101 @@ let allMessages={};
 function loadMessages(){
   const q=query(collection(db,'messages'),orderBy('createdAt','asc'));
   onSnapshot(q,snap=>{
-    allMessages={};
-    snap.forEach(d=>allMessages[d.id]=d.data());
-    $('statMsgs').textContent=snap.size;
-    $('welcomeCard').style.display=snap.size===0?'flex':'none';
-    renderAll(snap);
-    if(atBottom)scrollToBottom(false);
-    else if(snap.docChanges().some(c=>c.type==='added')){unread++;updateUnread();}
+    // Process changes incrementally - no full re-render
+    snap.docChanges().forEach(change=>{
+      const id=change.doc.id, data=change.doc.data();
+      if(change.type==='added'){
+        allMessages[id]=data;
+        appendMsg(id,data);
+        if(atBottom)scrollToBottom(false);
+        else{unread++;updateUnread();}
+      } else if(change.type==='modified'){
+        allMessages[id]=data;
+        patchMsg(id,data);
+      } else if(change.type==='removed'){
+        delete allMessages[id];
+        const el=document.getElementById('mg-'+id);
+        if(el){el.style.transition='opacity .3s,transform .3s';el.style.opacity='0';el.style.transform='scale(.95)';setTimeout(()=>el.remove(),300);}
+      }
+    });
+    const total=Object.keys(allMessages).length;
+    $('statMsgs').textContent=total;
+    const wc=$('welcomeCard');
+    if(wc)wc.style.display=total===0?'flex':'none';
   });
 }
 
-function renderAll(snap){
+// Append a single new message to the chat
+function appendMsg(id,data){
   const chat=$('chat');
-  chat.innerHTML='';
-  if(snap.size===0){chat.appendChild($('welcomeCard'));return;}
-
-  let lastDate='',lastSender='',lastSenderTime=0;
-
-  snap.forEach(d=>{
-    const data=d.data(),id=d.id;
-    const ts=(data.createdAt&&typeof data.createdAt.toMillis==='function')?data.createdAt.toMillis():Date.now();
-    const dateStr=new Date(ts).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
-
-    /* date separator */
-    if(dateStr!==lastDate){
-      const sep=document.createElement('div');sep.className='date-sep';
-      sep.innerHTML='<span>'+capitalize(dateStr)+'</span>';
-      chat.appendChild(sep);lastDate=dateStr;lastSender='';
-    }
-
-    const isMine=data.senderId===me.uid;
-    const showName=!isMine&&(data.senderId!==lastSender||ts-lastSenderTime>120000);
-    lastSender=data.senderId;lastSenderTime=ts;
-
-    chat.insertAdjacentHTML('beforeend',buildMsg(id,data,isMine,showName));
-  });
+  const isMine=data.senderId===me.uid;
+  const ts=(data.createdAt&&typeof data.createdAt.toMillis==='function')?data.createdAt.toMillis():Date.now();
+  // Check if we need a date separator
+  const dateStr=new Date(ts).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  const lastSep=chat.querySelector('.date-sep:last-of-type');
+  const lastSepDate=lastSep?lastSep.dataset.date:'';
+  if(dateStr!==lastSepDate){
+    const sep=document.createElement('div');sep.className='date-sep';sep.dataset.date=dateStr;
+    sep.innerHTML='<span>'+capitalize(dateStr)+'</span>';chat.appendChild(sep);
+  }
+  // Show sender name if different from previous
+  const lastGroup=chat.querySelector('.msg-group:last-of-type');
+  const lastSender=lastGroup?lastGroup.dataset.sender:'';
+  const lastTs=lastGroup?parseInt(lastGroup.dataset.ts||0):0;
+  const showName=!isMine&&(data.senderId!==lastSender||ts-lastTs>120000);
+  // Remove welcome card if present
+  const wc=document.getElementById('welcomeCard');if(wc&&wc.parentNode===chat)wc.style.display='none';
+  const html=buildMsg(id,data,isMine,showName);
+  chat.insertAdjacentHTML('beforeend',html);
+  // Add entry animation
+  const el=document.getElementById('mg-'+id);
+  if(el){el.style.opacity='0';el.style.transform='translateY(12px) scale(.97)';requestAnimationFrame(()=>{el.style.transition='opacity .25s ease,transform .25s ease';el.style.opacity='1';el.style.transform='translateY(0) scale(1)';});}
 }
+
+// Patch an existing message in-place (edit, reaction, etc.)
+function patchMsg(id,data){
+  const el=document.getElementById('mg-'+id);if(!el)return;
+  const isMine=data.senderId===me.uid;
+  const ts=(data.createdAt&&typeof data.createdAt.toMillis==='function')?data.createdAt.toMillis():Date.now();
+  const time=(ts===Date.now()||!data.createdAt)?'..':new Date(ts).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  // Update text
+  const txtEl=document.getElementById('txt-'+id);
+  if(txtEl)txtEl.innerHTML=formatText(esc(data.content||''));
+  // Update reactions
+  let reactHtml='';
+  if(data.reactions){
+    let pills='';
+    for(const[emoji,uids]of Object.entries(data.reactions)){
+      if(uids&&uids.length>0){
+        const myReact=uids.includes(me.uid);
+        pills+=`<div class="react-pill ${myReact?'mine-react':''}" onclick="toggleReaction('${id}','${emoji}')" title="${uids.length} personne(s)"><span class="rc">${emoji}</span><span class="cnt">${uids.length}</span></div>`;
+      }
+    }
+    if(pills)reactHtml=`<div class="reactions">${pills}</div>`;
+  }
+  // Find or create reactions container
+  const bubble=document.getElementById('bbl-'+id);
+  if(bubble){
+    let reactContainer=bubble.parentElement.querySelector('.reactions');
+    if(reactContainer)reactContainer.remove();
+    if(reactHtml)bubble.insertAdjacentHTML('afterend',reactHtml);
+    // Flash effect
+    bubble.style.transition='background .15s';
+    const origBg=bubble.style.background;
+    bubble.style.background=isMine?'rgba(255,255,255,.15)':'rgba(99,102,241,.1)';
+    setTimeout(()=>bubble.style.background=origBg,400);
+  }
+  // Update edited badge & time
+  const metaEl=bubble?bubble.querySelector('.bubble-meta'):null;
+  if(metaEl){
+    const editedEl=metaEl.querySelector('.meta-edited');
+    if(data.edited&&!editedEl){metaEl.insertAdjacentHTML('afterbegin','<span class="meta-edited">modifié </span>');}
+    const timeEl=metaEl.querySelector('.meta-time');
+    if(timeEl&&time!=='..')timeEl.textContent=time;
+  }
+}
+
+/* renderAll replaced by incremental appendMsg/patchMsg */
 
 function buildMsg(id,data,isMine,showName){
   const ts=(data.createdAt&&typeof data.createdAt.toMillis==='function')?data.createdAt.toMillis():Date.now();
@@ -823,13 +897,13 @@ function buildMsg(id,data,isMine,showName){
     <div class="act-emoji" onclick="quickReact(event,'${id}','❤️')">❤️</div>
     <div class="act-emoji" onclick="quickReact(event,'${id}','😂')">😂</div>
     <div class="act-emoji" onclick="quickReact(event,'${id}','🔥')">🔥</div>
-    <button class="act-btn" onclick="openCtx(event,'${id}',${isMine},${ts})" title="Options"><i class="fas fa-ellipsis-h" style="color:var(--text-2)"></i></button>
+    <button class="act-btn" onclick="openCtx(event,'${id}',${isMine},${ts})" title="Options"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
   </div>`;
 
   /* ticks */
-  const ticks=isMine?`<span class="read-ticks sent"><i class="fas fa-check-double"></i></span>`:'';
+  const ticks=isMine?`<span class="read-ticks sent"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 9 9 4 4"/><polyline points="21 5 9 17 4 12"/></svg></span>`:'';
 
-  return `<div class="msg-group ${isMine?'mine':'other'}" id="mg-${id}" data-msgid="${id}" data-ismine="${isMine}" data-ts="${ts}">
+  return `<div class="msg-group ${isMine?'mine':'other'}" id="mg-${id}" data-msgid="${id}" data-ismine="${isMine}" data-ts="${ts}" data-sender="${data.senderId||''}">
     ${showName?`<div class="msg-sender-name" style="color:${col}">${esc(data.senderName||'Anonyme')}</div>`:''}
     <div class="msg-row">
       ${!isMine?`<div class="msg-av" style="background:${col}">${(data.senderName||'A').charAt(0).toUpperCase()}</div>`:''}
@@ -961,20 +1035,28 @@ window.ctxPin=async()=>{
   pinnedId=selectedId;
   await setDoc(doc(db,'settings','pinned'),{msgId:selectedId,text:data.content.substring(0,80),pinnedBy:me.uid});
   closeCtx();
-  $('pinnedBar').classList.add('visible');
+  const pb=$('pinnedBar');pb.classList.add('visible');pb.style.display='flex';
   $('pinnedText').textContent=data.content.substring(0,60)+(data.content.length>60?'…':'');
-  showToast('Message épinglé 📌');
+  showToast('Message épinglé 📌','fa-thumbtack','var(--accent)');
 };
 window.unpin=async e=>{
-  e.stopPropagation();
-  await deleteDoc(doc(db,'settings','pinned'));
-  $('pinnedBar').classList.remove('visible');pinnedId=null;
-  showToast('Message désépinglé');
+  if(e){e.stopPropagation();e.preventDefault();}
+  try{await deleteDoc(doc(db,'settings','pinned'));}catch(err){}
+  const pb=$('pinnedBar');if(pb){pb.classList.remove('visible');pb.style.display='none';}
+  pinnedId=null;
+  showToast('Message désépinglé','fa-thumbtack','var(--accent)');
 };
 window.scrollToPinned=()=>{if(pinnedId)scrollToMsg(pinnedId);};
 async function loadPinned(){
-  const snap=await getDoc(doc(db,'settings','pinned'));
-  if(snap.exists()){const d=snap.data();pinnedId=d.msgId;$('pinnedBar').classList.add('visible');$('pinnedText').textContent=(d.text||'').substring(0,60);}
+  try{
+    const snap=await getDoc(doc(db,'settings','pinned'));
+    if(snap.exists()){
+      const d=snap.data();pinnedId=d.msgId;
+      const pb=$('pinnedBar');
+      pb.classList.add('visible');pb.style.display='flex';
+      $('pinnedText').textContent=(d.text||'').substring(0,60);
+    }
+  }catch(e){}
 }
 window.scrollToMsg=id=>{const el=document.getElementById('mg-'+id);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.transition='background .3s';el.style.background='rgba(99,102,241,.15)';setTimeout(()=>el.style.background='',1500);}};
 

@@ -514,30 +514,6 @@ textarea.msg-input::placeholder{color:var(--text-3)}
   .header{height:58px;padding:0 12px}
   .chat{padding:12px 10px 0}
 }
-
-/* ── ANIMATED SOLO EMOJI ── */
-.emoji-only-msg{background:transparent!important;border:none!important;box-shadow:none!important;padding:4px 6px!important}
-.emoji-only-msg .bubble-meta{opacity:.6;margin-top:2px}
-.solo-emoji{font-size:3.2rem;line-height:1.1;display:inline-block;animation:emojiBounce .55s cubic-bezier(.34,1.56,.64,1) both;cursor:default;user-select:none;filter:drop-shadow(0 4px 12px rgba(0,0,0,.25))}
-.solo-emoji:hover{animation:emojiBounce .55s both,emojiWiggle .4s .6s ease infinite alternate}
-@keyframes emojiBounce{0%{opacity:0;transform:scale(0) rotate(-15deg) translateY(20px)}60%{opacity:1;transform:scale(1.18) rotate(4deg) translateY(-6px)}80%{transform:scale(.92) rotate(-2deg) translateY(2px)}100%{opacity:1;transform:scale(1) rotate(0) translateY(0)}}
-@keyframes emojiWiggle{0%{transform:scale(1) rotate(-5deg)}100%{transform:scale(1.1) rotate(5deg)}}
-.emoji-anim-laugh{animation:emojiBounce .55s cubic-bezier(.34,1.56,.64,1) both,emojiLaugh 1s .6s ease infinite}
-@keyframes emojiLaugh{0%,100%{transform:scale(1) rotate(0)}25%{transform:scale(1.12) rotate(-8deg)}75%{transform:scale(1.12) rotate(8deg)}}
-.emoji-anim-fire{animation:emojiBounce .55s cubic-bezier(.34,1.56,.64,1) both,emojiFire .5s .6s ease infinite alternate}
-@keyframes emojiFire{0%{transform:scale(1) rotate(-3deg);filter:drop-shadow(0 0 8px #ff6b0088)}100%{transform:scale(1.1) rotate(3deg);filter:drop-shadow(0 0 20px #ff6b00cc)}}
-.emoji-anim-heart{animation:emojiBounce .55s cubic-bezier(.34,1.56,.64,1) both,emojiHeart .8s .6s ease infinite}
-@keyframes emojiHeart{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
-.emoji-anim-cry{animation:emojiBounce .55s cubic-bezier(.34,1.56,.64,1) both,emojiCry 1.5s .6s ease infinite}
-@keyframes emojiCry{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-.emoji-anim-star{animation:emojiBounce .55s cubic-bezier(.34,1.56,.64,1) both,emojiStar 2s .6s linear infinite}
-@keyframes emojiStar{from{transform:rotate(0) scale(1)}to{transform:rotate(360deg) scale(1)}}
-
-/* ── COMPACT MODE ── */
-body.compact .bubble{padding:7px 12px!important;font-size:.85rem!important}
-body.compact .msg-group{margin-bottom:6px}
-body.compact .solo-emoji{font-size:2.4rem}
-body.compact .msg-av{width:26px;height:26px;font-size:.68rem}
 </style>
 </head>
 <body>
@@ -566,54 +542,22 @@ body.compact .msg-av{width:26px;height:26px;font-size:.68rem}
   <div class="menu-body">
     <div class="menu-section">
       <div class="menu-section-title">Navigation</div>
-      <a href="perso.html" class="menu-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Espace Privé
-      </a>
-      <div class="menu-item" onclick="toggleSearch()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Rechercher
-      </div>
-      <div class="menu-item" onclick="toggleMembers()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Membres <span class="badge" id="membersBadge">—</span>
-      </div>
+      <a href="perso.html" class="menu-item"><i class="fas fa-fingerprint"></i> Espace Privé</a>
+      <div class="menu-item" onclick="toggleSearch()"><i class="fas fa-search"></i> Rechercher</div>
+      <div class="menu-item" onclick="toggleMembers()"><i class="fas fa-users"></i> Membres <span class="badge" id="membersBadge">—</span></div>
     </div>
     <div class="menu-divider"></div>
     <div class="menu-section">
-      <div class="menu-section-title">Personnalisation</div>
-      <div class="menu-item" onclick="toggleTheme()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/></svg> Changer de thème
-      </div>
-      <div class="menu-item" onclick="toggleNotif()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> <span id="notifTxt">Activer sons</span>
-      </div>
-      <div class="menu-item" onclick="toggleCompact()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> <span id="compactTxt">Mode compact</span>
-      </div>
-      <div class="menu-item" onclick="showEmojiPanel()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg> Emojis
-      </div>
-    </div>
-    <div class="menu-divider"></div>
-    <div class="menu-section">
-      <div class="menu-section-title">Groupe</div>
-      <div class="menu-item" onclick="scrollToBottom();closeMenu()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg> Aller en bas
-      </div>
-      <div class="menu-item" onclick="clearMyMessages()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Effacer mes messages
-      </div>
-      <div class="menu-item" onclick="showGroupRules()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Règles du groupe
-      </div>
+      <div class="menu-section-title">Options</div>
+      <div class="menu-item" onclick="toggleTheme()"><i class="fas fa-circle-half-stroke"></i> Changer de thème</div>
+      <div class="menu-item" onclick="toggleNotif()"><i class="fas fa-bell" id="notifIco"></i> <span id="notifTxt">Activer sons</span></div>
+      <div class="menu-item" onclick="showEmojiPanel()"><i class="fas fa-face-smile"></i> Emojis</div>
     </div>
     <div class="menu-divider"></div>
     <div class="menu-section">
       <div class="menu-section-title">Compte</div>
-      <div class="menu-item" onclick="copyUid()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copier mon pseudo
-      </div>
-      <div class="menu-item danger" onclick="doSignOut()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Déconnexion
-      </div>
+      <div class="menu-item" onclick="copyUid()"><i class="fas fa-copy"></i> Copier mon pseudo</div>
+      <div class="menu-item danger" onclick="doSignOut()"><i class="fas fa-sign-out-alt"></i> Déconnexion</div>
     </div>
   </div>
 </div>
@@ -622,7 +566,7 @@ body.compact .msg-av{width:26px;height:26px;font-size:.68rem}
 <div class="members-panel" id="membersPanel">
   <div class="members-head">
     <span>Membres (<span id="membersCount">0</span>)</span>
-    <div class="h-btn" onclick="toggleMembers()" style="width:28px;height:28px;border-radius:7px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+    <div class="h-btn" onclick="toggleMembers()" style="width:28px;height:28px;border-radius:7px"><i class="fas fa-times" style="font-size:.75rem"></i></div>
   </div>
   <div class="members-list" id="membersList"></div>
 </div>
@@ -630,9 +574,9 @@ body.compact .msg-av{width:26px;height:26px;font-size:.68rem}
 <!-- ══ HEADER ══ -->
 <header class="header" id="mainHeader">
   <div class="header-left">
-    <button class="h-btn" onclick="openMenu()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="21" y2="12"/><line x1="9" y1="18" x2="21" y2="18"/></svg></button>
+    <button class="h-btn" onclick="openMenu()"><i class="fas fa-bars-staggered"></i></button>
     <a class="logo" href="#">
-      <div class="logo-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg></div>
+      <div class="logo-icon"><i class="fas fa-feather-pointed"></i></div>
       <span class="logo-text">WebNote</span>
     </a>
     <div class="group-info" onclick="toggleMembers()">
@@ -644,10 +588,8 @@ body.compact .msg-av{width:26px;height:26px;font-size:.68rem}
     </div>
   </div>
   <div class="header-right">
-    <button class="h-btn" onclick="toggleTheme()" id="themeBtn" title="Changer le thème">
-      <span id="themeIcon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
-    </button>
-    <button class="h-btn" onclick="toggleMembers()" id="membersBtn" title="Membres"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></button>
+    <button class="h-btn" onclick="toggleSearch()" id="searchBtn"><i class="fas fa-search"></i></button>
+    <button class="h-btn" onclick="toggleMembers()" id="membersBtn"><i class="fas fa-users"></i></button>
     <div class="h-btn" id="clockWidget" style="width:auto;padding:0 10px;border-radius:11px;cursor:default;gap:6px;display:flex;align-items:center">
       <span id="clock" style="font-size:.82rem;font-weight:700"></span>
     </div>
@@ -656,24 +598,24 @@ body.compact .msg-av{width:26px;height:26px;font-size:.68rem}
 
 <!-- ══ SEARCH BAR ══ -->
 <div class="search-bar" id="searchBar">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  <i class="fas fa-search" style="color:var(--text-3);font-size:.85rem"></i>
   <input class="search-input" id="searchInput" placeholder="Rechercher dans le chat..." oninput="searchMessages()">
   <span class="search-matches" id="searchMatches"></span>
-  <button class="h-btn" onclick="toggleSearch()" style="width:30px;height:30px;border-radius:8px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  <button class="h-btn" onclick="toggleSearch()" style="width:30px;height:30px;border-radius:8px"><i class="fas fa-times" style="font-size:.75rem"></i></button>
 </div>
 
 <!-- ══ PINNED BAR ══ -->
-<div class="pinned-bar" id="pinnedBar" onclick="scrollToPinned()" style="display:none">
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>
+<div class="pinned-bar" id="pinnedBar" onclick="scrollToPinned()">
+  <i class="fas fa-thumbtack pin-icon"></i>
   <div class="pin-text"><strong>Épinglé :</strong> <span id="pinnedText">—</span></div>
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  <i class="fas fa-times pin-close" onclick="unpin(event)"></i>
 </div>
 
 <!-- ══ CHAT ══ -->
 <div class="chat-wrap">
   <div class="chat" id="chat">
     <div class="welcome-card" id="welcomeCard">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>
+      <i class="fas fa-comments"></i>
       <h3>Bienvenue dans WebNote 👋</h3>
       <p>Espace de discussion ouvert à tous les membres.<br>Soyez respectueux et bienveillants.</p>
     </div>
@@ -682,7 +624,7 @@ body.compact .msg-av{width:26px;height:26px;font-size:.68rem}
 
 <!-- ══ SCROLL BUTTON ══ -->
 <button class="scroll-btn" id="scrollBtn" onclick="scrollToBottom()">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  <i class="fas fa-chevron-down" style="color:#fff;font-size:.9rem;pointer-events:none"></i>
   <span class="unread-cnt" id="unreadCnt" style="display:none"></span>
 </button>
 
@@ -697,38 +639,34 @@ body.compact .msg-av{width:26px;height:26px;font-size:.68rem}
       <div class="reply-bar-name" id="replyBarName">—</div>
       <div class="reply-bar-text" id="replyBarText">—</div>
     </div>
-    <button class="reply-close" onclick="cancelReply()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <button class="reply-close" onclick="cancelReply()"><i class="fas fa-times"></i></button>
   </div>
   <div class="input-bar">
-    <button class="ib-btn" onclick="showEmojiPanel()" title="Emojis"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></button>
+    <button class="ib-btn" onclick="showEmojiPanel()" title="Emojis"><i class="fas fa-face-smile"></i></button>
     <textarea class="msg-input" id="msgInput" rows="1" placeholder="Message au groupe..."></textarea>
-    <button class="ib-btn" onclick="toggleAttach()" title="Joindre" id="attachBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
-    <button class="send-btn" id="sendBtn" disabled><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="#fff" stroke="none"/></svg></button>
+    <button class="ib-btn" onclick="toggleAttach()" title="Joindre" id="attachBtn"><i class="fas fa-paperclip"></i></button>
+    <button class="send-btn" id="sendBtn" disabled><i class="fas fa-paper-plane"></i></button>
   </div>
 </div>
 
 <!-- ══ CONTEXT MENU ══ -->
 <div class="ctx-menu" id="ctxMenu">
-  <div class="ctx-emojis" style="flex-wrap:wrap;max-width:280px">
+  <div class="ctx-emojis">
     <div class="ctx-emoji" onclick="addReaction('❤️')">❤️</div>
     <div class="ctx-emoji" onclick="addReaction('😂')">😂</div>
-    <div class="ctx-emoji" onclick="addReaction('😍')">😍</div>
+    <div class="ctx-emoji" onclick="addReaction('😮')">😮</div>
     <div class="ctx-emoji" onclick="addReaction('🔥')">🔥</div>
     <div class="ctx-emoji" onclick="addReaction('👏')">👏</div>
-    <div class="ctx-emoji" onclick="addReaction('😮')">😮</div>
-    <div class="ctx-emoji" onclick="addReaction('😢')">😢</div>
-    <div class="ctx-emoji" onclick="addReaction('🤣')">🤣</div>
-    <div class="ctx-emoji" onclick="addReaction('💯')">💯</div>
-    <div class="ctx-emoji" onclick="addReaction('👍')">👍</div>
     <div class="ctx-emoji" onclick="addReaction('👎')">👎</div>
+    <div class="ctx-emoji" onclick="addReaction('😢')">😢</div>
     <div class="ctx-emoji" onclick="addReaction('🙏')">🙏</div>
   </div>
-  <div class="ctx-item" onclick="ctxReply()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg> Répondre</div>
-  <div class="ctx-item" onclick="ctxCopy()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Copier le texte</div>
-  <div class="ctx-item" onclick="ctxPin()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg> Épingler</div>
-  <div class="ctx-item" id="ctxEditBtn" onclick="ctxEdit()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> Modifier</div>
+  <div class="ctx-item" onclick="ctxReply()"><i class="fas fa-reply"></i> Répondre</div>
+  <div class="ctx-item" onclick="ctxCopy()"><i class="fas fa-copy"></i> Copier le texte</div>
+  <div class="ctx-item" onclick="ctxPin()"><i class="fas fa-thumbtack"></i> Épingler</div>
+  <div class="ctx-item" id="ctxEditBtn" onclick="ctxEdit()"><i class="fas fa-pen"></i> Modifier</div>
   <div class="ctx-sep"></div>
-  <div class="ctx-item danger" id="ctxDeleteBtn" onclick="ctxDelete()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Supprimer</div>
+  <div class="ctx-item danger" id="ctxDeleteBtn" onclick="ctxDelete()"><i class="fas fa-trash"></i> Supprimer</div>
 </div>
 
 <!-- ══ EMOJI PANEL ══ -->
@@ -740,17 +678,17 @@ body.compact .msg-av{width:26px;height:26px;font-size:.68rem}
 <!-- ══ EDIT MODAL ══ -->
 <div class="modal-overlay" id="editModal">
   <div class="modal">
-    <div class="modal-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg> Modifier le message</div>
+    <div class="modal-title"><i class="fas fa-pen"></i> Modifier le message</div>
     <textarea class="modal-textarea" id="editTextarea" rows="3"></textarea>
     <div class="modal-footer">
       <button class="modal-btn cancel" onclick="closeModal()">Annuler</button>
-      <button class="modal-btn primary" onclick="saveEdit()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Enregistrer</button>
+      <button class="modal-btn primary" onclick="saveEdit()"><i class="fas fa-check"></i> Enregistrer</button>
     </div>
   </div>
 </div>
 
 <!-- ══ TOAST ══ -->
-<div class="toast" id="toast"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span id="toastMsg">—</span></div>
+<div class="toast" id="toast"><i class="fas fa-check-circle" style="color:var(--success)"></i><span id="toastMsg">—</span></div>
 
 <!-- ══════════════════════════════════════
      FIREBASE + LOGIC
@@ -767,28 +705,13 @@ const $=id=>document.getElementById(id);
 let me=null,selectedId=null,replyData=null,pinnedId=null;
 let soundsOn=localStorage.getItem('sounds')==='1';
 let unread=0,atBottom=true;
-let compactMode=localStorage.getItem('compact')==='1'; // moved up to avoid TDZ crash
 const EMOJIS=['😀','😂','😅','🤣','😊','😍','🤩','😎','🥳','🤔','😐','😑','🙄','😏','😒','😔','😢','😭','😤','😠','🤬','🥺','🥹','❤️','🧡','💛','💚','💙','💜','🖤','🤍','❤️‍🔥','💔','💕','😘','😗','😙','😚','🤗','🤭','🫠','🫥','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤫','🫢','🤐','😶','🫡','🤤','🙃','😵','😵‍💫','🤪','😜','😝','😛','🤑','🥴','🤢','🤮','🤧','😷','🤒','🤕','😴','💤','💩','👻','💀','☠️','👽','🤖','👺','👹','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🫶','🤲','👐','🙌','👏','🤝','👍','👎','👊','✊','🤛','🤜','🤞','✌️','🤟','🤘','👌','🤌','🤏','👈','👉','👆','🖕','👇','☝️','✋','🤚','🖐','🖖','🫵','💪','🦾','🦿','🦵','🦶','🫁','🫀','👂','🦻','👃','🫦','👅','👁','👀','🧠','🦷','🦴','👣','🌟','⭐','✨','💫','🌙','☀️','🌈','🔥','💥','❄️','⚡','🌊','🌀','🎉','🎊','🎈','🎁','🎀','🎗','🏆','🥇','🎯','🎮','🕹','🎲','🎸','🎹','🎵','🎶','📱','💻','⌨️','🖥','📷','📸','📹','🎥','📺','📻','🎙','⏰','⏱','⌚','⏳','📅','📆','📝','📋','📌','📍','🔐','🔒','🔓','🔑','🗝','🔨','🪛','🔧','⚙️','🛠','🔫','💣','🧨','🪤','🪜','🪞','🪟','🛋','🪑','🚀','✈️','🚗','🚕','🚙','🚌','🏠','🏡','🏗','🏢','🏪','🌍','🌎','🌏','🗺','🧭','🏔','🌋','🏕','🏖','🏝','🌴','🌲','🌵','🌾','🌺','🌸','🌼','🌻','🌹','🥀','🍀','🌿','🌱','🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐔','🐧','🐦','🐤','🦆','🦅','🦉','🦇','🐝','🪲','🐛','🦋','🐌','🐞','🐜','🪳','🦟','🦗','🦂','🐢','🐍','🦎','🦖','🦕','🐙','🦑','🦐','🦞','🦀','🐡','🐠','🐟','🐬','🐳','🦈','🐊','🐅','🐆','🦓','🦍','🦧','🦣','🐘','🦛','🦏','🐪','🐫','🦒','🦘','🦬','🐃','🐂','🐄','🐎','🐖','🐏','🐑','🦙','🐐','🦌','🐕','🐩','🦮','🐕‍🦺','🐈','🐈‍⬛','🪶','🐓','🦃','🦤','🦚','🦜','🦢','🦩','🕊','🐇','🦝','🦨','🦡','🦫','🦦','🦥','🐁','🐀','🐿','🦔','🐾','🍎','🍊','🍋','🍇','🍓','🫐','🍈','🍉','🍑','🍒','🍌','🍍','🥭','🥝','🍅','🍆','🥑','🥦','🥬','🥒','🌶','🫑','🧅','🌽','🥕','🫛','🧄','🥔','🍠','🧇','🥞','🧈','🍳','🥚','🧆','🍗','🍖','🌭','🍔','🍟','🍕','🌮','🌯','🫔','🥙','🥪','🥗','🍝','🍜','🍲','🍛','🍣','🍱','🥟','🦪','🍤','🍙','🍚','🍘','🍥','🥮','🍢','🧁','🍰','🎂','🍮','🍭','🍬','🍫','🍿','🍩','🍪','🌰','🥜','🍯','🧃','🥤','🧋','☕','🍵','🧉','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🧊','🍴','🫙','🧂'];
 let filteredEmojis=[...EMOJIS];
 
 /* ── THEME ── */
 const savedTheme=localStorage.getItem('theme')||'dark';
 document.body.setAttribute('data-theme',savedTheme);
-requestAnimationFrame(()=>updateThemeIcon(savedTheme));
-applyCompact();
-window.toggleTheme=()=>{
-  const t=document.body.getAttribute('data-theme')==='light'?'dark':'light';
-  document.body.setAttribute('data-theme',t);localStorage.setItem('theme',t);
-  updateThemeIcon(t);closeMenu();
-};
-function updateThemeIcon(t){
-  const icon=$('themeIcon');if(!icon)return;
-  if(t==='light'){
-    icon.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-  } else {
-    icon.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
-  }
-}
+window.toggleTheme=()=>{const t=document.body.getAttribute('data-theme')==='light'?'dark':'light';document.body.setAttribute('data-theme',t);localStorage.setItem('theme',t);closeMenu();};
 
 /* ── CLOCK ── */
 function tick(){const n=new Date();$('clock').textContent=n.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
@@ -826,103 +749,42 @@ let allMessages={};
 function loadMessages(){
   const q=query(collection(db,'messages'),orderBy('createdAt','asc'));
   onSnapshot(q,snap=>{
-    // Process changes incrementally - no full re-render
-    snap.docChanges().forEach(change=>{
-      try{
-      const id=change.doc.id, data=change.doc.data();
-      if(change.type==='added'){
-        allMessages[id]=data;
-        appendMsg(id,data);
-        if(atBottom)scrollToBottom(false);
-        else{unread++;updateUnread();}
-      } else if(change.type==='modified'){
-        allMessages[id]=data;
-        patchMsg(id,data);
-      } else if(change.type==='removed'){
-        delete allMessages[id];
-        const el=document.getElementById('mg-'+id);
-        if(el){el.style.transition='opacity .3s,transform .3s';el.style.opacity='0';el.style.transform='scale(.95)';setTimeout(()=>el.remove(),300);}
-      }
-      }catch(err){console.error('Message render error:',err);}
-    });
-    const total=Object.keys(allMessages).length;
-    $('statMsgs').textContent=total;
-    const wc=$('welcomeCard');
-    if(wc)wc.style.display=total===0?'flex':'none';
+    allMessages={};
+    snap.forEach(d=>allMessages[d.id]=d.data());
+    $('statMsgs').textContent=snap.size;
+    $('welcomeCard').style.display=snap.size===0?'flex':'none';
+    renderAll(snap);
+    if(atBottom)scrollToBottom(false);
+    else if(snap.docChanges().some(c=>c.type==='added')){unread++;updateUnread();}
   });
 }
 
-// Append a single new message to the chat
-function appendMsg(id,data){
+function renderAll(snap){
   const chat=$('chat');
-  const isMine=data.senderId===me.uid;
-  const ts=(data.createdAt&&typeof data.createdAt.toMillis==='function')?data.createdAt.toMillis():Date.now();
-  // Check if we need a date separator
-  const dateStr=new Date(ts).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
-  const lastSep=chat.querySelector('.date-sep:last-of-type');
-  const lastSepDate=lastSep?lastSep.dataset.date:'';
-  if(dateStr!==lastSepDate){
-    const sep=document.createElement('div');sep.className='date-sep';sep.dataset.date=dateStr;
-    sep.innerHTML='<span>'+capitalize(dateStr)+'</span>';chat.appendChild(sep);
-  }
-  // Show sender name if different from previous
-  const lastGroup=chat.querySelector('.msg-group:last-of-type');
-  const lastSender=lastGroup?lastGroup.dataset.sender:'';
-  const lastTs=lastGroup?parseInt(lastGroup.dataset.ts||0):0;
-  const showName=!isMine&&(data.senderId!==lastSender||ts-lastTs>120000);
-  // Remove welcome card if present
-  const wc=document.getElementById('welcomeCard');if(wc)wc.style.display='none';
-  const html=buildMsg(id,data,isMine,showName);
-  chat.insertAdjacentHTML('beforeend',html);
-  // Add entry animation
-  const el=document.getElementById('mg-'+id);
-  if(el){el.style.opacity='0';el.style.transform='translateY(12px) scale(.97)';requestAnimationFrame(()=>{el.style.transition='opacity .25s ease,transform .25s ease';el.style.opacity='1';el.style.transform='translateY(0) scale(1)';});}
-}
+  chat.innerHTML='';
+  if(snap.size===0){chat.appendChild($('welcomeCard'));return;}
 
-// Patch an existing message in-place (edit, reaction, etc.)
-function patchMsg(id,data){
-  const el=document.getElementById('mg-'+id);if(!el)return;
-  const isMine=data.senderId===me.uid;
-  const ts=(data.createdAt&&typeof data.createdAt.toMillis==='function')?data.createdAt.toMillis():Date.now();
-  const time=(ts===Date.now()||!data.createdAt)?'..':new Date(ts).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-  // Update text
-  const txtEl=document.getElementById('txt-'+id);
-  if(txtEl)txtEl.innerHTML=formatText(esc(data.content||''));
-  // Update reactions
-  let reactHtml='';
-  if(data.reactions){
-    let pills='';
-    for(const[emoji,uids]of Object.entries(data.reactions)){
-      if(uids&&uids.length>0){
-        const myReact=uids.includes(me.uid);
-        pills+=`<div class="react-pill ${myReact?'mine-react':''}" onclick="toggleReaction('${id}','${emoji}')" title="${uids.length} personne(s)"><span class="rc">${emoji}</span><span class="cnt">${uids.length}</span></div>`;
-      }
+  let lastDate='',lastSender='',lastSenderTime=0;
+
+  snap.forEach(d=>{
+    const data=d.data(),id=d.id;
+    const ts=(data.createdAt&&typeof data.createdAt.toMillis==='function')?data.createdAt.toMillis():Date.now();
+    const dateStr=new Date(ts).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+
+    /* date separator */
+    if(dateStr!==lastDate){
+      const sep=document.createElement('div');sep.className='date-sep';
+      sep.innerHTML='<span>'+capitalize(dateStr)+'</span>';
+      chat.appendChild(sep);lastDate=dateStr;lastSender='';
     }
-    if(pills)reactHtml=`<div class="reactions">${pills}</div>`;
-  }
-  // Find or create reactions container
-  const bubble=document.getElementById('bbl-'+id);
-  if(bubble){
-    let reactContainer=bubble.parentElement.querySelector('.reactions');
-    if(reactContainer)reactContainer.remove();
-    if(reactHtml)bubble.insertAdjacentHTML('afterend',reactHtml);
-    // Flash effect
-    bubble.style.transition='background .15s';
-    const origBg=bubble.style.background;
-    bubble.style.background=isMine?'rgba(255,255,255,.15)':'rgba(99,102,241,.1)';
-    setTimeout(()=>bubble.style.background=origBg,400);
-  }
-  // Update edited badge & time
-  const metaEl=bubble?bubble.querySelector('.bubble-meta'):null;
-  if(metaEl){
-    const editedEl=metaEl.querySelector('.meta-edited');
-    if(data.edited&&!editedEl){metaEl.insertAdjacentHTML('afterbegin','<span class="meta-edited">modifié </span>');}
-    const timeEl=metaEl.querySelector('.meta-time');
-    if(timeEl&&time!=='..')timeEl.textContent=time;
-  }
-}
 
-/* renderAll replaced by incremental appendMsg/patchMsg */
+    const isMine=data.senderId===me.uid;
+    const showName=!isMine&&(data.senderId!==lastSender||ts-lastSenderTime>120000);
+    lastSender=data.senderId;lastSenderTime=ts;
+
+    chat.insertAdjacentHTML('beforeend',buildMsg(id,data,isMine,showName));
+  });
+}
 
 function buildMsg(id,data,isMine,showName){
   const ts=(data.createdAt&&typeof data.createdAt.toMillis==='function')?data.createdAt.toMillis():Date.now();
@@ -961,23 +823,20 @@ function buildMsg(id,data,isMine,showName){
     <div class="act-emoji" onclick="quickReact(event,'${id}','❤️')">❤️</div>
     <div class="act-emoji" onclick="quickReact(event,'${id}','😂')">😂</div>
     <div class="act-emoji" onclick="quickReact(event,'${id}','🔥')">🔥</div>
-    <button class="act-btn" onclick="openCtx(event,'${id}',${isMine},${ts})" title="Options"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+    <button class="act-btn" onclick="openCtx(event,'${id}',${isMine},${ts})" title="Options"><i class="fas fa-ellipsis-h" style="color:var(--text-2)"></i></button>
   </div>`;
 
   /* ticks */
-  const ticks=isMine?`<span class="read-ticks sent"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 9 9 4 4"/><polyline points="21 5 9 17 4 12"/></svg></span>`:'';
+  const ticks=isMine?`<span class="read-ticks sent"><i class="fas fa-check-double"></i></span>`:'';
 
-  return `<div class="msg-group ${isMine?'mine':'other'}" id="mg-${id}" data-msgid="${id}" data-ismine="${isMine}" data-ts="${ts}" data-sender="${data.senderId||''}">
+  return `<div class="msg-group ${isMine?'mine':'other'}" id="mg-${id}" data-msgid="${id}" data-ismine="${isMine}" data-ts="${ts}">
     ${showName?`<div class="msg-sender-name" style="color:${col}">${esc(data.senderName||'Anonyme')}</div>`:''}
     <div class="msg-row">
       ${!isMine?`<div class="msg-av" style="background:${col}">${(data.senderName||'A').charAt(0).toUpperCase()}</div>`:''}
       <div>
-        <div class="bubble ${isSoloEmoji(data.content||'')?'emoji-only-msg':''}" id="bbl-${id}">
+        <div class="bubble" id="bbl-${id}">
           ${replyHtml}
-          ${isSoloEmoji(data.content||'')?
-            `<span class="solo-emoji ${getEmojiAnimClass(data.content)}" id="txt-${id}">${esc(data.content)}</span>`:
-            `<span class="msg-text" id="txt-${id}">${formatText(esc(data.content||''))}</span>`
-          }
+          <span class="msg-text" id="txt-${id}">${formatText(esc(data.content||''))}</span>
           <div class="bubble-meta">
             ${data.edited?'<span class="meta-edited">modifié</span>':''}
             <span class="meta-time">${time}</span>
@@ -991,20 +850,6 @@ function buildMsg(id,data,isMine,showName){
   </div>`;
 }
 
-// Emoji-only detection
-const EMOJI_RE=/^(\p{Emoji_Presentation}|\p{Extended_Pictographic})(\uFE0F)?(\u20E3|\u200D(\p{Emoji_Presentation}|\p{Extended_Pictographic})(\uFE0F)?)*$/u;
-const EMOJI_ANIM_MAP={'😂':'emoji-anim-laugh','🤣':'emoji-anim-laugh','❤️':'emoji-anim-heart','🧡':'emoji-anim-heart','💛':'emoji-anim-heart','💚':'emoji-anim-heart','💙':'emoji-anim-heart','💜':'emoji-anim-heart','🖤':'emoji-anim-heart','🤍':'emoji-anim-heart','❤':'emoji-anim-heart','🔥':'emoji-anim-fire','😭':'emoji-anim-cry','😢':'emoji-anim-cry','⭐':'emoji-anim-star','🌟':'emoji-anim-star','✨':'emoji-anim-star','💫':'emoji-anim-star'};
-function isSoloEmoji(s){
-  const t=s.trim();
-  // Check if it's only emoji chars (1-3 emojis)
-  const noText=t.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D\u20E3\s]/gu,'');
-  const emojiCount=[...t.matchAll(/\p{Emoji_Presentation}|\p{Extended_Pictographic}/gu)].length;
-  return noText.length===0&&emojiCount>=1&&emojiCount<=3&&t.length<=12;
-}
-function getEmojiAnimClass(s){
-  for(const[em,cls]of Object.entries(EMOJI_ANIM_MAP)){if(s.includes(em))return cls;}
-  return '';
-}
 function formatText(t){
   return t
     .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
@@ -1116,31 +961,20 @@ window.ctxPin=async()=>{
   pinnedId=selectedId;
   await setDoc(doc(db,'settings','pinned'),{msgId:selectedId,text:data.content.substring(0,80),pinnedBy:me.uid});
   closeCtx();
-  const pb=$('pinnedBar');pb.classList.add('visible');pb.style.display='flex';
+  $('pinnedBar').classList.add('visible');
   $('pinnedText').textContent=data.content.substring(0,60)+(data.content.length>60?'…':'');
-  showToast('Message épinglé 📌','fa-thumbtack','var(--accent)');
+  showToast('Message épinglé 📌');
 };
 window.unpin=async e=>{
-  if(e){e.stopPropagation();e.preventDefault();}
-  try{await deleteDoc(doc(db,'settings','pinned'));}catch(err){}
-  const pb=$('pinnedBar');if(pb){pb.classList.remove('visible');pb.style.display='none';}
-  pinnedId=null;
-  showToast('Message désépinglé','fa-thumbtack','var(--accent)');
+  e.stopPropagation();
+  await deleteDoc(doc(db,'settings','pinned'));
+  $('pinnedBar').classList.remove('visible');pinnedId=null;
+  showToast('Message désépinglé');
 };
 window.scrollToPinned=()=>{if(pinnedId)scrollToMsg(pinnedId);};
 async function loadPinned(){
-  try{
-    const snap=await getDoc(doc(db,'settings','pinned'));
-    if(snap.exists()){
-      const d=snap.data();pinnedId=d.msgId;
-      const pb=$('pinnedBar');
-      pb.classList.add('visible');pb.style.display='flex';
-      $('pinnedText').textContent=(d.text||'').substring(0,60);
-    }
-  }catch(e){}
-  // Hide unpin button for non-admin
-  const unpinBtn=document.getElementById('unpinBtn');
-  if(unpinBtn)unpinBtn.style.display=isAdmin()?'flex':'none';
+  const snap=await getDoc(doc(db,'settings','pinned'));
+  if(snap.exists()){const d=snap.data();pinnedId=d.msgId;$('pinnedBar').classList.add('visible');$('pinnedText').textContent=(d.text||'').substring(0,60);}
 }
 window.scrollToMsg=id=>{const el=document.getElementById('mg-'+id);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.transition='background .3s';el.style.background='rgba(99,102,241,.15)';setTimeout(()=>el.style.background='',1500);}};
 
@@ -1200,7 +1034,7 @@ chatEl.addEventListener('touchstart',e=>{
   const mg=e.target.closest('.msg-group[data-msgid]');
   if(!mg)return;
   lpTarget=mg;
-  lpTimer=setTimeout(()=>{showMsgActions(mg);vibrateShort();},900);
+  lpTimer=setTimeout(()=>{showMsgActions(mg);vibrateShort();},500);
 },{passive:true});
 chatEl.addEventListener('touchend',()=>{clearTimeout(lpTimer);lpTimer=null;},{passive:true});
 chatEl.addEventListener('touchmove',()=>{clearTimeout(lpTimer);lpTimer=null;},{passive:true});
@@ -1266,47 +1100,23 @@ function listenPresence(){
     $('statOnline').textContent=online;
     $('membersBadge').textContent=members.length;
     $('membersCount').textContent=members.length;
-    // Admin sees online count in head, others just total count
-    const headEl=document.querySelector('.members-head span');
-    if(headEl){
-      if(isAdmin()) headEl.innerHTML='Membres (<span id="membersCount">'+members.length+'</span>) · <span style="color:var(--success);font-size:.75rem">'+online+' en ligne</span>';
-      else headEl.innerHTML='Membres (<span id="membersCount">'+members.length+'</span>)';
-    }
     renderMembers(members);
   });
 }
 function renderMembers(members){
-  const list=$('membersList');
-  list.innerHTML='';
-  const admin=isAdmin();
-
-  if(!admin){
-    // Non-admin: affiche uniquement le nombre de membres en ligne
-    const online=members.filter(m=>m.isOnline).length;
-    const total=members.length;
-    list.innerHTML='<div style="padding:32px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px">'
-      +'<div style="width:64px;height:64px;border-radius:50%;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.22);display:grid;place-items:center">'
-      +'<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'
-      +'</div>'
-      +'<div style="font-size:2.8rem;font-weight:900;color:var(--success);line-height:1">'+online+'</div>'
-      +'<div style="font-size:.82rem;color:var(--text-2)">membre'+(online!==1?'s':'')+' en ligne</div>'
-      +'</div>';
-    return;
-  }
-
-  // Admin: liste complete avec statuts
+  const list=$('membersList');list.innerHTML='';
   members.sort((a,b)=>b.isOnline-a.isOnline).forEach(m=>{
     const col=avColor(m.uid||'x');
-    list.insertAdjacentHTML('beforeend','<div class="member-row">'
-      +'<div class="member-av" style="background:'+col+'">'
-      +((m.name||'?').charAt(0).toUpperCase())
-      +'<div class="member-status '+(m.isOnline?'on':'')+'"></div>'
-      +'</div>'
-      +'<div class="member-info">'
-      +'<div class="member-name">'+esc(m.name||'Anonyme')+'</div>'
-      +'<div class="member-role" style="color:'+(m.isOnline?'var(--success)':'var(--text-3)')+'">'+( m.isOnline?'● En ligne':'○ Hors ligne')+'</div>'
-      +'</div>'
-      +'</div>');
+    list.insertAdjacentHTML('beforeend',`<div class="member-row">
+      <div class="member-av" style="background:${col}">
+        ${(m.name||'?').charAt(0).toUpperCase()}
+        <div class="member-status ${m.isOnline?'on':''}"></div>
+      </div>
+      <div class="member-info">
+        <div class="member-name">${esc(m.name||'Anonyme')}</div>
+        <div class="member-role">${m.isOnline?'En ligne':'Hors ligne'}</div>
+      </div>
+    </div>`);
   });
 }
 
@@ -1321,35 +1131,6 @@ function listenTyping(){
   });
 }
 
-
-/* ── COMPACT MODE ── */
-function applyCompact(){
-  document.body.classList.toggle('compact',compactMode);
-  $('compactTxt').textContent=compactMode?'Mode normal':'Mode compact';
-}
-window.toggleCompact=()=>{compactMode=!compactMode;localStorage.setItem('compact',compactMode?'1':'0');applyCompact();closeMenu();showToast(compactMode?'Mode compact activé':'Mode normal activé');};
-
-/* ── CLEAR MY MESSAGES ── */
-window.clearMyMessages=async()=>{
-  closeMenu();
-  if(!confirm('Supprimer tous vos messages ? Cette action est irréversible.'))return;
-  const q=query(collection(db,'messages'));
-  const snap=await getDocs(q);
-  const mine=snap.docs.filter(d=>d.data().senderId===me.uid);
-  if(mine.length===0){showToast('Aucun message à supprimer','fa-info-circle','var(--accent)');return;}
-  for(const d of mine)await deleteDoc(doc(db,'messages',d.id));
-  showToast(mine.length+' message(s) supprimé(s)','fa-trash','var(--danger)');
-};
-
-/* ── GROUP RULES ── */
-window.showGroupRules=()=>{
-  closeMenu();
-  const ov=document.createElement('div');ov.className='modal-overlay open';
-  ov.style.cssText='position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px';
-  ov.innerHTML='<div class="modal" style="max-width:400px"><div class="modal-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Règles du groupe</div><div style="font-size:.85rem;line-height:1.7;color:var(--text-2)"><p>📌 <strong>WebNote</strong> est un espace ouvert à tous les membres inscrits.</p><br><p>✅ Soyez respectueux et bienveillants.</p><p>✅ Partagez vos idées, projets, réflexions.</p><p>✅ Utilisez les réactions pour interagir.</p><br><p>❌ Pas de spam ni contenu inapproprié.</p><p>❌ Pas de publicité sans accord.</p><p>❌ Pas d'attaque personnelle.</p><br><p style="color:var(--accent);font-size:.78rem">Les modérateurs peuvent supprimer tout message sans préavis.</p></div><div class="modal-footer"><button class="modal-btn primary" onclick="this.closest('.modal-overlay').remove()">Compris !</button></div></div>';
-  ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});
-  document.body.appendChild(ov);
-};
 /* ── SCROLL ── */
 const chat=$('chat');
 chat.addEventListener('scroll',()=>{
@@ -1370,11 +1151,11 @@ window.copyUid=()=>{navigator.clipboard?.writeText(me.displayName||me.uid).then(
 window.toggleNotif=()=>{soundsOn=!soundsOn;localStorage.setItem('sounds',soundsOn?'1':'0');$('notifTxt').textContent=soundsOn?'Désactiver sons':'Activer sons';showToast(soundsOn?'Sons activés 🔔':'Sons désactivés 🔕');};
 window.toggleAttach=()=>showToast('Partage de fichiers bientôt disponible','fa-info-circle','var(--accent)');
 
-function showToast(msg,ico,col){
+function showToast(msg,ico='fa-check-circle',col='var(--success)'){
   const t=$('toast');
   $('toastMsg').textContent=msg;
   $('toastMsg').style.color='#f0f0f8';
-  // no <i> in toast, icon handled by SVG in HTML
+  const i=t.querySelector('i');i.className='fas '+ico;i.style.color=col;
   t.classList.add('show');clearTimeout(t._to);t._to=setTimeout(()=>t.classList.remove('show'),2500);
 }
 

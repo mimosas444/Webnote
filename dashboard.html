@@ -272,10 +272,10 @@ document.body.classList.toggle('hide-ts',hideTs);
 document.body.classList.toggle('square-bbl',!roundedStyle);
 function syncLabels(){
   if($('compactTxt'))$('compactTxt').textContent=compactMode?'Mode normal':'Mode compact';
-  if($('notifTxt'))$('notifTxt').textContent=soundsOn?'D\u00e9sactiver les sons':'Activer les sons';
+  if($('notifTxt'))$('notifTxt').textContent=soundsOn?'Désactiver les sons':'Activer les sons';
   if($('textSizeTxt'))$('textSizeTxt').textContent=bigText?'Texte normal':'Texte grand';
-  if($('tsTxt'))$('tsTxt').textContent=hideTs?'Afficher l\'heure':'Masquer l\'heure';
-  if($('styleTxt'))$('styleTxt').textContent=roundedStyle?'Style carr\u00e9':'Style arrondi';
+  if($('tsTxt'))$('tsTxt').textContent=hideTs?'Afficher l’heure':'Masquer l’heure';
+  if($('styleTxt'))$('styleTxt').textContent=roundedStyle?'Style carré':'Style arrondi';
 }
 requestAnimationFrame(()=>{setThemeIco(savedTheme);syncLabels();});
 /* CLOCK */
@@ -305,14 +305,14 @@ function getEmCls(s){for(const[em,cls]of Object.entries(EANIM)){if(s.includes(em
 function showToast(msg,color){const t=$('toast');$('tMsg').textContent=msg;$('tIcon').style.color=color||'var(--ok)';t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);}
 /* DATE LABEL — WhatsApp style */
 function dateLabel(ts){
-  const d=new Date(ts),n=new Date();
-  const sd=(a,b)=>a.getDate()===b.getDate()&&a.getMonth()===b.getMonth()&&a.getFullYear()===b.getFullYear();
-  const y1=new Date(n);y1.setDate(n.getDate()-1);
-  const y2=new Date(n);y2.setDate(n.getDate()-2);
-  if(sd(d,n))return "Aujourd\\'hui";
+  var d=new Date(ts),n=new Date();
+  var sd=function(a,b){return a.getDate()===b.getDate()&&a.getMonth()===b.getMonth()&&a.getFullYear()===b.getFullYear();};
+  var y1=new Date(n);y1.setDate(n.getDate()-1);
+  var y2=new Date(n);y2.setDate(n.getDate()-2);
+  if(sd(d,n))return "Aujourd’hui";
   if(sd(d,y1))return "Hier";
   if(sd(d,y2))return "Avant-hier";
-  const s=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  var s=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
   return s.charAt(0).toUpperCase()+s.slice(1);
 }
 /* MESSAGES — incremental */
@@ -453,7 +453,7 @@ window.toggleTextSize=()=>{bigText=!bigText;localStorage.setItem('bigText',bigTe
 window.toggleTimestamps=()=>{hideTs=!hideTs;localStorage.setItem('hideTs',hideTs?'1':'0');document.body.classList.toggle('hide-ts',hideTs);syncLabels();showToast(hideTs?'Heure masqu\u00e9e':'Heure visible');closeMenu();};
 window.toggleBubbleStyle=()=>{roundedStyle=!roundedStyle;localStorage.setItem('bubbleStyle',roundedStyle?'round':'square');document.body.classList.toggle('square-bbl',!roundedStyle);syncLabels();showToast(roundedStyle?'Style arrondi':'Style carr\u00e9');closeMenu();};
 window.clearMyMsgs=async()=>{closeMenu();if(!confirm('Supprimer tous vos messages ?'))return;const s=await getDocs(collection(db,'messages'));const mine=s.docs.filter(d=>d.data().senderId===me.uid);if(!mine.length){showToast('Aucun message');return;}for(const d of mine)await deleteDoc(doc(db,'messages',d.id));showToast(mine.length+' message(s) supprim\u00e9(s)','var(--dn)');};
-window.showRules=()=>{closeMenu();const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px';ov.innerHTML='<div style="background:rgba(14,12,26,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:26px;max-width:380px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,.5)"><div style="font-size:1rem;font-weight:800;margin-bottom:14px;color:var(--tx)">\ud83d\udccb R\u00e8gles du groupe</div><div style="font-size:.85rem;line-height:1.75;color:var(--tx2)"><p>\ud83d\udccc <strong style="color:var(--tx)">WebNote</strong> est un espace ouvert.</p><br><p>\u2705 Soyez respectueux et bienveillants.</p><p>\u2705 Partagez vos id\u00e9es et projets.</p><p>\u2705 Utilisez les r\u00e9actions pour interagir.</p><br><p>\u274c Pas de spam ni publicit\u00e9.</p><p>\u274c Pas d\'attaque personnelle.</p><br><p style="color:var(--ac);font-size:.78rem">Les mod\u00e9rateurs peuvent supprimer tout message sans pr\u00e9avis.</p></div><div style="margin-top:16px;text-align:right"><button onclick="this.closest(\'div[style]\').remove()" style="padding:10px 22px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;font-weight:700;cursor:pointer;font-family:inherit">Compris !</button></div></div>';ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});document.body.appendChild(ov);};
+window.showRules=()=>{closeMenu();const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px';ov.innerHTML='<div style="background:rgba(14,12,26,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:26px;max-width:380px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,.5)"><div style="font-size:1rem;font-weight:800;margin-bottom:14px;color:var(--tx)">\ud83d\udccb R\u00e8gles du groupe</div><div style="font-size:.85rem;line-height:1.75;color:var(--tx2)"><p>\ud83d\udccc <strong style="color:var(--tx)">WebNote</strong> est un espace ouvert.</p><br><p>\u2705 Soyez respectueux et bienveillants.</p><p>\u2705 Partagez vos id\u00e9es et projets.</p><p>\u2705 Utilisez les r\u00e9actions pour interagir.</p><br><p>\u274c Pas de spam ni publicit\u00e9.</p><p>\u274c Pas d’attaque personnelle.</p><br><p style="color:var(--ac);font-size:.78rem">Les mod\u00e9rateurs peuvent supprimer tout message sans pr\u00e9avis.</p></div><div style="margin-top:16px;text-align:right"><button onclick="this.closest(\'div[style]\').remove()" style="padding:10px 22px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;font-weight:700;cursor:pointer;font-family:inherit">Compris !</button></div></div>';ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});document.body.appendChild(ov);};
 </script>
 </body>
-        </html>
+  </html>

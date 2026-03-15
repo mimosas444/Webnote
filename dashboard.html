@@ -767,6 +767,7 @@ const $=id=>document.getElementById(id);
 let me=null,selectedId=null,replyData=null,pinnedId=null;
 let soundsOn=localStorage.getItem('sounds')==='1';
 let unread=0,atBottom=true;
+let compactMode=localStorage.getItem('compact')==='1'; // moved up to avoid TDZ crash
 const EMOJIS=['😀','😂','😅','🤣','😊','😍','🤩','😎','🥳','🤔','😐','😑','🙄','😏','😒','😔','😢','😭','😤','😠','🤬','🥺','🥹','❤️','🧡','💛','💚','💙','💜','🖤','🤍','❤️‍🔥','💔','💕','😘','😗','😙','😚','🤗','🤭','🫠','🫥','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤫','🫢','🤐','😶','🫡','🤤','🙃','😵','😵‍💫','🤪','😜','😝','😛','🤑','🥴','🤢','🤮','🤧','😷','🤒','🤕','😴','💤','💩','👻','💀','☠️','👽','🤖','👺','👹','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🫶','🤲','👐','🙌','👏','🤝','👍','👎','👊','✊','🤛','🤜','🤞','✌️','🤟','🤘','👌','🤌','🤏','👈','👉','👆','🖕','👇','☝️','✋','🤚','🖐','🖖','🫵','💪','🦾','🦿','🦵','🦶','🫁','🫀','👂','🦻','👃','🫦','👅','👁','👀','🧠','🦷','🦴','👣','🌟','⭐','✨','💫','🌙','☀️','🌈','🔥','💥','❄️','⚡','🌊','🌀','🎉','🎊','🎈','🎁','🎀','🎗','🏆','🥇','🎯','🎮','🕹','🎲','🎸','🎹','🎵','🎶','📱','💻','⌨️','🖥','📷','📸','📹','🎥','📺','📻','🎙','⏰','⏱','⌚','⏳','📅','📆','📝','📋','📌','📍','🔐','🔒','🔓','🔑','🗝','🔨','🪛','🔧','⚙️','🛠','🔫','💣','🧨','🪤','🪜','🪞','🪟','🛋','🪑','🚀','✈️','🚗','🚕','🚙','🚌','🏠','🏡','🏗','🏢','🏪','🌍','🌎','🌏','🗺','🧭','🏔','🌋','🏕','🏖','🏝','🌴','🌲','🌵','🌾','🌺','🌸','🌼','🌻','🌹','🥀','🍀','🌿','🌱','🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐔','🐧','🐦','🐤','🦆','🦅','🦉','🦇','🐝','🪲','🐛','🦋','🐌','🐞','🐜','🪳','🦟','🦗','🦂','🐢','🐍','🦎','🦖','🦕','🐙','🦑','🦐','🦞','🦀','🐡','🐠','🐟','🐬','🐳','🦈','🐊','🐅','🐆','🦓','🦍','🦧','🦣','🐘','🦛','🦏','🐪','🐫','🦒','🦘','🦬','🐃','🐂','🐄','🐎','🐖','🐏','🐑','🦙','🐐','🦌','🐕','🐩','🦮','🐕‍🦺','🐈','🐈‍⬛','🪶','🐓','🦃','🦤','🦚','🦜','🦢','🦩','🕊','🐇','🦝','🦨','🦡','🦫','🦦','🦥','🐁','🐀','🐿','🦔','🐾','🍎','🍊','🍋','🍇','🍓','🫐','🍈','🍉','🍑','🍒','🍌','🍍','🥭','🥝','🍅','🍆','🥑','🥦','🥬','🥒','🌶','🫑','🧅','🌽','🥕','🫛','🧄','🥔','🍠','🧇','🥞','🧈','🍳','🥚','🧆','🍗','🍖','🌭','🍔','🍟','🍕','🌮','🌯','🫔','🥙','🥪','🥗','🍝','🍜','🍲','🍛','🍣','🍱','🥟','🦪','🍤','🍙','🍚','🍘','🍥','🥮','🍢','🧁','🍰','🎂','🍮','🍭','🍬','🍫','🍿','🍩','🍪','🌰','🥜','🍯','🧃','🥤','🧋','☕','🍵','🧉','🍺','🍻','🥂','🍷','🥃','🍸','🍹','🧊','🍴','🫙','🧂'];
 let filteredEmojis=[...EMOJIS];
 
@@ -827,6 +828,7 @@ function loadMessages(){
   onSnapshot(q,snap=>{
     // Process changes incrementally - no full re-render
     snap.docChanges().forEach(change=>{
+      try{
       const id=change.doc.id, data=change.doc.data();
       if(change.type==='added'){
         allMessages[id]=data;
@@ -841,6 +843,7 @@ function loadMessages(){
         const el=document.getElementById('mg-'+id);
         if(el){el.style.transition='opacity .3s,transform .3s';el.style.opacity='0';el.style.transform='scale(.95)';setTimeout(()=>el.remove(),300);}
       }
+      }catch(err){console.error('Message render error:',err);}
     });
     const total=Object.keys(allMessages).length;
     $('statMsgs').textContent=total;
@@ -868,7 +871,7 @@ function appendMsg(id,data){
   const lastTs=lastGroup?parseInt(lastGroup.dataset.ts||0):0;
   const showName=!isMine&&(data.senderId!==lastSender||ts-lastTs>120000);
   // Remove welcome card if present
-  const wc=document.getElementById('welcomeCard');if(wc&&wc.parentNode===chat)wc.style.display='none';
+  const wc=document.getElementById('welcomeCard');if(wc)wc.style.display='none';
   const html=buildMsg(id,data,isMine,showName);
   chat.insertAdjacentHTML('beforeend',html);
   // Add entry animation
@@ -1320,7 +1323,6 @@ function listenTyping(){
 
 
 /* ── COMPACT MODE ── */
-let compactMode=localStorage.getItem('compact')==='1';
 function applyCompact(){
   document.body.classList.toggle('compact',compactMode);
   $('compactTxt').textContent=compactMode?'Mode normal':'Mode compact';
@@ -1368,11 +1370,11 @@ window.copyUid=()=>{navigator.clipboard?.writeText(me.displayName||me.uid).then(
 window.toggleNotif=()=>{soundsOn=!soundsOn;localStorage.setItem('sounds',soundsOn?'1':'0');$('notifTxt').textContent=soundsOn?'Désactiver sons':'Activer sons';showToast(soundsOn?'Sons activés 🔔':'Sons désactivés 🔕');};
 window.toggleAttach=()=>showToast('Partage de fichiers bientôt disponible','fa-info-circle','var(--accent)');
 
-function showToast(msg,ico='fa-check-circle',col='var(--success)'){
+function showToast(msg,ico,col){
   const t=$('toast');
   $('toastMsg').textContent=msg;
   $('toastMsg').style.color='#f0f0f8';
-  const i=t.querySelector('i');i.className='fas '+ico;i.style.color=col;
+  // no <i> in toast, icon handled by SVG in HTML
   t.classList.add('show');clearTimeout(t._to);t._to=setTimeout(()=>t.classList.remove('show'),2500);
 }
 

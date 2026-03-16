@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Envoie un message anonyme</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060610;--bg1:#0b0b1a;--bg2:#10102a;
+  --p:#7c6ef7;--p2:#a78bfa;--p3:#c4b5fd;
+  --pk:#ec4899;--ok:#10d9a0;--dn:#f87171;
+  --tx:#f0efff;--tx2:#9490b8;--tx3:#4a4870;
+  --bd:rgba(124,110,247,.12);--bd2:rgba(124,110,247,.22);
+  --gl:rgba(124,110,247,.06);--gl2:rgba(124,110,247,.1);
+  --mb:linear-gradient(135deg,#7c6ef7,#a78bfa);
+  --mpk:linear-gradient(135deg,#ec4899,#f97316);
+  --mok:linear-gradient(135deg,#10d9a0,#3b82f6);
+  --ea:cubic-bezier(.23,1,.32,1);--eb:cubic-bezier(.34,1.56,.64,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{height:100%}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100dvh;overflow-x:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 16px 40px;position:relative}
+
+/* BG */
+.orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.o{position:absolute;border-radius:50%;filter:blur(80px);animation:oF ease-in-out infinite}
+.o1{width:500px;height:500px;background:radial-gradient(rgba(124,110,247,.3),transparent 70%);top:-180px;left:-180px;animation-duration:22s}
+.o2{width:450px;height:450px;background:radial-gradient(rgba(236,72,153,.22),transparent 70%);bottom:-130px;right:-130px;animation-duration:28s;animation-delay:-9s}
+.o3{width:300px;height:300px;background:radial-gradient(rgba(16,217,160,.18),transparent 70%);top:50%;left:50%;animation-duration:16s;animation-delay:-5s}
+@keyframes oF{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-20px,-25px) scale(1.07)}}
+body::after{content:'';position:fixed;inset:0;opacity:.025;pointer-events:none;z-index:1;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px}
+
+/* WRAP */
+.wrap{width:100%;max-width:420px;position:relative;z-index:2;display:flex;flex-direction:column;gap:0}
+
+/* LOADING */
+#loadView{text-align:center;padding:60px 0;display:flex;flex-direction:column;align-items:center;gap:14px}
+.spin{width:28px;height:28px;border:2.5px solid rgba(124,110,247,.2);border-top-color:var(--p2);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* NOT FOUND */
+#nfView{text-align:center;padding:40px 20px;display:none;flex-direction:column;align-items:center;gap:14px}
+#nfView h2{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800}
+#nfView p{font-size:.85rem;color:var(--tx2);line-height:1.6}
+
+/* FORM VIEW */
+#formView{display:none;flex-direction:column;gap:0;animation:fUp .5s var(--ea) both}
+@keyframes fUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+/* TOP LOGO */
+.top-logo{text-align:center;margin-bottom:28px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.tl-ico{width:56px;height:56px;border-radius:17px;background:var(--mb);display:flex;align-items:center;justify-content:center;box-shadow:0 0 36px rgba(124,110,247,.55),0 0 70px rgba(124,110,247,.2);animation:iFloat 3.5s ease-in-out infinite}
+@keyframes iFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.tl-brand{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:-.5px;background:var(--mb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tl-tag{font-size:.72rem;color:var(--tx3);font-weight:500}
+
+/* OWNER CARD */
+.owner-card{background:var(--bg1);border:1px solid var(--bd);border-radius:20px;padding:18px;margin-bottom:14px;display:flex;align-items:center;gap:13px;position:relative;overflow:hidden}
+.owner-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--p),var(--pk),transparent)}
+.ow-av{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:800;color:#fff;flex-shrink:0;position:relative}
+.ow-av-ring{position:absolute;inset:-2px;border-radius:50%;border:2px solid transparent;background:linear-gradient(var(--bg1),var(--bg1)) padding-box,var(--mb) border-box}
+.ow-info{flex:1;min-width:0}
+.ow-name{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.ow-status{font-size:.72rem;color:var(--tx2)}
+.anon-badge{flex-shrink:0;background:rgba(16,217,160,.09);border:1px solid rgba(16,217,160,.2);border-radius:10px;padding:7px 10px;text-align:center}
+.ab-ico{font-size:1rem;display:block;margin-bottom:1px}
+.ab-txt{font-size:.6rem;color:var(--ok);font-weight:700;display:block;white-space:nowrap}
+
+/* FORM CARD */
+.form-card{background:var(--bg1);border:1px solid var(--bd);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:13px;position:relative;overflow:hidden}
+.form-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(124,110,247,.4),transparent)}
+.form-lbl{font-size:.72rem;font-weight:700;color:var(--tx2);display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.8px}
+.form-lbl svg{color:var(--p2)}
+
+/* TEXTAREA */
+.ta-wrap{position:relative}
+.msg-ta{width:100%;background:var(--bg2);border:1.5px solid var(--bd);border-radius:14px;padding:13px 14px;color:var(--tx);font-family:'DM Sans',sans-serif;font-size:.93rem;outline:none;resize:none;line-height:1.65;min-height:120px;max-height:200px;transition:border .25s,box-shadow .25s;-webkit-appearance:none}
+.msg-ta:focus{border-color:rgba(124,110,247,.45);box-shadow:0 0 0 3px rgba(124,110,247,.09)}
+.msg-ta::placeholder{color:var(--tx3)}
+.char-count{position:absolute;bottom:10px;right:12px;font-size:.65rem;color:var(--tx3);font-weight:600;pointer-events:none;transition:.2s}
+.char-count.warn{color:var(--warn,#f59e0b)}
+.char-count.over{color:var(--dn)}
+
+/* EMOJI QUICK */
+.emo-row{display:flex;gap:5px;flex-wrap:wrap}
+.eq{width:34px;height:34px;border-radius:9px;background:var(--bg2);border:1px solid var(--bd);font-size:1.05rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.18s;user-select:none;flex-shrink:0}
+.eq:hover{background:var(--gl2);transform:scale(1.18) translateY(-1px)}
+
+/* MOOD SELECTOR */
+.mood-row{display:flex;gap:6px;flex-wrap:wrap}
+.mood{height:28px;border-radius:8px;border:1px solid var(--bd);background:var(--gl);font-size:.72rem;font-weight:600;color:var(--tx2);cursor:pointer;padding:0 10px;transition:.2s;white-space:nowrap}
+.mood:hover{background:var(--gl2);color:var(--tx)}
+.mood.sel{background:rgba(124,110,247,.14);border-color:var(--bd2);color:var(--p2)}
+
+/* ANON NOTE */
+.anon-note{display:flex;align-items:flex-start;gap:9px;background:rgba(124,110,247,.05);border:1px solid rgba(124,110,247,.13);border-radius:12px;padding:11px 13px;font-size:.74rem;color:var(--tx2);line-height:1.6}
+.anon-note svg{flex-shrink:0;margin-top:1px;color:var(--p2)}
+
+/* SEND BUTTON */
+.send-btn{width:100%;padding:15px;border-radius:16px;border:none;background:var(--mb);color:#fff;font-family:'DM Sans',sans-serif;font-size:.97rem;font-weight:700;cursor:pointer;box-shadow:0 6px 28px rgba(124,110,247,.4);transition:.24s var(--ea);display:flex;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden;letter-spacing:-.2px}
+.send-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.12),transparent);pointer-events:none}
+.send-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 36px rgba(124,110,247,.55)}
+.send-btn:active:not(:disabled){transform:scale(.98)}
+.send-btn:disabled{opacity:.38;cursor:not-allowed;transform:none}
+
+/* SUCCESS VIEW */
+#successView{display:none;flex-direction:column;align-items:center;gap:0;text-align:center;animation:fUp .5s var(--ea) both;padding:10px 0}
+.succ-ring{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,rgba(16,217,160,.15),rgba(124,110,247,.12));border:2px solid rgba(16,217,160,.25);display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 18px;animation:pIn .55s var(--eb) both}
+@keyframes pIn{0%{opacity:0;transform:scale(0) rotate(-10deg)}65%{transform:scale(1.15) rotate(4deg)}85%{transform:scale(.95) rotate(-1deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+.succ-title{font-family:'Syne',sans-serif;font-size:1.55rem;font-weight:800;letter-spacing:-1px;margin-bottom:8px}
+.succ-sub{font-size:.85rem;color:var(--tx2);line-height:1.65;max-width:280px;margin:0 auto 24px}
+.succ-acts{display:flex;flex-direction:column;gap:9px;width:100%;max-width:290px;margin:0 auto}
+.sa-btn{padding:13px;border-radius:14px;border:none;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:.22s var(--ea);display:flex;align-items:center;justify-content:center;gap:8px}
+.sa-btn.another{background:var(--mb);color:#fff;box-shadow:0 4px 18px rgba(124,110,247,.35)}
+.sa-btn.another:hover{transform:translateY(-1px);box-shadow:0 8px 26px rgba(124,110,247,.5)}
+.sa-btn.wa{background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.18);color:#25d366}
+.sa-btn.wa:hover{background:rgba(37,211,102,.15)}
+.sa-btn.join{background:var(--gl);border:1px solid var(--bd);color:var(--tx2)}
+.sa-btn.join:hover{background:var(--gl2);color:var(--tx)}
+
+/* FOOTER */
+.footer{margin-top:22px;text-align:center;font-size:.7rem;color:var(--tx3);display:flex;align-items:center;gap:5px;justify-content:center}
+.footer a{color:var(--p2);text-decoration:none;font-weight:600}
+.footer a:hover{color:var(--p3)}
+
+/* CONFETTI */
+.cfwrap{position:fixed;inset:0;pointer-events:none;z-index:999;overflow:hidden}
+.cf{position:absolute;top:-10px;animation:cfFall linear forwards}
+@keyframes cfFall{0%{transform:translateY(0) rotate(0) translateX(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg) translateX(var(--dx));opacity:0}}
+
+/* SPINNER IN BUTTON */
+.btn-spin{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+
+@media(max-width:380px){.emo-row .eq{width:30px;height:30px;font-size:.9rem}}
+</style>
+</head>
+<body>
+
+<div class="orbs"><div class="o o1"></div><div class="o o2"></div><div class="o o3"></div></div>
+<div class="cfwrap" id="cfwrap"></div>
+
+<div class="wrap">
+
+  <!-- LOADING -->
+  <div id="loadView">
+    <div class="spin"></div>
+    <div style="font-size:.8rem;color:var(--tx3)">Chargement...</div>
+  </div>
+
+  <!-- NOT FOUND -->
+  <div id="nfView">
+    <div style="font-size:3rem">🔍</div>
+    <h2>Lien introuvable</h2>
+    <p>Ce lien n'existe pas ou a expiré.</p>
+    <a href="dashboard.html" style="color:var(--p2);font-size:.85rem;font-weight:600;text-decoration:none;margin-top:4px">→ Créer mon propre lien</a>
+  </div>
+
+  <!-- FORM -->
+  <div id="formView">
+    <div class="top-logo">
+      <div class="tl-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg></div>
+      <div class="tl-brand">WebNote</div>
+      <div class="tl-tag">Messages anonymes</div>
+    </div>
+
+    <div class="owner-card">
+      <div class="ow-av" id="owAv" style="background:linear-gradient(135deg,#7c6ef7,#a78bfa)">
+        <div class="ow-av-ring"></div>
+        <span id="owInit">?</span>
+      </div>
+      <div class="ow-info">
+        <div class="ow-name" id="owName">Chargement...</div>
+        <div class="ow-status">attend tes messages anonymes 👀</div>
+      </div>
+      <div class="anon-badge">
+        <span class="ab-ico">🔒</span>
+        <span class="ab-txt">100%<br>anonyme</span>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div class="form-lbl"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Ton message</div>
+
+      <div class="ta-wrap">
+        <textarea class="msg-ta" id="msgTA" placeholder="Écris ce que tu veux vraiment dire... une confession, une question, un compliment, une critique 🤫" maxlength="500" oninput="onTA()"></textarea>
+        <span class="char-count" id="charCnt">0 / 500</span>
+      </div>
+
+      <!-- EMOJI QUICK -->
+      <div class="emo-row">
+        <div class="eq" onclick="insEm('😍')">😍</div>
+        <div class="eq" onclick="insEm('🔥')">🔥</div>
+        <div class="eq" onclick="insEm('😂')">😂</div>
+        <div class="eq" onclick="insEm('❤️')">❤️</div>
+        <div class="eq" onclick="insEm('😭')">😭</div>
+        <div class="eq" onclick="insEm('💀')">💀</div>
+        <div class="eq" onclick="insEm('🤩')">🤩</div>
+        <div class="eq" onclick="insEm('👀')">👀</div>
+        <div class="eq" onclick="insEm('💯')">💯</div>
+        <div class="eq" onclick="insEm('🫶')">🫶</div>
+      </div>
+
+      <!-- MOOD SUGGESTIONS -->
+      <div>
+        <div style="font-size:.68rem;color:var(--tx3);font-weight:600;text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px">Suggestions</div>
+        <div class="mood-row">
+          <div class="mood" onclick="setMood(this,'confession')">🤫 Confession</div>
+          <div class="mood" onclick="setMood(this,'compliment')">✨ Compliment</div>
+          <div class="mood" onclick="setMood(this,'question')">🤔 Question</div>
+          <div class="mood" onclick="setMood(this,'critique')">💬 Critique</div>
+          <div class="mood" onclick="setMood(this,'other')">🎲 Autre</div>
+        </div>
+      </div>
+
+      <div class="anon-note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Ton identité est <strong>totalement protégée</strong>. Aucune donnée personnelle n'est collectée. <span id="owName2">Cette personne</span> verra uniquement ton message.</span>
+      </div>
+
+      <button class="send-btn" id="sendBtn" onclick="sendMsg()" disabled>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13" stroke="#fff"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="#fff" stroke="none"/></svg>
+        Envoyer anonymement
+      </button>
+    </div>
+
+    <div class="footer">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Propulsé par <a href="dashboard.html">WebNote</a>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div id="successView">
+    <div class="succ-ring">✅</div>
+    <div class="succ-title">Envoyé ! 🎉</div>
+    <p class="succ-sub">Ton message a été envoyé anonymement à <strong id="owName3">cette personne</strong>. Elle le recevra en temps réel.</p>
+    <div class="succ-acts">
+      <button class="sa-btn another" onclick="sendAnother()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.22"/></svg>
+        Envoyer un autre message
+      </button>
+      <button class="sa-btn wa" onclick="shareWA()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+        Moi aussi je veux en recevoir
+      </button>
+      <button class="sa-btn join" onclick="goHome()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Rejoindre WebNote
+      </button>
+    </div>
+    <div class="footer" style="margin-top:28px">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Propulsé par <a href="dashboard.html">WebNote</a>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import{getFirestore,collection,addDoc,serverTimestamp,doc,getDoc}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+const app=initializeApp({apiKey:"AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",authDomain:"webnote-9ea1e.firebaseapp.com",projectId:"webnote-9ea1e",storageBucket:"webnote-9ea1e.firebasestorage.app",messagingSenderId:"869875049003",appId:"1:869875049003:web:0f7334733cb313e426406e"});
+const db=getFirestore(app),auth=getAuth(app);
+const $=id=>document.getElementById(id);
+
+const params=new URLSearchParams(window.location.search);
+const targetUid=params.get('u');
+let ownerName='Cette personne',myUid=null,myLink='',selectedMood='';
+const AVC=['#7c6ef7','#a78bfa','#ec4899','#f97316','#10b981','#3b82f6','#14b8a6','#f59e0b'];
+
+onAuthStateChanged(auth,u=>{if(u){myUid=u.uid;const base=window.location.origin+window.location.pathname+'?u='+myUid;myLink=base;}});
+
+async function loadOwner(){
+  if(!targetUid){showNF();return;}
+  try{
+    const snap=await getDoc(doc(db,'presence',targetUid));
+    $('loadView').style.display='none';
+    if(!snap.exists()){showNF();return;}
+    const data=snap.data();
+    ownerName=data.name||'Quelqu\'un';
+    $('owName').textContent=ownerName;
+    $('owName2').textContent=ownerName;
+    $('owName3').textContent=ownerName;
+    $('owInit').textContent=ownerName.charAt(0).toUpperCase();
+    let h=0;for(const c of targetUid)h=(h*31+c.charCodeAt(0))%AVC.length;
+    $('owAv').style.background='linear-gradient(135deg,'+AVC[Math.abs(h)]+','+AVC[(Math.abs(h)+2)%AVC.length]+')';
+    $('formView').style.display='flex';
+  }catch{showNF();}
+}
+function showNF(){$('loadView').style.display='none';$('nfView').style.display='flex';}
+
+loadOwner();
+
+/* TEXTAREA */
+window.onTA=()=>{
+  const ta=$('msgTA'),len=ta.value.length;
+  const cc=$('charCnt');
+  cc.textContent=len+' / 500';
+  cc.className='char-count'+(len>420?' warn':'')+(len>=500?' over':'');
+  $('sendBtn').disabled=!ta.value.trim()||len>500;
+};
+
+window.insEm=em=>{
+  const ta=$('msgTA');ta.value+=em;ta.focus();onTA();
+};
+
+window.setMood=(el,type)=>{
+  document.querySelectorAll('.mood').forEach(m=>m.classList.remove('sel'));
+  el.classList.add('sel');selectedMood=type;
+  const hints={
+    confession:'Je dois t\'avouer quelque chose...',
+    compliment:'Je voulais juste te dire que ',
+    question:'J\'ai une question pour toi : ',
+    critique:'Je pense que tu devrais...',
+    other:''
+  };
+  if(hints[type]&&!$('msgTA').value){$('msgTA').value=hints[type];$('msgTA').focus();$('msgTA').setSelectionRange(9999,9999);onTA();}
+};
+
+window.sendMsg=async()=>{
+  const txt=$('msgTA').value.trim();
+  if(!txt||!targetUid)return;
+  const btn=$('sendBtn');btn.disabled=true;
+  btn.innerHTML='<div class="btn-spin"></div>';
+  try{
+    await addDoc(collection(db,'nglMsgs',targetUid,'msgs'),{
+      message:txt,
+      mood:selectedMood||null,
+      createdAt:serverTimestamp(),
+      reactions:{},
+      read:false,
+    });
+    showSuccess();
+  }catch{
+    btn.disabled=false;
+    btn.innerHTML='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13" stroke="#fff"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="#fff" stroke="none"/></svg>Réessayer';
+    alert('Erreur — réessaie.');
+  }
+};
+
+function showSuccess(){
+  $('formView').style.display='none';
+  $('successView').style.display='flex';
+  spawnConfetti();
+}
+
+window.sendAnother=()=>{
+  $('msgTA').value='';onTA();selectedMood='';
+  document.querySelectorAll('.mood').forEach(m=>m.classList.remove('sel'));
+  $('successView').style.display='none';
+  $('formView').style.display='flex';
+};
+
+window.shareWA=()=>{
+  const link=myLink||window.location.origin+'/ngl.html';
+  const txt=myUid
+    ?'🎭 *Envoie-moi un message anonyme !*\n\nJe ne saurai jamais que c\'est toi 👀\n\n'+link
+    :'🎭 Rejoins WebNote pour recevoir des messages anonymes !\n\n'+window.location.origin+'/dashboard.html';
+  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+};
+
+window.goHome=()=>{window.location.href='dashboard.html';};
+
+/* CONFETTI */
+function spawnConfetti(){
+  const wrap=$('cfwrap');wrap.innerHTML='';
+  const colors=['#7c6ef7','#a78bfa','#ec4899','#f97316','#10d9a0','#fbbf24','#c4b5fd','#f43f5e'];
+  const shapes=['2px','4px','6px'];
+  for(let i=0;i<65;i++){
+    const d=document.createElement('div');d.className='cf';
+    const dx=(Math.random()-0.5)*300;
+    const size=parseInt(shapes[Math.floor(Math.random()*shapes.length)]);
+    d.style.cssText=`
+      left:${10+Math.random()*80}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${size+Math.random()*6}px;
+      height:${size+Math.random()*6}px;
+      border-radius:${Math.random()>.45?'50%':'2px'};
+      --dx:${dx}px;
+      animation-duration:${1.3+Math.random()*1.8}s;
+      animation-delay:${Math.random()*.5}s;
+    `;
+    wrap.appendChild(d);
+  }
+  setTimeout(()=>wrap.innerHTML='',3500);
+}
+</script>
+</body>
+</html>

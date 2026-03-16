@@ -5,7 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Message anonyme — WebNote</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- Twemoji — emojis style Twitter/X, bien meilleurs qu'Android -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/twemoji.min.js" crossorigin="anonymous"></script>
 <style>
+/* Twemoji global render */
+img.emoji{display:inline-block;vertical-align:-.18em;width:1.1em;height:1.1em;pointer-events:none}
+/* Twemoji dans les boutons / chips */
+.chip img.emoji,.sa img.emoji,.jbtn img.emoji,.mdb img.emoji{width:1em;height:1em;vertical-align:-.14em}
+/* Taille large pour les emojis standalone (burst, join) */
+.join-emoji img.emoji{width:2.2rem;height:2.2rem;vertical-align:middle}
+.eb-item img.emoji{width:.9rem;height:.9rem}
 :root{
   --bg:#05050e;--bg1:#0a0918;--bg2:#0f0e22;--bg3:#14132c;
   --p:#6366f1;--p2:#8b5cf6;--p3:#a78bfa;--p4:#c4b5fd;
@@ -454,14 +463,14 @@ body{
 <div id="joinModal">
   <div class="join-wrap">
     <div class="join-head">
-      <span class="join-emoji">🎭</span>
+      <span class="join-emoji"><span class="twm">🎭</span></span>
       <div class="join-title">Reçois tes propres<br>messages <span class="g1">anonymes</span></div>
       <p class="join-sub">Des gens autour de toi ont des choses à te dire. Rejoins WebNote et crée ton lien unique.</p>
     </div>
     <div class="join-feats">
-      <div class="jf"><div class="jf-ic v">🔗</div><div class="jf-txt"><strong>Lien unique</strong> à partager sur WhatsApp, Instagram, partout</div></div>
-      <div class="jf"><div class="jf-ic g">⚡</div><div class="jf-txt">Messages reçus en <strong>temps réel</strong>, directement sur ton tableau de bord</div></div>
-      <div class="jf"><div class="jf-ic p">🔒</div><div class="jf-txt"><strong>100% anonyme</strong> · Gratuit · Propulsé par WebNote</div></div>
+      <div class="jf"><div class="jf-ic v"><span class="twm">🔗</span></div><div class="jf-txt"><strong>Lien unique</strong> à partager sur WhatsApp, Instagram, partout</div></div>
+      <div class="jf"><div class="jf-ic g"><span class="twm">⚡</span></div><div class="jf-txt">Messages reçus en <strong>temps réel</strong>, directement sur ton tableau de bord</div></div>
+      <div class="jf"><div class="jf-ic p"><span class="twm">🔒</span></div><div class="jf-txt"><strong>100% anonyme</strong> · Gratuit · Propulsé par WebNote</div></div>
     </div>
     <div class="join-btns">
       <button class="jbtn prim" onclick="goJoin()">
@@ -492,14 +501,47 @@ body{
         <circle class="ld-ring-bg" cx="26" cy="26" r="22"/>
         <circle class="ld-ring-arc" cx="26" cy="26" r="22"/>
       </svg>
-      <div class="ld-ico">✍️</div>
+      <!-- Icône stylo 3D stylisée -->
+    <div class="ld-ico">
+      <svg width="22" height="22" viewBox="0 0 36 36" fill="none">
+        <!-- Ombre portée -->
+        <ellipse cx="18" cy="32" rx="8" ry="2" fill="rgba(99,102,241,.25)"/>
+        <!-- Corps du stylo — face principale -->
+        <path d="M10 6 L26 6 L28 28 L18 32 L8 28 Z" fill="url(#penBody)"/>
+        <!-- Reflet côté gauche -->
+        <path d="M10 6 L14 6 L16 28 L8 28 Z" fill="rgba(255,255,255,.18)"/>
+        <!-- Tranche du haut -->
+        <path d="M10 6 L26 6 L24 3 L12 3 Z" fill="url(#penTop)"/>
+        <!-- Pointe -->
+        <path d="M14 28 L18 32 L22 28 Z" fill="url(#penTip)"/>
+        <!-- Clip métallique -->
+        <path d="M20 4 L22 4 L24 22 L22 22 Z" fill="rgba(255,255,255,.22)" rx="1"/>
+        <!-- Trait de plume -->
+        <line x1="18" y1="8" x2="18" y2="26" stroke="rgba(255,255,255,.15)" stroke-width="1" stroke-dasharray="2 2"/>
+        <defs>
+          <linearGradient id="penBody" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#8b5cf6"/>
+            <stop offset="60%" stop-color="#6366f1"/>
+            <stop offset="100%" stop-color="#4338ca"/>
+          </linearGradient>
+          <linearGradient id="penTop" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#a78bfa"/>
+            <stop offset="100%" stop-color="#7c3aed"/>
+          </linearGradient>
+          <linearGradient id="penTip" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#c4b5fd"/>
+            <stop offset="100%" stop-color="#7c3aed"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
     </div>
     <div class="ld-lbl">Chargement du profil...</div>
   </div>
 
   <!-- NOT FOUND -->
   <div id="nfView">
-    <div class="nf-glyph">🔍</div>
+    <div class="nf-glyph"><span class="twm">🔍</span></div>
     <h2>Lien introuvable</h2>
     <p>Ce lien de messages anonymes n'existe pas ou a expiré.</p>
     <a class="nf-cta" href="index.html">
@@ -533,10 +575,10 @@ body{
       </div>
       <div class="ow-info">
         <div class="ow-name" id="owName">Chargement...</div>
-        <div class="ow-desc">attend tes messages anonymes 👀</div>
+        <div class="ow-desc">attend tes messages anonymes <span class="twm">👀</span></div>
       </div>
       <div class="ow-anon">
-        <span class="ow-anon-ico">🔒</span>
+        <span class="ow-anon-ico twm">🔒</span>
         <span class="ow-anon-txt">Anonyme</span>
       </div>
     </div>
@@ -550,7 +592,7 @@ body{
 
       <div class="ta-outer">
         <textarea class="msg-ta" id="msgTA"
-          placeholder="Dis ce que tu n'oses pas dire à voix haute... une confession, un aveu, une pensée secrète 🤫"
+          placeholder="Dis ce que tu n'oses pas dire à voix haute... une confession, un aveu, une pensée secrète"
           maxlength="500"
           oninput="onTA()"
           onfocus="onFocus()"
@@ -569,31 +611,31 @@ body{
         <span id="owName3">...</span> verra ton message en temps réel
       </div>
 
-      <!-- Emoji row -->
+      <!-- Emoji row — Twemoji rendered -->
       <div class="em-scroll">
-        <div class="em" onclick="ins('😍')">😍</div>
-        <div class="em" onclick="ins('🔥')">🔥</div>
-        <div class="em" onclick="ins('😂')">😂</div>
-        <div class="em" onclick="ins('❤️')">❤️</div>
-        <div class="em" onclick="ins('😭')">😭</div>
-        <div class="em" onclick="ins('💀')">💀</div>
-        <div class="em" onclick="ins('🤩')">🤩</div>
-        <div class="em" onclick="ins('👀')">👀</div>
-        <div class="em" onclick="ins('💯')">💯</div>
-        <div class="em" onclick="ins('🫶')">🫶</div>
-        <div class="em" onclick="ins('😤')">😤</div>
-        <div class="em" onclick="ins('🥺')">🥺</div>
+        <div class="em" onclick="ins('😍')"><span class="twm">😍</span></div>
+        <div class="em" onclick="ins('🔥')"><span class="twm">🔥</span></div>
+        <div class="em" onclick="ins('😂')"><span class="twm">😂</span></div>
+        <div class="em" onclick="ins('❤️')"><span class="twm">❤️</span></div>
+        <div class="em" onclick="ins('😭')"><span class="twm">😭</span></div>
+        <div class="em" onclick="ins('💀')"><span class="twm">💀</span></div>
+        <div class="em" onclick="ins('🤩')"><span class="twm">🤩</span></div>
+        <div class="em" onclick="ins('👀')"><span class="twm">👀</span></div>
+        <div class="em" onclick="ins('💯')"><span class="twm">💯</span></div>
+        <div class="em" onclick="ins('🫶')"><span class="twm">🫶</span></div>
+        <div class="em" onclick="ins('😤')"><span class="twm">😤</span></div>
+        <div class="em" onclick="ins('🥺')"><span class="twm">🥺</span></div>
       </div>
 
       <!-- Mood chips -->
       <div class="mood-sec">
         <div class="mood-lbl">Suggestions</div>
         <div class="mood-chips">
-          <button class="chip" onclick="setMood(this,'confession')">🤫 Confession</button>
-          <button class="chip" onclick="setMood(this,'compliment')">✨ Compliment</button>
-          <button class="chip" onclick="setMood(this,'question')">🤔 Question</button>
-          <button class="chip" onclick="setMood(this,'critique')">💬 Critique</button>
-          <button class="chip" onclick="setMood(this,'other')">🎲 Autre</button>
+          <button class="chip" onclick="setMood(this,'confession')"><span class="twm">🤫</span> Confession</button>
+          <button class="chip" onclick="setMood(this,'compliment')"><span class="twm">✨</span> Compliment</button>
+          <button class="chip" onclick="setMood(this,'question')"><span class="twm">🤔</span> Question</button>
+          <button class="chip" onclick="setMood(this,'critique')"><span class="twm">💬</span> Critique</button>
+          <button class="chip" onclick="setMood(this,'other')"><span class="twm">🎲</span> Autre</button>
         </div>
       </div>
 
@@ -652,7 +694,7 @@ body{
       <div id="partWrap"></div>
     </div>
 
-    <div class="succ-title"><span class="g1">Envoyé !</span> 🎉</div>
+    <div class="succ-title"><span class="g1">Envoyé !</span> <span class="twm" style="font-size:1.3rem">🎉</span></div>
     <p class="succ-sub">Ton message a été transmis anonymement à <strong id="owName2">cette personne</strong>. Elle le recevra instantanément.</p>
 
     <div class="succ-acts-wrap">
@@ -841,6 +883,8 @@ function spawnEmojiBurst(){
     d.style.cssText=`left:${45+Math.cos(angle)*4-10}px;top:${45+Math.sin(angle)*4-10}px;--dx:${Math.cos(angle)*dist}px;--dy:${Math.sin(angle)*dist}px;animation-delay:${.45+Math.random()*.25}s;animation-duration:${.8+Math.random()*.3}s`;
     wrap.appendChild(d);
   }
+  /* Parse Twemoji sur les emojis du burst */
+  if(typeof twemoji!=='undefined')twemoji.parse(wrap,{folder:'svg',ext:'.svg',base:'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/'});
 }
 
 function spawnConfetti(){
@@ -863,6 +907,32 @@ $('joinModal').addEventListener('click',e=>{if(e.target===$('joinModal'))closeJo
 /* Stocker la redirection post-connexion */
 window.goJoin=()=>{sessionStorage.setItem('afterLoginRedirect','ngl.html');window.location.href='index.html';};
 window.goLogin=()=>{sessionStorage.setItem('afterLoginRedirect','ngl.html');window.location.href='index.html';};
+</script>
+
+<script>
+/* ── TWEMOJI — parse tout le document après chargement ── */
+document.addEventListener('DOMContentLoaded',()=>{
+  twemoji.parse(document.body,{
+    folder:'svg',ext:'.svg',
+    base:'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/',
+  });
+});
+
+/* Re-parse après affichage des vues dynamiques (success, join modal) */
+const _twParse=el=>twemoji.parse(el,{folder:'svg',ext:'.svg',base:'https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/'});
+
+const _origShowSuccess=window.sendMsg;
+document.addEventListener('twemoji-reparse',e=>{if(e.detail)_twParse(e.detail);});
+
+/* Observer pour re-parser les éléments qui apparaissent dynamiquement */
+const _mo=new MutationObserver(muts=>{
+  muts.forEach(m=>{
+    m.addedNodes.forEach(n=>{
+      if(n.nodeType===1)_twParse(n);
+    });
+  });
+});
+_mo.observe(document.body,{childList:true,subtree:true});
 </script>
 </body>
 </html>

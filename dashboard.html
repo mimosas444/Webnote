@@ -41,8 +41,6 @@ body{background:var(--bg);background-image:radial-gradient(ellipse 80% 40% at 50
 .mi{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;cursor:pointer;transition:.2s;color:var(--tx);font-size:.88rem;font-weight:600;text-decoration:none}
 .mi:hover{background:var(--gb)}.mi svg{flex-shrink:0;color:var(--tx2)}.mi .badge{margin-left:auto;background:var(--p);color:#fff;font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:5px}
 .mi.red{color:var(--dn)}.mi.red svg{color:var(--dn)}.m-div{height:1px;background:var(--bd);margin:6px 10px}
-/* STATUS BADGE */
-.mi .status-dot{margin-left:auto;width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 6px var(--ok)}
 .mbr-panel{position:fixed;top:64px;right:0;bottom:0;width:250px;background:rgba(10,9,20,.88);backdrop-filter:blur(30px);border-left:1px solid var(--bd);z-index:60;transform:translateX(100%);transition:transform .3s var(--ea);display:flex;flex-direction:column}
 [data-theme="light"] .mbr-panel{background:rgba(240,240,248,.93)}.mbr-panel.open{transform:translateX(0)}
 .mbr-head{padding:14px 16px;border-bottom:1px solid var(--bd);font-size:.82rem;font-weight:700;display:flex;align-items:center;justify-content:space-between}
@@ -60,9 +58,9 @@ body{background:var(--bg);background-image:radial-gradient(ellipse 80% 40% at 50
 .chat-wrap{position:relative;z-index:1;flex:1;overflow:hidden;display:flex}
 .chat{flex:1;overflow-y:auto;padding:16px 16px 8px;display:flex;flex-direction:column;scroll-behavior:smooth}
 
-/* ── DATE SEPARATOR (style WhatsApp) ── */
-.d-sep{text-align:center;margin:20px 0 10px;display:flex;align-items:center;justify-content:center}
-.d-sep span{background:var(--bg2);border:1px solid var(--bd);border-radius:20px;padding:4px 14px;font-size:.71rem;font-weight:700;color:var(--tx2);letter-spacing:.3px;backdrop-filter:blur(10px);box-shadow:0 2px 8px rgba(0,0,0,.15)}
+/* ── DATE SEPARATOR — style WhatsApp ── */
+.d-sep{text-align:center;margin:20px 0 12px;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.d-sep span{background:var(--bg2);border:1px solid var(--bd);border-radius:20px;padding:4px 14px;font-size:.71rem;font-weight:700;color:var(--tx2);letter-spacing:.3px;backdrop-filter:blur(10px);box-shadow:0 2px 8px rgba(0,0,0,.18)}
 
 .w-card{margin:auto;text-align:center;max-width:320px;padding:30px 20px;background:var(--g);border:1px solid var(--bd);border-radius:22px;backdrop-filter:blur(20px);display:flex;flex-direction:column;align-items:center;gap:10px}
 .w-card h3{font-size:1rem;font-weight:800}.w-card p{font-size:.82rem;color:var(--tx2);line-height:1.6}
@@ -94,60 +92,32 @@ body{background:var(--bg);background-image:radial-gradient(ellipse 80% 40% at 50
 .aem{font-size:1rem;cursor:pointer;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:9px;transition:.2s var(--eb);user-select:none}.aem:hover{background:rgba(255,255,255,.1);transform:scale(1.25) translateY(-1px)}
 .bbl.em-big{background:transparent!important;border:none!important;box-shadow:none!important;padding:4px 6px!important}
 
-/* ══════════════════════════════════════════
-   ÉMOJI ANIMATIONS AVANCÉES
-══════════════════════════════════════════ */
+/* ══ ÉMOJI ANIMATIONS ══ */
 .semo{font-size:3.2rem;line-height:1.1;display:inline-block;cursor:default;user-select:none;filter:drop-shadow(0 4px 12px rgba(0,0,0,.25))}
-
-/* Entrée universelle */
 @keyframes emIn{0%{opacity:0;transform:scale(0) rotate(-20deg) translateY(24px)}55%{opacity:1;transform:scale(1.22) rotate(5deg) translateY(-8px)}75%{transform:scale(.9) rotate(-2deg) translateY(2px)}100%{opacity:1;transform:scale(1) rotate(0) translateY(0)}}
-
-/* 😂🤣 — rit en se balançant */
 .semo.el{animation:emIn .5s var(--eb) both,laugh 1s .55s ease-in-out infinite}
 @keyframes laugh{0%,100%{transform:scale(1) rotate(0)}20%{transform:scale(1.14) rotate(-10deg)}50%{transform:scale(1.08) rotate(10deg)}70%{transform:scale(1.14) rotate(-6deg)}}
-
-/* ❤️ — bat comme un cœur */
 .semo.eh{animation:emIn .5s var(--eb) both,heartbeat .75s .55s ease-in-out infinite}
 @keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.25)}28%{transform:scale(1)}42%{transform:scale(1.18)}70%{transform:scale(1)}}
-
-/* 🔥 — flamme oscillante + halo */
 .semo.ef{animation:emIn .5s var(--eb) both,flame .45s .55s ease-in-out infinite alternate}
 @keyframes flame{0%{transform:scale(1) rotate(-4deg) translateY(0);filter:drop-shadow(0 0 6px #ff6b0066)}100%{transform:scale(1.12) rotate(4deg) translateY(-4px);filter:drop-shadow(0 0 22px #ff6b00cc)}}
-
-/* 😭😢 — pleure en tombant */
 .semo.ec{animation:emIn .5s var(--eb) both,cry 1.6s .55s ease-in-out infinite}
 @keyframes cry{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-5px) rotate(-4deg)}60%{transform:translateY(2px) rotate(3deg)}}
-
-/* ⭐✨ — tourne en brillant */
 .semo.es{animation:emIn .5s var(--eb) both,spin 2.5s .55s linear infinite,glow 1.2s .55s ease-in-out infinite alternate}
 @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 @keyframes glow{from{filter:drop-shadow(0 0 4px rgba(255,220,50,.4))}to{filter:drop-shadow(0 0 18px rgba(255,220,50,.95))}}
-
-/* 👍 — pouce qui monte */
 .semo.et{animation:emIn .5s var(--eb) both,thumbup .9s .55s var(--eb) infinite}
 @keyframes thumbup{0%,100%{transform:translateY(0) scale(1)}40%{transform:translateY(-8px) scale(1.15)}70%{transform:translateY(2px) scale(.95)}}
-
-/* 🎉🎊 — confetti bounce */
 .semo.ep2{animation:emIn .5s var(--eb) both,party .6s .55s var(--eb) infinite}
 @keyframes party{0%,100%{transform:scale(1) rotate(0)}25%{transform:scale(1.2) rotate(-12deg)}75%{transform:scale(1.2) rotate(12deg)}}
-
-/* 😱😰 — choc vibrant */
 .semo.esh{animation:emIn .5s var(--eb) both,shock .12s .55s linear 6}
 @keyframes shock{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-
-/* 🥺 — pulsation douce */
 .semo.epu{animation:emIn .5s var(--eb) both,puppy 1.8s .55s ease-in-out infinite}
 @keyframes puppy{0%,100%{transform:scale(1)}50%{transform:scale(1.1) translateY(-3px)}}
-
-/* 💀 — fondu glitch */
 .semo.esk{animation:emIn .5s var(--eb) both,skull 2s .55s ease-in-out infinite}
 @keyframes skull{0%,90%,100%{opacity:1;transform:rotate(0)}93%{opacity:.6;transform:rotate(-8deg) skewX(-5deg)}96%{opacity:.8;transform:rotate(6deg) skewX(3deg)}}
-
-/* 🚀 — décollage */
 .semo.ero{animation:emIn .5s var(--eb) both,rocket 1s .55s ease-in-out infinite}
 @keyframes rocket{0%,100%{transform:translateY(0) rotate(-10deg)}40%{transform:translateY(-12px) rotate(-20deg)}70%{transform:translateY(3px) rotate(-5deg)}}
-
-/* entrée par défaut sans animation en boucle */
 .semo.ed{animation:emIn .5s var(--eb) both}
 
 .scr-btn{position:fixed;bottom:100px;right:20px;z-index:80;width:44px;height:44px;border-radius:50%;background:var(--p);border:none;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 16px var(--pg);transition:.25s var(--ea)}
@@ -166,9 +136,7 @@ body{background:var(--bg);background-image:radial-gradient(ellipse 80% 40% at 50
 .ibtn{width:36px;height:36px;border-radius:50%;background:var(--g);border:1px solid var(--bd);color:var(--tx2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0}.ibtn:hover{background:var(--gh);border-color:var(--bdb);color:var(--tx)}
 textarea.msgi{flex:1;background:transparent;border:none;color:var(--tx);padding:10px 8px;font-size:.92rem;outline:none;resize:none;font-family:inherit;line-height:1.5;max-height:120px}textarea.msgi::placeholder{color:var(--tx3)}
 .send{width:40px;height:40px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--p),var(--p2));cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px var(--pg);transition:.22s var(--ea);flex-shrink:0}
-.send:hover{transform:scale(1.1) rotate(-8deg)}.send:disabled{opacity:.35;transform:none;cursor:not-allowed}
-/* Send button press animation */
-.send:active:not(:disabled){transform:scale(.9)}
+.send:hover{transform:scale(1.1) rotate(-8deg)}.send:disabled{opacity:.35;transform:none;cursor:not-allowed}.send:active:not(:disabled){transform:scale(.9)}
 .ctx{position:fixed;z-index:1000;min-width:210px;background:rgba(14,12,26,.97);border:1px solid var(--bdb);border-radius:16px;padding:5px;box-shadow:0 20px 60px rgba(0,0,0,.55);backdrop-filter:blur(30px);display:none;flex-direction:column;animation:ctxIn .15s var(--eb)}
 [data-theme="light"] .ctx{background:rgba(255,255,255,.98)}@keyframes ctxIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
 .ctx-ems{display:flex;flex-wrap:wrap;gap:2px;padding:8px;border-bottom:1px solid var(--bd);margin-bottom:4px}
@@ -189,11 +157,7 @@ textarea.msgi{flex:1;background:transparent;border:none;color:var(--tx);padding:
 .mbtn{padding:10px 20px;border-radius:11px;border:none;font-family:inherit;font-size:.87rem;font-weight:700;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px}
 .mbtn.ok{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;box-shadow:0 4px 14px var(--pg)}.mbtn.cn{background:var(--gb);border:1px solid var(--bd);color:var(--tx2)}
 body.compact .bbl{padding:7px 12px!important;font-size:.85rem!important}body.compact .mg{margin-bottom:6px}body.compact .semo{font-size:2.4rem}
-/* STATUS MODAL */
-.status-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.sopt{background:var(--g);border:1px solid var(--bd);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:.2s;font-size:1.2rem}
-.sopt:hover{background:var(--gb);transform:scale(1.04)}.sopt span{display:block;font-size:.75rem;font-weight:600;color:var(--tx2);margin-top:4px}
-.sopt.active{border-color:var(--p);background:var(--pg)}
+.sopt{background:var(--g);border:1px solid var(--bd);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:.2s;font-size:1.2rem}.sopt:hover{background:var(--gb);transform:scale(1.04)}.sopt span{display:block;font-size:.75rem;font-weight:600;color:var(--tx2);margin-top:4px}.sopt.active{border-color:var(--p);background:var(--pg)}
 @media(max-width:700px){.mbr-panel{top:0;width:100%;max-height:50vh;border-left:none;border-bottom:1px solid var(--bd);transform:translateY(-100%)}.mbr-panel.open{transform:translateY(0)}.mg.me .mg-row,.mg.you .mg-row{max-width:88%}.hdr{height:58px;padding:0 12px}.chat{padding:12px 10px 8px}}
 </style>
 </head>
@@ -221,7 +185,8 @@ body.compact .bbl{padding:7px 12px!important;font-size:.85rem!important}body.com
     </div><div class="m-div"></div>
     <div class="m-sec"><div class="m-sec-t">Groupe</div>
       <div class="mi" onclick="scrollToBottom();closeMenu()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Aller en bas</div>
-      <div class="mi" onclick="exportChat()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exporter la conv.</div>
+      <div class="mi" onclick="showSaveModal()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Sauvegarder la conv.</div>
+      <div class="mi" onclick="showShareModal()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Partager le groupe</div>
       <div class="mi" onclick="clearMyMsgs()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Effacer mes messages</div>
       <div class="mi" onclick="showRules()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Règles du groupe</div>
       <div class="mi" onclick="showStats()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Statistiques</div>
@@ -250,21 +215,16 @@ body.compact .bbl{padding:7px 12px!important;font-size:.85rem!important}body.com
     <div class="hbtn" style="width:auto;padding:0 10px;border-radius:11px;cursor:default;pointer-events:none"><span id="clock" style="font-size:.82rem;font-weight:700"></span></div>
   </div>
 </header>
-<!-- SEARCH -->
 <div class="srch" id="srch"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="srchInp" placeholder="Rechercher..." oninput="searchMsgs()"><span class="srch-n" id="srchN"></span><button class="hbtn" onclick="toggleSearch()" style="width:28px;height:28px;border-radius:8px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
-<!-- PINNED -->
 <div class="pin-bar" id="pinBar">
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--ac)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>
   <div class="pin-txt" onclick="scrollToPinned()"><strong>Épinglé :</strong> <span id="pinTxt">—</span></div>
   <span id="pinClose" onclick="unpin(event)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
 </div>
-<!-- CHAT -->
 <div class="chat-wrap"><div class="chat" id="chat">
   <div class="w-card" id="wCard"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--ac)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg><h3>Bienvenue dans WebNote 👋</h3><p>Espace ouvert à tous les membres.<br>Soyez respectueux et bienveillants.</p></div>
 </div></div>
-<!-- SCROLL BTN -->
 <button class="scr-btn" id="scrBtn" onclick="scrollToBottom()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg><span class="u-cnt" id="uCnt"></span></button>
-<!-- DOCK -->
 <div class="dock">
   <div class="typing-row" id="typRow"><div class="tds"><div class="td"></div><div class="td"></div><div class="td"></div></div><span class="tn" id="typName">...</span></div>
   <div class="reply-bar" id="replyBar"><div style="flex:1;min-width:0"><div class="rb-name" id="rbName">—</div><div class="rb-txt" id="rbTxt">—</div></div><button class="rb-close" onclick="cancelReply()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
@@ -272,7 +232,6 @@ body.compact .bbl{padding:7px 12px!important;font-size:.85rem!important}body.com
     <button class="ibtn" onclick="showEmojiPanel()" title="Emojis"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></button>
     <textarea class="msgi" id="msgInp" rows="1" placeholder="Message au groupe..."></textarea>
     <button class="ibtn" onclick="showToast('Partage bientôt disponible')" title="Joindre"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
-    <!-- ✅ BOUTON ENVOYER CORRIGÉ — type="button" + onclick direct -->
     <button type="button" class="send" id="sendBtn" onclick="sendMsg()" disabled>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none"><line x1="22" y1="2" x2="11" y2="13" stroke="#fff"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="#fff" stroke="none"/></svg>
     </button>
@@ -294,12 +253,10 @@ body.compact .bbl{padding:7px 12px!important;font-size:.85rem!important}body.com
   <div class="ctx-sep"></div>
   <div class="ci red" id="ctxDel" onclick="ctxDelFn()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>Supprimer</div>
 </div>
-<!-- EMOJI PANEL -->
 <div class="ep" id="epanel"><input class="ep-s" placeholder="Rechercher un emoji..." oninput="filterEmojis(this.value)"><div class="ep-g" id="epGrid"></div></div>
-<!-- EDIT MODAL -->
 <div class="modal-ov" id="editMov"><div class="modal"><div class="modal-title"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ac)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>Modifier le message</div><textarea class="modal-ta" id="editTA" rows="3"></textarea><div class="modal-foot"><button class="mbtn cn" onclick="closeEditModal()">Annuler</button><button class="mbtn ok" onclick="saveEdit()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Enregistrer</button></div></div></div>
-<!-- TOAST -->
 <div class="toast" id="toast"><span id="tIcon" style="font-size:1rem">✓</span><span id="tMsg">—</span></div>
+
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import{getAuth,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -314,22 +271,7 @@ let compactMode=localStorage.getItem('compact')==='1';
 let unread=0,atBottom=true,lpTimer=null,lastActEl=null,allMsgs={};
 const ADMIN='kennysauvegardej3@gmail.com';
 const AVC=['#6366f1','#8b5cf6','#ec4899','#f97316','#10b981','#3b82f6','#14b8a6','#f59e0b'];
-
-/* ── ÉMOJI ANIMATIONS MAP (étendu) ── */
-const EANIM={
-  '😂':'el','🤣':'el',
-  '❤️':'eh','🧡':'eh','💛':'eh','💚':'eh','💙':'eh','💜':'eh','🖤':'eh','🤍':'eh','❤':'eh','❤️‍🔥':'eh',
-  '🔥':'ef',
-  '😭':'ec','😢':'ec',
-  '⭐':'es','🌟':'es','✨':'es','💫':'es',
-  '👍':'et','👆':'et',
-  '🎉':'ep2','🎊':'ep2','🥳':'ep2',
-  '😱':'esh','😰':'esh','🤯':'esh',
-  '🥺':'epu','🙏':'epu',
-  '💀':'esk','👻':'esk',
-  '🚀':'ero','✈️':'ero'
-};
-
+const EANIM={'😂':'el','🤣':'el','❤️':'eh','🧡':'eh','💛':'eh','💚':'eh','💙':'eh','💜':'eh','🖤':'eh','🤍':'eh','❤':'eh','❤️‍🔥':'eh','🔥':'ef','😭':'ec','😢':'ec','⭐':'es','🌟':'es','✨':'es','💫':'es','👍':'et','👆':'et','🎉':'ep2','🎊':'ep2','🥳':'ep2','😱':'esh','😰':'esh','🤯':'esh','🥺':'epu','🙏':'epu','💀':'esk','👻':'esk','🚀':'ero','✈️':'ero'};
 const EMOJIS=['😀','😂','😅','🤣','😊','😍','🤩','😎','🥳','🤔','😐','😑','🙄','😏','😒','😔','😢','😭','😤','😠','🤬','🥺','❤️','🧡','💛','💚','💙','💜','🖤','🤍','❤️‍🔥','💔','💕','😘','🤗','🤯','😳','🥵','🥶','😱','😰','🤫','🤐','😶','🙃','😵','🤪','😜','😛','🤑','🥴','🤢','😷','😴','💤','💩','👻','💀','👽','🤖','🫶','🤲','👐','🙌','👏','🤝','👍','👎','👊','✊','🤞','✌️','👌','👈','👉','👆','👇','✋','💪','🌟','⭐','✨','💫','🌙','☀️','🌈','🔥','💥','❄️','⚡','🌊','🎉','🎊','🎈','🎁','🏆','🥇','🎯','🎮','🎲','🎸','🎵','🎶','📱','💻','📷','⏰','📝','📌','🔐','🔒','🔑','🔨','🔧','⚙️','🚀','✈️','🚗','🏠','🌍','🌴','🌲','🌺','🌸','🌻','🌹','🐶','🐱','🐰','🦊','🐻','🐼','🐯','🦁','🐮','🐷','🐸','🐵','🙈','🙉','🙊','🐔','🐧','🦋','🐢','🐙','🐠','🐬','🐳','🦈','🐘','🦒','🐎','🐕','🐈','🍎','🍊','🍋','🍇','🍓','🫐','🍉','🍑','🍒','🍌','🍕','🍔','🍟','🌮','🌯','🍝','🍜','🍣','🥟','🧁','🍰','🎂','🍭','🍬','🍫','🍿','🍩','🍪','☕','🍵','🍺','🍻','🥂','🍷','🥃','🍸','🍹'];
 
 /* INIT */
@@ -341,15 +283,12 @@ $('notifTxt').textContent=soundsOn?'Désactiver les sons':'Activer les sons';
 requestAnimationFrame(()=>setThemeIco(savedTheme));
 applyFontSize(localStorage.getItem('fontSize')||'normal');
 
-/* CLOCK */
 function tick(){$('clock').textContent=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});}
 setInterval(tick,1000);tick();
 
-/* THEME */
 window.toggleTheme=()=>{const t=document.body.getAttribute('data-theme')==='light'?'dark':'light';document.body.setAttribute('data-theme',t);localStorage.setItem('theme',t);setThemeIco(t);closeMenu();};
 function setThemeIco(t){const s=$('themeIco');if(!s)return;s.innerHTML=t==='light'?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';}
 
-/* AUTH */
 onAuthStateChanged(auth,u=>{if(u){me=u;init();}else window.location.href='index.html';});
 function init(){
   const name=me.displayName||'Anonyme';
@@ -360,7 +299,6 @@ function init(){
   loadMsgs();listenPresence();listenTyping();loadPin();buildEpGrid();
 }
 
-/* HELPERS */
 function avc(uid){let h=0;for(const c of uid)h=(h*31+c.charCodeAt(0))%AVC.length;return AVC[Math.abs(h)];}
 function isAdmin(){return me&&me.email===ADMIN;}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -369,26 +307,28 @@ function fmtTxt(t){return t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').repl
 function tsOf(d){return(d.createdAt&&typeof d.createdAt.toMillis==='function')?d.createdAt.toMillis():Date.now();}
 function isSoloEm(s){try{const t=s.trim(),x=t.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}\uFE0F\u200D\u20E3\s]/gu,''),c=[...t.matchAll(/\p{Emoji_Presentation}|\p{Extended_Pictographic}/gu)].length;return x.length===0&&c>=1&&c<=2&&t.length<=8;}catch(e){return false;}}
 function getEmCls(s){for(const[em,cls]of Object.entries(EANIM)){if(s.includes(em))return cls;}return 'ed';}
-
 function showToast(msg,color){const t=$('toast');$('tMsg').textContent=msg;$('tIcon').style.color=color||'var(--ok)';t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);}
 
-/* ── DATE LABEL WHATSAPP STYLE ── */
+/* ══════════════════════════════════════════
+   DATE LABEL — clé = YYYY-MM-DD
+   Un seul séparateur par jour, jamais dupliqué
+══════════════════════════════════════════ */
+function dateKey(ts){
+  const d=new Date(ts);
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
 function getDateLabel(ts){
-  const d=new Date(ts),now=new Date();
-  const dStr=d.toDateString(),nStr=now.toDateString();
-  const yStr=new Date(now-86400000).toDateString();
-  const yyStr=new Date(now-172800000).toDateString();
-  if(dStr===nStr)return"Aujourd'hui";
-  if(dStr===yStr)return'Hier';
-  if(dStr===yyStr)return'Avant-hier';
-  // Si dans les 7 jours : nom du jour
-  const diff=(now-d)/(1000*60*60*24);
-  if(diff<7)return cap(d.toLocaleDateString('fr-FR',{weekday:'long'}));
-  // Sinon date complète
-  return cap(d.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:d.getFullYear()!==now.getFullYear()?'numeric':undefined}));
+  const now=new Date(),d=new Date(ts);
+  const nk=dateKey(Date.now()),dk=dateKey(ts);
+  const diffDays=Math.floor((new Date(nk)-new Date(dk))/(1000*60*60*24));
+  if(diffDays===0)return "Aujourd'hui";
+  if(diffDays===1)return 'Hier';
+  if(diffDays===2)return 'Avant-hier';
+  if(diffDays<7)return cap(d.toLocaleDateString('fr-FR',{weekday:'long'}));
+  return cap(d.toLocaleDateString('fr-FR',{day:'numeric',month:'long',...(d.getFullYear()!==now.getFullYear()&&{year:'numeric'})}));
 }
 
-/* MESSAGES */
+/* ══ MESSAGES ══ */
 function loadMsgs(){
   const q=query(collection(db,'messages'),orderBy('createdAt','asc'));
   onSnapshot(q,snap=>{
@@ -406,14 +346,23 @@ function loadMsgs(){
 
 function appendMsg(id,data){
   const chatEl=$('chat'),isMine=data.senderId===me.uid,ts=tsOf(data);
-  const label=getDateLabel(ts);
-  const ls=chatEl.querySelector('.d-sep:last-of-type');
-  if(!ls||ls.dataset.d!==label){
-    const sep=document.createElement('div');sep.className='d-sep';sep.dataset.d=label;
-    sep.innerHTML='<span>'+label+'</span>';chatEl.appendChild(sep);
+  const dk=dateKey(ts);
+
+  /* ── Un seul séparateur par jour ──
+     On cherche un .d-sep qui porte déjà ce dateKey.
+     S'il n'existe pas encore → on l'insère.             */
+  if(!chatEl.querySelector('.d-sep[data-dk="'+dk+'"]')){
+    const sep=document.createElement('div');
+    sep.className='d-sep';
+    sep.dataset.dk=dk;
+    sep.innerHTML='<span>'+getDateLabel(ts)+'</span>';
+    chatEl.appendChild(sep);
   }
+
+  /* Regroupement auteur (nom visible si 1er msg ou >2 min après) */
   const lg=chatEl.querySelector('.mg:last-of-type');
   const showName=!isMine&&(!lg||lg.dataset.s!==data.senderId||ts-parseInt(lg.dataset.ts||0)>120000);
+
   chatEl.insertAdjacentHTML('beforeend',buildMsg(id,data,isMine,showName));
   const el=$('mg-'+id);
   if(el){el.style.opacity='0';el.style.transform='translateY(10px) scale(.97)';requestAnimationFrame(()=>{el.style.transition='opacity .22s,transform .22s';el.style.opacity='1';el.style.transform='none';});}
@@ -445,81 +394,37 @@ function buildMsg(id,data,isMine,showName){
   const actHtml='<div class="act-bar" id="ab-'+id+'"><div class="aem" onclick="qReact(event,\''+id+'\',\'❤️\')">❤️</div><div class="aem" onclick="qReact(event,\''+id+'\',\'😂\')">😂</div><div class="aem" onclick="qReact(event,\''+id+'\',\'🔥\')">🔥</div><button class="abtn" onclick="openCtx(event,\''+id+'\','+isMine+','+ts+')" title="Options"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button></div>';
   return '<div class="mg '+(isMine?'me':'you')+'" id="mg-'+id+'" data-s="'+(data.senderId||'')+'" data-ts="'+ts+'">'+(showName?'<div class="mg-sender" style="color:'+col+'">'+esc(data.senderName||'Anonyme')+'</div>':'')+'<div class="mg-row">'+(isMine?'':'<div class="mg-av" style="background:'+col+'">'+(data.senderName||'A').charAt(0).toUpperCase()+'</div>')+'<div><div class="bbl'+(solo?' em-big':'')+'" id="bbl-'+id+'">'+rHtml+(solo?'<span class="semo '+emCls+'" id="txt-'+id+'">'+esc(data.content)+'</span>':'<span class="msg-txt" id="txt-'+id+'">'+fmtTxt(esc(data.content||''))+'</span>')+'<div class="bbl-meta">'+(data.edited?'<span class="meta-e">modifié</span>':'')+'<span class="meta-t">'+time+'</span>'+ticks+'</div></div>'+(buildReacts(id,data)||'')+'</div>'+actHtml+'</div></div>';
 }
-
 function buildReacts(id,data){if(!data.reactions)return'';let p='';for(const[em,uids]of Object.entries(data.reactions)){if(!uids||!uids.length)continue;const mine=uids.includes(me.uid);p+='<div class="rpill'+(mine?' mine':'')+'" onclick="togReact(\''+id+'\',\''+em+'\')" title="'+uids.length+'"><span>'+em+'</span><span class="cnt">'+uids.length+'</span></div>';}return p?'<div class="reacts">'+p+'</div>':'';}
 
-/* ── SEND — CORRIGÉ ── */
+/* ══ SEND ══ */
 const inp=$('msgInp'),sendBtn=$('sendBtn');
-
 function updateSendBtn(){sendBtn.disabled=!inp.value.trim();}
-
-inp.addEventListener('input',()=>{
-  inp.style.height='auto';
-  inp.style.height=Math.min(inp.scrollHeight,120)+'px';
-  updateSendBtn();
-  setDoc(doc(db,'typing',me.uid),{name:me.displayName||'Anonyme',t:Date.now()},{merge:true});
-});
-
-/* Enter = envoyer, Shift+Enter = nouvelle ligne */
-inp.addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&!e.shiftKey){
-    e.preventDefault();
-    sendMsg();
-  }
-});
-
-async function sendMsg(){
-  const txt=inp.value.trim();
-  if(!txt)return;
-  const p={content:txt,senderId:me.uid,senderName:me.displayName||'Anonyme',createdAt:serverTimestamp(),edited:false,reactions:{}};
-  if(replyData){p.replyTo={id:replyData.id,name:replyData.name,snippet:replyData.snippet};cancelReply();}
-  inp.value='';
-  inp.style.height='auto';
-  sendBtn.disabled=true;
-  await addDoc(collection(db,'messages'),p);
-  deleteDoc(doc(db,'typing',me.uid));
-  scrollToBottom();
-  if(soundsOn)playSound();
-}
-/* Exposer sendMsg globalement pour le onclick HTML */
+inp.addEventListener('input',()=>{inp.style.height='auto';inp.style.height=Math.min(inp.scrollHeight,120)+'px';updateSendBtn();setDoc(doc(db,'typing',me.uid),{name:me.displayName||'Anonyme',t:Date.now()},{merge:true});});
+inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}});
+async function sendMsg(){const txt=inp.value.trim();if(!txt)return;const p={content:txt,senderId:me.uid,senderName:me.displayName||'Anonyme',createdAt:serverTimestamp(),edited:false,reactions:{}};if(replyData){p.replyTo={id:replyData.id,name:replyData.name,snippet:replyData.snippet};cancelReply();}inp.value='';inp.style.height='auto';sendBtn.disabled=true;await addDoc(collection(db,'messages'),p);deleteDoc(doc(db,'typing',me.uid));scrollToBottom();if(soundsOn)playSound();}
 window.sendMsg=sendMsg;
-
 function playSound(){try{const a=new AudioContext(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(880,a.currentTime);o.frequency.exponentialRampToValueAtTime(440,a.currentTime+.15);g.gain.setValueAtTime(.1,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.2);o.start();o.stop(a.currentTime+.2);}catch(e){}}
 
 /* REACTIONS */
 window.qReact=async(e,id,em)=>{e.stopPropagation();await updateDoc(doc(db,'messages',id),{['reactions.'+em]:arrayUnion(me.uid)});showToast('Réaction '+em);};
 window.togReact=async(id,em)=>{const s=await getDoc(doc(db,'messages',id));if(!s.exists())return;const u=s.data().reactions?.[em]||[];const next=u.includes(me.uid)?u.filter(x=>x!==me.uid):[...u,me.uid];await updateDoc(doc(db,'messages',id),{['reactions.'+em]:next});};
 window.addReact=async em=>{if(!selId)return;await updateDoc(doc(db,'messages',selId),{['reactions.'+em]:arrayUnion(me.uid)});closeCtx();showToast('Réaction '+em);};
-
-/* REPLY */
 window.ctxReply=()=>{const d=allMsgs[selId];if(!d)return;replyData={id:selId,name:d.senderId===me.uid?'Moi':d.senderName,snippet:d.content.substring(0,60)};$('rbName').textContent=replyData.name;$('rbTxt').textContent=replyData.snippet;$('replyBar').classList.add('show');inp.focus();closeCtx();};
 window.cancelReply=()=>{replyData=null;$('replyBar').classList.remove('show');};
-
-/* EDIT */
 window.ctxEditFn=()=>{const d=allMsgs[selId];if(!d)return;$('editTA').value=d.content;$('editMov').classList.add('open');closeCtx();};
 window.saveEdit=async()=>{const txt=$('editTA').value.trim();if(!txt||!selId)return;await updateDoc(doc(db,'messages',selId),{content:txt,edited:true});closeEditModal();showToast('Message modifié ✏️');};
 window.closeEditModal=()=>$('editMov').classList.remove('open');
 $('editMov').addEventListener('click',e=>{if(e.target===$('editMov'))closeEditModal();});
-
-/* DELETE */
 window.ctxDelFn=async()=>{if(!selId)return;const d=allMsgs[selId];if(!d)return;if(d.senderId!==me.uid&&!isAdmin()){showToast('Non autorisé','var(--dn)');return;}closeCtx();if(!confirm('Supprimer ce message ?'))return;await deleteDoc(doc(db,'messages',selId));showToast('Supprimé','var(--dn)');};
-
-/* COPY */
 window.ctxCopy=()=>{const d=allMsgs[selId];if(!d)return;navigator.clipboard?.writeText(d.content).then(()=>showToast('Copié 📋'));closeCtx();};
-
-/* PIN */
 window.ctxPin=async()=>{const d=allMsgs[selId];if(!d)return;pinId=selId;await setDoc(doc(db,'settings','pinned'),{msgId:selId,text:d.content.substring(0,80),pinnedBy:me.uid});closeCtx();showPinBar(d.content);showToast('Message épinglé 📌');};
 window.unpin=async e=>{if(e){e.stopPropagation();e.preventDefault();}try{await deleteDoc(doc(db,'settings','pinned'));}catch(err){}$('pinBar').style.display='none';pinId=null;showToast('Désépinglé');};
 window.scrollToPinned=()=>{if(pinId)goToMsg(pinId);};
 function showPinBar(text){$('pinTxt').textContent=(text||'').substring(0,60)+((text||'').length>60?'…':'');$('pinBar').style.display='flex';$('pinClose').style.display=isAdmin()?'flex':'none';}
 async function loadPin(){try{const s=await getDoc(doc(db,'settings','pinned'));if(s.exists()){pinId=s.data().msgId;showPinBar(s.data().text||'');}}catch(e){}}
 window.goToMsg=id=>{const el=$('mg-'+id);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.transition='background .3s';el.style.background='rgba(99,102,241,.15)';setTimeout(()=>el.style.background='',1500);}};
-
-/* CTX */
 window.openCtx=(e,id,isMine,ts)=>{e.stopPropagation();selId=id;const m=$('ctx'),el=Date.now()-ts,admin=isAdmin();$('ctxEdit').style.display=(isMine&&el<3600000)?'flex':'none';$('ctxDel').style.display=((isMine&&el<86400000)||admin)?'flex':'none';m.style.display='flex';let x=e.clientX,y=e.clientY;const mw=m.offsetWidth||220,mh=m.offsetHeight||300;if(x+mw>window.innerWidth-8)x=window.innerWidth-mw-8;if(y+mh>window.innerHeight-8)y=window.innerHeight-mh-8;if(y<8)y=8;m.style.left=x+'px';m.style.top=y+'px';};
 function closeCtx(){$('ctx').style.display='none';}
-
-/* LONG PRESS */
 function showAct(mgEl){if(lastActEl&&lastActEl!==mgEl){const p=lastActEl.querySelector('.act-bar');if(p)p.classList.remove('vis');}const acts=mgEl.querySelector('.act-bar');if(!acts)return;const was=acts.classList.contains('vis');document.querySelectorAll('.act-bar.vis').forEach(a=>a.classList.remove('vis'));if(!was){acts.classList.add('vis');lastActEl=mgEl;}}
 const chatEl=$('chat');
 chatEl.addEventListener('touchstart',e=>{const mg=e.target.closest('.mg');if(!mg)return;lpTimer=setTimeout(()=>{showAct(mg);try{navigator.vibrate&&navigator.vibrate(40);}catch(e){}},900);},{passive:true});
@@ -527,17 +432,12 @@ chatEl.addEventListener('touchend',()=>{clearTimeout(lpTimer);lpTimer=null;},{pa
 chatEl.addEventListener('touchmove',()=>{clearTimeout(lpTimer);lpTimer=null;},{passive:true});
 chatEl.addEventListener('contextmenu',e=>{const mg=e.target.closest('.mg');if(!mg)return;e.preventDefault();showAct(mg);});
 document.addEventListener('click',e=>{if(!e.target.closest('.ctx')&&!e.target.closest('.act-bar'))closeCtx();if(!e.target.closest('.ep')&&!e.target.closest('.ibtn'))$('epanel').classList.remove('open');if(!e.target.closest('.mg'))document.querySelectorAll('.act-bar.vis').forEach(a=>a.classList.remove('vis'));});
-
-/* SEARCH */
 window.toggleSearch=()=>{const s=$('srch');const o=s.classList.toggle('open');if(o)$('srchInp').focus();else{$('srchInp').value='';searchMsgs();}closeMenu();};
 window.searchMsgs=()=>{const q=$('srchInp').value.toLowerCase().trim();let c=0;document.querySelectorAll('.bbl').forEach(b=>{const mg=b.closest('.mg');if(!mg)return;if(!q){mg.style.display='';return;}const t=b.querySelector('.msg-txt,.semo');const m=t&&t.textContent.toLowerCase().includes(q);mg.style.display=m?'':'none';if(m)c++;});$('srchN').textContent=q?c+' résultat'+(c!==1?'s':''):'';};
-
-/* EMOJI PANEL */
 window.showEmojiPanel=()=>{$('epanel').classList.toggle('open');closeMenu();};
 function buildEpGrid(f=''){const g=$('epGrid');g.innerHTML='';(f?EMOJIS.filter(e=>e.includes(f)):EMOJIS).slice(0,200).forEach(em=>{const d=document.createElement('div');d.className='ep-em';d.textContent=em;d.onclick=()=>{inp.value+=em;inp.focus();updateSendBtn();$('epanel').classList.remove('open');};g.appendChild(d);});}
 window.filterEmojis=v=>buildEpGrid(v);
 
-/* PRESENCE */
 function listenPresence(){
   onSnapshot(collection(db,'presence'),snap=>{
     let on=0;const mbrs=[];
@@ -557,66 +457,81 @@ function renderMbrs(mbrs,on){
     list.innerHTML='<div style="padding:32px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px"><div style="width:64px;height:64px;border-radius:50%;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.22);display:flex;align-items:center;justify-content:center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div style="font-size:3rem;font-weight:900;color:var(--ok);line-height:1">'+on+'</div><div style="font-size:.82rem;color:var(--tx2)">membre'+(on!==1?'s':'')+' en ligne</div></div>';
   }
 }
-
-/* TYPING */
 function listenTyping(){onSnapshot(collection(db,'typing'),snap=>{const ac=[];const now=Date.now();snap.forEach(d=>{if(d.id!==me.uid&&now-d.data().t<3000)ac.push(d.data().name);});const r=$('typRow');if(ac.length>0){r.style.display='flex';$('typName').textContent=ac.join(', ')+' écrit...';}else r.style.display='none';});}
-
-/* SCROLL */
 chatEl.addEventListener('scroll',()=>{const near=chatEl.scrollHeight-chatEl.scrollTop-chatEl.clientHeight<100;atBottom=near;$('scrBtn').classList.toggle('show',!near);if(near){unread=0;updUnread();}});
 window.scrollToBottom=(smooth=true)=>{chatEl.scrollTo({top:chatEl.scrollHeight,behavior:smooth?'smooth':'instant'});unread=0;updUnread();};
 function updUnread(){const u=$('uCnt');u.textContent=unread>0?unread:'';u.style.display=unread>0?'block':'none';}
 
-/* ── NOUVELLES OPTIONS MENU ── */
+/* ══ NOUVELLES OPTIONS ══ */
 
-/* STATUT */
-window.showStatusModal=()=>{
+/* — SAUVEGARDER : télécharge un .txt structuré par jour — */
+window.showSaveModal=()=>{
   closeMenu();
-  const statuses=[{em:'🟢',label:'Disponible'},{em:'🟡',label:'Occupé'},{em:'🔴',label:'Ne pas déranger'},{em:'👻',label:'Invisible'},{em:'🏖️',label:'En vacances'},{em:'💤',label:'Absent'}];
-  const cur=localStorage.getItem('myStatus')||'🟢';
+  const msgs=Object.values(allMsgs).sort((a,b)=>tsOf(a)-tsOf(b));
+  if(!msgs.length){showToast('Aucun message à sauvegarder');return;}
+  /* grouper par jour */
+  const days={};
+  msgs.forEach(m=>{const dk=dateKey(tsOf(m));if(!days[dk])days[dk]=[];days[dk].push(m);});
+  let out='╔══════════════════════════════════════╗\n║      WebNote — Sauvegarde complète    ║\n╚══════════════════════════════════════╝\n';
+  out+='Exporté le '+new Date().toLocaleString('fr-FR')+'\n';
+  out+='Groupe : WebNote\n\n';
+  for(const dk of Object.keys(days).sort()){
+    out+='┌─ '+getDateLabel(new Date(dk).getTime()+43200000)+' ─────────────────────\n';
+    days[dk].forEach(m=>{
+      const t=new Date(tsOf(m)).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+      out+='  ['+t+'] '+m.senderName+' : '+m.content+'\n';
+    });
+    out+='\n';
+  }
+  const blob=new Blob([out],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='webnote-sauvegarde-'+new Date().toISOString().slice(0,10)+'.txt';
+  a.click();URL.revokeObjectURL(a.href);
+  showToast('Sauvegarde téléchargée 💾');
+};
+
+/* — PARTAGER LE GROUPE : lien d'invitation — */
+window.showShareModal=()=>{
+  closeMenu();
+  const link=window.location.origin+window.location.pathname;
   const ov=document.createElement('div');
   ov.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px';
-  ov.innerHTML='<div style="background:rgba(14,12,26,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:24px;max-width:340px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,.5)"><div style="font-size:1rem;font-weight:800;margin-bottom:16px;color:var(--tx)">⚡ Mon statut</div><div class="status-options">'+statuses.map(s=>'<div class="sopt'+(cur===s.em?' active':'')+'" onclick="setStatus(\''+s.em+'\',\''+s.label+'\',this)" >'+s.em+'<span>'+s.label+'</span></div>').join('')+'</div><div style="margin-top:16px;text-align:right"><button onclick="this.closest(\'div[style]\').remove()" style="padding:10px 22px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;font-weight:700;cursor:pointer;font-family:inherit">OK</button></div></div>';
+  ov.innerHTML=`
+  <div style="background:rgba(14,12,26,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:24px;max-width:380px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,.5)">
+    <div style="font-size:1rem;font-weight:800;margin-bottom:6px;color:var(--tx)">🔗 Partager le groupe</div>
+    <div style="font-size:.78rem;color:var(--tx2);margin-bottom:16px">Invite quelqu'un à rejoindre WebNote</div>
+    <div style="background:var(--g);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;font-size:.8rem;color:var(--ac);word-break:break-all;margin-bottom:14px;font-weight:600">${esc(link)}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+      <button onclick="navigator.clipboard?.writeText('${esc(link)}').then(()=>showToast('Lien copié 🔗'))" style="padding:11px;border-radius:12px;border:1px solid var(--bd);background:var(--g);color:var(--tx);font-weight:700;font-family:inherit;cursor:pointer;font-size:.82rem;display:flex;align-items:center;justify-content:center;gap:7px;transition:.2s">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>Copier
+      </button>
+      <button onclick="window.open('https://wa.me/?text=${encodeURIComponent('Rejoins WebNote : '+link)}','_blank')" style="padding:11px;border-radius:12px;border:1px solid rgba(37,211,102,.3);background:rgba(37,211,102,.08);color:#25d366;font-weight:700;font-family:inherit;cursor:pointer;font-size:.82rem;display:flex;align-items:center;justify-content:center;gap:7px;transition:.2s">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>WhatsApp
+      </button>
+      <button onclick="window.open('mailto:?subject=Rejoins WebNote&body=${encodeURIComponent('Salut ! Rejoins-moi sur WebNote : '+link)}','_blank')" style="padding:11px;border-radius:12px;border:1px solid var(--bd);background:var(--g);color:var(--tx);font-weight:700;font-family:inherit;cursor:pointer;font-size:.82rem;display:flex;align-items:center;justify-content:center;gap:7px;transition:.2s">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Email
+      </button>
+      <button onclick="if(navigator.share)navigator.share({title:'WebNote',url:'${esc(link)}'}).catch(()=>{});else showToast('Partage non supporté')" style="padding:11px;border-radius:12px;border:1px solid rgba(99,102,241,.3);background:rgba(99,102,241,.08);color:var(--ac);font-weight:700;font-family:inherit;cursor:pointer;font-size:.82rem;display:flex;align-items:center;justify-content:center;gap:7px;transition:.2s">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Autres
+      </button>
+    </div>
+    <div style="text-align:right"><button onclick="this.closest('div[style]').remove()" style="padding:10px 22px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;font-weight:700;cursor:pointer;font-family:inherit">Fermer</button></div>
+  </div>`;
   ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});
   document.body.appendChild(ov);
 };
+
+/* STATUT */
+window.showStatusModal=()=>{closeMenu();const statuses=[{em:'🟢',label:'Disponible'},{em:'🟡',label:'Occupé'},{em:'🔴',label:'Ne pas déranger'},{em:'👻',label:'Invisible'},{em:'🏖️',label:'En vacances'},{em:'💤',label:'Absent'}];const cur=localStorage.getItem('myStatus')||'🟢';const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px';ov.innerHTML='<div style="background:rgba(14,12,26,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:24px;max-width:340px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,.5)"><div style="font-size:1rem;font-weight:800;margin-bottom:16px;color:var(--tx)">⚡ Mon statut</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+statuses.map(s=>'<div class="sopt'+(cur===s.em?' active':'')+'" onclick="setStatus(\''+s.em+'\',\''+s.label+'\',this)">'+s.em+'<span>'+s.label+'</span></div>').join('')+'</div><div style="margin-top:16px;text-align:right"><button onclick="this.closest(\'div[style]\').remove()" style="padding:10px 22px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;font-weight:700;cursor:pointer;font-family:inherit">OK</button></div></div>';ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});document.body.appendChild(ov);};
 window.setStatus=(em,label,el)=>{localStorage.setItem('myStatus',em);document.querySelectorAll('.sopt').forEach(s=>s.classList.remove('active'));el.classList.add('active');showToast('Statut : '+label+' '+em);};
 
 /* TAILLE POLICE */
-window.showFontModal=()=>{
-  closeMenu();
-  const sizes=[{k:'small',label:'Petite',px:'.82rem'},{k:'normal',label:'Normale',px:'.9rem'},{k:'large',label:'Grande',px:'1rem'},{k:'xl',label:'Très grande',px:'1.1rem'}];
-  const cur=localStorage.getItem('fontSize')||'normal';
-  const ov=document.createElement('div');
-  ov.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px';
-  ov.innerHTML='<div style="background:rgba(14,12,26,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:24px;max-width:340px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,.5)"><div style="font-size:1rem;font-weight:800;margin-bottom:16px;color:var(--tx)">🔤 Taille des polices</div><div style="display:flex;flex-direction:column;gap:8px">'+sizes.map(s=>'<div style="background:var(--g);border:1px solid '+(cur===s.k?'var(--p)':'var(--bd)')+';border-radius:12px;padding:12px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:.2s" onclick="setFontSize(\''+s.k+'\',this)"><span style="font-size:'+s.px+';font-weight:600;color:var(--tx)">'+s.label+'</span><span style="font-size:'+s.px+';color:var(--tx2)">Aa</span></div>').join('')+'</div><div style="margin-top:16px;text-align:right"><button onclick="this.closest(\'div[style]\').remove()" style="padding:10px 22px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;font-weight:700;cursor:pointer;font-family:inherit">OK</button></div></div>';
-  ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});
-  document.body.appendChild(ov);
-};
+window.showFontModal=()=>{closeMenu();const sizes=[{k:'small',label:'Petite',px:'.82rem'},{k:'normal',label:'Normale',px:'.9rem'},{k:'large',label:'Grande',px:'1rem'},{k:'xl',label:'Très grande',px:'1.1rem'}];const cur=localStorage.getItem('fontSize')||'normal';const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px';ov.innerHTML='<div style="background:rgba(14,12,26,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:24px;max-width:340px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,.5)"><div style="font-size:1rem;font-weight:800;margin-bottom:16px;color:var(--tx)">🔤 Taille des polices</div><div style="display:flex;flex-direction:column;gap:8px">'+sizes.map(s=>'<div style="background:var(--g);border:1px solid '+(cur===s.k?'var(--p)':'var(--bd)')+';border-radius:12px;padding:12px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:.2s" onclick="setFontSize(\''+s.k+'\',this)"><span style="font-size:'+s.px+';font-weight:600;color:var(--tx)">'+s.label+'</span><span style="font-size:'+s.px+';color:var(--tx2)">Aa</span></div>').join('')+'</div><div style="margin-top:16px;text-align:right"><button onclick="this.closest(\'div[style]\').remove()" style="padding:10px 22px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;font-weight:700;cursor:pointer;font-family:inherit">OK</button></div></div>';ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});document.body.appendChild(ov);};
 window.setFontSize=(k,el)=>{localStorage.setItem('fontSize',k);applyFontSize(k);document.querySelectorAll('[onclick^="setFontSize"]').forEach(e=>e.style.borderColor='var(--bd)');el.style.borderColor='var(--p)';showToast('Taille : '+k);};
 function applyFontSize(k){const m={'small':'.82rem','normal':'.9rem','large':'1rem','xl':'1.1rem'};const v=m[k]||'.9rem';document.querySelectorAll('.bbl').forEach(b=>b.style.fontSize=v);}
 
-/* EXPORTER LA CONVERSATION */
-window.exportChat=()=>{
-  closeMenu();
-  const lines=Object.values(allMsgs).sort((a,b)=>tsOf(a)-tsOf(b)).map(m=>{const d=new Date(tsOf(m));const t=d.toLocaleDateString('fr-FR')+' '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});return '['+t+'] '+m.senderName+' : '+m.content;});
-  if(!lines.length){showToast('Aucun message à exporter');return;}
-  const blob=new Blob(['WebNote — Export conversation\n'+'='.repeat(30)+'\n\n'+lines.join('\n')],{type:'text/plain'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='webnote-'+new Date().toISOString().slice(0,10)+'.txt';a.click();
-  showToast('Conversation exportée 📥');
-};
-
-/* STATISTIQUES */
-window.showStats=()=>{
-  closeMenu();
-  const msgs=Object.values(allMsgs);
-  const myMsgs=msgs.filter(m=>m.senderId===me.uid);
-  const totalReacts=msgs.reduce((acc,m)=>{if(m.reactions)for(const v of Object.values(m.reactions))acc+=v.length;return acc;},0);
-  const ov=document.createElement('div');
-  ov.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px';
-  ov.innerHTML='<div style="background:rgba(14,12,26,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:24px;max-width:360px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,.5)"><div style="font-size:1rem;font-weight:800;margin-bottom:16px;color:var(--tx)">📊 Statistiques du groupe</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px"><div style="background:var(--g);border:1px solid var(--bd);border-radius:12px;padding:14px;text-align:center"><div style="font-size:1.6rem;font-weight:900;color:var(--ac)">'+msgs.length+'</div><div style="font-size:.72rem;color:var(--tx2);margin-top:3px;text-transform:uppercase;letter-spacing:.5px">Messages total</div></div><div style="background:var(--g);border:1px solid var(--bd);border-radius:12px;padding:14px;text-align:center"><div style="font-size:1.6rem;font-weight:900;color:var(--ok)">'+myMsgs.length+'</div><div style="font-size:.72rem;color:var(--tx2);margin-top:3px;text-transform:uppercase;letter-spacing:.5px">Mes messages</div></div><div style="background:var(--g);border:1px solid var(--bd);border-radius:12px;padding:14px;text-align:center"><div style="font-size:1.6rem;font-weight:900;color:#f97316">'+totalReacts+'</div><div style="font-size:.72rem;color:var(--tx2);margin-top:3px;text-transform:uppercase;letter-spacing:.5px">Réactions totales</div></div><div style="background:var(--g);border:1px solid var(--bd);border-radius:12px;padding:14px;text-align:center"><div style="font-size:1.6rem;font-weight:900;color:#ec4899">'+(msgs.length>0?Math.round(myMsgs.length/msgs.length*100):0)+'%</div><div style="font-size:.72rem;color:var(--tx2);margin-top:3px;text-transform:uppercase;letter-spacing:.5px">Ma participation</div></div></div><div style="margin-top:4px;text-align:right"><button onclick="this.closest(\'div[style]\').remove()" style="padding:10px 22px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;font-weight:700;cursor:pointer;font-family:inherit">Fermer</button></div></div>';
-  ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});
-  document.body.appendChild(ov);
-};
+/* STATS */
+window.showStats=()=>{closeMenu();const msgs=Object.values(allMsgs);const myMsgs=msgs.filter(m=>m.senderId===me.uid);const totalReacts=msgs.reduce((acc,m)=>{if(m.reactions)for(const v of Object.values(m.reactions))acc+=v.length;return acc;},0);const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px';ov.innerHTML='<div style="background:rgba(14,12,26,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:24px;max-width:360px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,.5)"><div style="font-size:1rem;font-weight:800;margin-bottom:16px;color:var(--tx)">📊 Statistiques</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px"><div style="background:var(--g);border:1px solid var(--bd);border-radius:12px;padding:14px;text-align:center"><div style="font-size:1.6rem;font-weight:900;color:var(--ac)">'+msgs.length+'</div><div style="font-size:.72rem;color:var(--tx2);margin-top:3px;text-transform:uppercase;letter-spacing:.5px">Total</div></div><div style="background:var(--g);border:1px solid var(--bd);border-radius:12px;padding:14px;text-align:center"><div style="font-size:1.6rem;font-weight:900;color:var(--ok)">'+myMsgs.length+'</div><div style="font-size:.72rem;color:var(--tx2);margin-top:3px;text-transform:uppercase;letter-spacing:.5px">Mes messages</div></div><div style="background:var(--g);border:1px solid var(--bd);border-radius:12px;padding:14px;text-align:center"><div style="font-size:1.6rem;font-weight:900;color:#f97316">'+totalReacts+'</div><div style="font-size:.72rem;color:var(--tx2);margin-top:3px;text-transform:uppercase;letter-spacing:.5px">Réactions</div></div><div style="background:var(--g);border:1px solid var(--bd);border-radius:12px;padding:14px;text-align:center"><div style="font-size:1.6rem;font-weight:900;color:#ec4899">'+(msgs.length>0?Math.round(myMsgs.length/msgs.length*100):0)+'%</div><div style="font-size:.72rem;color:var(--tx2);margin-top:3px;text-transform:uppercase;letter-spacing:.5px">Participation</div></div></div><div style="text-align:right"><button onclick="this.closest(\'div[style]\').remove()" style="padding:10px 22px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;font-weight:700;cursor:pointer;font-family:inherit">Fermer</button></div></div>';ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});document.body.appendChild(ov);};
 
 /* MISC */
 window.toggleMembers=()=>{$('mbrPanel').classList.toggle('open');closeMenu();};
@@ -628,6 +543,7 @@ window.toggleNotif=()=>{soundsOn=!soundsOn;localStorage.setItem('sounds',soundsO
 window.toggleCompact=()=>{compactMode=!compactMode;localStorage.setItem('compact',compactMode?'1':'0');document.body.classList.toggle('compact',compactMode);$('compactTxt').textContent=compactMode?'Mode normal':'Mode compact';showToast(compactMode?'Mode compact activé':'Mode normal');closeMenu();};
 window.clearMyMsgs=async()=>{closeMenu();if(!confirm('Supprimer tous vos messages ?'))return;const s=await getDocs(collection(db,'messages'));const mine=s.docs.filter(d=>d.data().senderId===me.uid);if(!mine.length){showToast('Aucun message');return;}for(const d of mine)await deleteDoc(doc(db,'messages',d.id));showToast(mine.length+' message(s) supprimé(s)','var(--dn)');};
 window.showRules=()=>{closeMenu();const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:grid;place-items:center;padding:20px';ov.innerHTML='<div style="background:rgba(14,12,26,.97);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:26px;max-width:380px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,.5)"><div style="font-size:1rem;font-weight:800;margin-bottom:14px;color:var(--tx)">📋 Règles du groupe</div><div style="font-size:.85rem;line-height:1.75;color:var(--tx2)"><p>📌 <strong style="color:var(--tx)">WebNote</strong> est un espace ouvert.</p><br><p>✅ Soyez respectueux.</p><p>✅ Partagez vos idées.</p><p>✅ Utilisez les réactions.</p><br><p>❌ Pas de spam.</p><p>❌ Pas de publicité non autorisée.</p><p>❌ Pas d\'attaque personnelle.</p><br><p style="color:var(--ac);font-size:.78rem">Les modérateurs peuvent supprimer tout message.</p></div><div style="margin-top:16px;text-align:right"><button onclick="this.closest(\'div[style]\').remove()" style="padding:10px 22px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;font-weight:700;cursor:pointer;font-family:inherit">Compris !</button></div></div>';ov.addEventListener('click',e=>{if(e.target===ov)ov.remove();});document.body.appendChild(ov);};
+window.showToast=showToast;
 </script>
 </body>
-                                                                                                                                                                                                                                       </html>
+   </html>

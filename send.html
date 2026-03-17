@@ -724,7 +724,7 @@ body{
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import{getFirestore,collection,addDoc,serverTimestamp,doc,getDoc}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import{getFirestore,collection,addDoc,serverTimestamp,doc,getDoc,setDoc}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const app=initializeApp({apiKey:"AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",authDomain:"webnote-9ea1e.firebaseapp.com",projectId:"webnote-9ea1e",storageBucket:"webnote-9ea1e.firebasestorage.app",messagingSenderId:"869875049003",appId:"1:869875049003:web:0f7334733cb313e426406e"});
@@ -742,22 +742,50 @@ onAuthStateChanged(auth,u=>{myUid=u?u.uid:null;});
 async function loadOwner(){
   if(!targetUid){show('nfView');return;}
   try{
-    const snap=await getDoc(doc(db,'presence',targetUid));
+    /* 1. Essayer presence/{uid} */
+    let data=null;
+    const pSnap=await getDoc(doc(db,'presence',targetUid));
+    if(pSnap.exists()){
+      data=pSnap.data();
+    } else {
+      /* 2. Fallback sur users/{uid} */
+      const uSnap=await getDoc(doc(db,'users',targetUid));
+      if(uSnap.exists()){
+        data=uSnap.data();
+        /* Créer presence manquant pour la prochaine fois */
+        const nm=data.pseudo||data.name||data.displayName||'Anonyme';
+        try{await setDoc(doc(db,'presence',targetUid),{name:nm,uid:targetUid,email:data.email||null},{merge:true});}catch(e){}
+      }
+    }
     hide('loadView');
-    if(!snap.exists()){show('nfView');return;}
-    const data=snap.data();
-    ownerName=data.name||'Quelqu\'un';
+    if(!data){show('nfView');return;}
+    ownerName=data.pseudo||data.name||data.displayName||'Quelqu\'un';
     $('owName').textContent=ownerName;
     $('owName2').textContent=ownerName;
     $('owName3').textContent=ownerName;
     $('owInit').textContent=ownerName.charAt(0).toUpperCase();
-    /* Color from uid */
     let h=0;for(const c of targetUid)h=(h*31+c.charCodeAt(0))%AVC.length;
     const col1=AVC[Math.abs(h)],col2=AVC[(Math.abs(h)+3)%AVC.length];
     $('owAv').style.background=`linear-gradient(135deg,${col1},${col2})`;
     $('owGlow').style.background=`radial-gradient(circle,${col1}55,transparent 70%)`;
     show('formView');
-  }catch(e){console.error(e);show('nfView');}
+  }catch(e){
+    console.error('loadOwner error:',e);
+    /* Si c'est une erreur de permission Firestore → les règles ne sont pas configurées */
+    if(e.code==='permission-denied'||e.message?.includes('permission')){
+      /* Afficher quand même le formulaire avec nom générique */
+      hide('loadView');
+      ownerName='Quelqu'un';
+      $('owName').textContent=ownerName;
+      $('owName2').textContent=ownerName;
+      $('owName3').textContent=ownerName;
+      $('owInit').textContent='?';
+      show('formView');
+    } else {
+      hide('loadView');
+      show('nfView');
+    }
+  }
 }
 function show(id){$(id).style.display='flex';}
 function hide(id){$(id).style.display='none';}
@@ -935,4 +963,4 @@ const _mo=new MutationObserver(muts=>{
 _mo.observe(document.body,{childList:true,subtree:true});
 </script>
 </body>
-                                             </html>
+</html>

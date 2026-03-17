@@ -736,29 +736,64 @@ const targetUid=params.get('u');
 let ownerName='Cette personne',myUid=null,selectedMood='';
 const AVC=['#6366f1','#8b5cf6','#ec4899','#f97316','#10b981','#3b82f6','#14b8a6','#f59e0b'];
 
+/* Auth optionnelle — juste pour savoir si l'envoyeur est connecté */
 onAuthStateChanged(auth,u=>{myUid=u?u.uid:null;});
 
-/* ── LOAD OWNER ── */
+function show(id){$(id).style.display='flex';}
+function hide(id){$(id).style.display='none';}
+
+/* ── LOAD OWNER ── appelé immédiatement, sans attendre l'auth ── */
 async function loadOwner(){
-  if(!targetUid){show('nfView');return;}
-  try{
-    /* 1. Essayer presence/{uid} */
-    let data=null;
-    const pSnap=await getDoc(doc(db,'presence',targetUid));
-    if(pSnap.exists()){
-      data=pSnap.data();
-    } else {
-      /* 2. Fallback sur users/{uid} */
-      const uSnap=await getDoc(doc(db,'users',targetUid));
-      if(uSnap.exists()){
-        data=uSnap.data();
-        /* Créer presence manquant pour la prochaine fois */
-        const nm=data.pseudo||data.name||data.displayName||'Anonyme';
-        try{await setDoc(doc(db,'presence',targetUid),{name:nm,uid:targetUid,email:data.email||null},{merge:true});}catch(e){}
-      }
-    }
+  if(!targetUid){hide('loadView');show('nfView');return;}
+
+  /* Timeout de sécurité : si Firestore ne répond pas en 6s → afficher le formulaire quand même */
+  const safetyTimer=setTimeout(()=>{
+    console.warn('Firestore timeout — affichage formulaire par défaut');
     hide('loadView');
-    if(!data){show('nfView');return;}
+    ownerName='Quelqu\'un';
+    $('owName').textContent=ownerName;
+    $('owName2').textContent=ownerName;
+    $('owName3').textContent=ownerName;
+    $('owInit').textContent='?';
+    show('formView');
+  },6000);
+
+  try{
+    /* Essai 1 : presence/{uid} */
+    let data=null;
+    try{
+      const pSnap=await getDoc(doc(db,'presence',targetUid));
+      if(pSnap.exists())data=pSnap.data();
+    }catch(e1){console.warn('presence read failed:',e1.code);}
+
+    /* Essai 2 : users/{uid} si presence vide ou inaccessible */
+    if(!data){
+      try{
+        const uSnap=await getDoc(doc(db,'users',targetUid));
+        if(uSnap.exists()){
+          data=uSnap.data();
+          /* Créer presence pour la prochaine fois (silencieux si ça échoue) */
+          const nm=data.pseudo||data.name||data.displayName||'Anonyme';
+          setDoc(doc(db,'presence',targetUid),{name:nm,uid:targetUid,email:data.email||null},{merge:true}).catch(()=>{});
+        }
+      }catch(e2){console.warn('users read failed:',e2.code);}
+    }
+
+    clearTimeout(safetyTimer);
+    hide('loadView');
+
+    if(!data){
+      /* Aucun document trouvé mais on affiche quand même le formulaire
+         (l'uid est dans l'URL, donc le lien est valide) */
+      ownerName='Quelqu\'un';
+      $('owName').textContent=ownerName;
+      $('owName2').textContent=ownerName;
+      $('owName3').textContent=ownerName;
+      $('owInit').textContent='?';
+      show('formView');
+      return;
+    }
+
     ownerName=data.pseudo||data.name||data.displayName||'Quelqu\'un';
     $('owName').textContent=ownerName;
     $('owName2').textContent=ownerName;
@@ -769,26 +804,22 @@ async function loadOwner(){
     $('owAv').style.background=`linear-gradient(135deg,${col1},${col2})`;
     $('owGlow').style.background=`radial-gradient(circle,${col1}55,transparent 70%)`;
     show('formView');
+
   }catch(e){
-    console.error('loadOwner error:',e);
-    /* Si c'est une erreur de permission Firestore → les règles ne sont pas configurées */
-    if(e.code==='permission-denied'||e.message?.includes('permission')){
-      /* Afficher quand même le formulaire avec nom générique */
-      hide('loadView');
-      ownerName='Quelqu'un';
-      $('owName').textContent=ownerName;
-      $('owName2').textContent=ownerName;
-      $('owName3').textContent=ownerName;
-      $('owInit').textContent='?';
-      show('formView');
-    } else {
-      hide('loadView');
-      show('nfView');
-    }
+    clearTimeout(safetyTimer);
+    console.error('loadOwner fatal:',e);
+    /* Même en cas d'erreur fatale → montrer le formulaire plutôt que bloquer */
+    hide('loadView');
+    ownerName='Quelqu\'un';
+    $('owName').textContent=ownerName;
+    $('owName2').textContent=ownerName;
+    $('owName3').textContent=ownerName;
+    $('owInit').textContent='?';
+    show('formView');
   }
 }
-function show(id){$(id).style.display='flex';}
-function hide(id){$(id).style.display='none';}
+
+/* Lancer immédiatement — pas besoin d'attendre l'auth pour une page publique */
 loadOwner();
 
 /* ── TEXTAREA EVENTS ── */

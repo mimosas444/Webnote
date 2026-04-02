@@ -297,36 +297,20 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opac
 .nsend{padding:10px 18px;border-radius:10px;border:none;background:var(--mb);color:#fff;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:5px;box-shadow:0 4px 12px var(--pg)}.nsend:hover{transform:scale(1.02)}
 .ncancel{padding:10px 14px;border-radius:10px;border:1px solid var(--bd);background:var(--surface2);color:var(--tx2);font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;transition:.2s;backdrop-filter:blur(8px)}.ncancel:hover{background:var(--surface);color:var(--tx)}
 
-/* ══ NOTIFICATION BANNER — FIX: truly hidden until .on ══ */
 .new-notif{
-  position:fixed;
-  top:68px;
-  left:50%;
+  position:fixed;top:68px;left:50%;
   transform:translateX(-50%) translateY(-16px) scale(.88);
-  z-index:500;
-  background:linear-gradient(135deg,var(--p),var(--p2));
-  color:#fff;
-  border-radius:26px;
-  padding:9px 18px;
-  font-size:.79rem;
-  font-weight:700;
-  display:flex;
-  align-items:center;
-  gap:7px;
+  z-index:500;background:linear-gradient(135deg,var(--p),var(--p2));
+  color:#fff;border-radius:26px;padding:9px 18px;font-size:.79rem;font-weight:700;
+  display:flex;align-items:center;gap:7px;
   box-shadow:0 8px 26px var(--pg),inset 0 1px 0 rgba(255,255,255,.15);
-  /* Hidden state: invisible + can't interfere with topbar */
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
-  white-space:nowrap;
+  opacity:0;visibility:hidden;pointer-events:none;white-space:nowrap;
   backdrop-filter:blur(20px);
   transition:transform .38s var(--ea),opacity .38s var(--ea),visibility 0s .4s;
 }
 .new-notif.on{
   transform:translateX(-50%) translateY(0) scale(1);
-  opacity:1;
-  visibility:visible;
-  pointer-events:none;
+  opacity:1;visibility:visible;pointer-events:none;
   transition:transform .38s var(--ea),opacity .38s var(--ea),visibility 0s 0s;
 }
 
@@ -357,7 +341,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opac
   </div>
 </div>
 
-<!-- Notification banner — completely hidden until triggered -->
 <div class="new-notif" id="newNotif">
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
   Nouveau message anonyme !
@@ -513,7 +496,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opac
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import{getAuth,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import{getFirestore,collection,query,orderBy,onSnapshot,doc,deleteDoc,getDocs,updateDoc,arrayUnion,arrayRemove,getDoc}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+/* ✅ FIX CRITIQUE : setDoc et serverTimestamp maintenant importés */
+import{getFirestore,collection,query,orderBy,onSnapshot,doc,deleteDoc,getDocs,updateDoc,arrayUnion,arrayRemove,getDoc,setDoc,serverTimestamp}from"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
 const app=initializeApp({apiKey:"AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",authDomain:"webnote-9ea1e.firebaseapp.com",projectId:"webnote-9ea1e",storageBucket:"webnote-9ea1e.firebasestorage.app",messagingSenderId:"869875049003",appId:"1:869875049003:web:0f7334733cb313e426406e"});
 const auth=getAuth(app),db=getFirestore(app);
 const $=id=>document.getElementById(id);
@@ -549,16 +534,31 @@ onAuthStateChanged(auth,u=>{
 });
 window.doSignOut=()=>signOut(auth).then(()=>window.location.href='index.html');
 
+/* ✅ FIX : init() sauvegarde correctement le profil dans users/{uid} */
 function init(){
   const name=me.displayName||me.email?.split('@')[0]||'Anonyme';
   $('heroName').textContent=name;
-  // Build link using origin + path to send.html
   const sendPath=window.location.pathname.replace(/ngl\.html.*/,'')+'send.html';
   myLink=window.location.origin+sendPath+'?u='+me.uid;
   $('lkDisplay').textContent=myLink;
-  // Create/update presence + users so send.html can always find this user
-  setDoc(doc(db,'presence',me.uid),{name,uid:me.uid,online:true,lastSeen:serverTimestamp()},{merge:true}).catch(()=>{});
-  setDoc(doc(db,'users',me.uid),{displayName:name,name,pseudo:name,uid:me.uid},{merge:true}).catch(()=>{});
+
+  /* Sauvegarde dans users/{uid} — lecture publique pour send.html */
+  setDoc(doc(db,'users',me.uid),{
+    displayName:name,
+    name:name,
+    pseudo:name,
+    uid:me.uid,
+    updatedAt:serverTimestamp()
+  },{merge:true}).catch(e=>console.warn('users setDoc:',e));
+
+  /* Sauvegarde dans presence/{uid} — fallback */
+  setDoc(doc(db,'presence',me.uid),{
+    name:name,
+    uid:me.uid,
+    online:true,
+    lastSeen:serverTimestamp()
+  },{merge:true}).catch(e=>console.warn('presence setDoc:',e));
+
   $('shrLink').textContent=window.location.hostname+'/send?u='+me.uid.slice(0,8)+'\u2026';
   listenMsgs();
 }
@@ -569,13 +569,7 @@ function generateQR(){
   const container=$('qrCode');
   container.innerHTML='';
   try{
-    new QRCode(container,{
-      text:myLink,
-      width:160,height:160,
-      colorDark:'#000000',
-      colorLight:'#ffffff',
-      correctLevel:QRCode.CorrectLevel.M,
-    });
+    new QRCode(container,{text:myLink,width:160,height:160,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
     qrGenerated=true;
   }catch(e){console.error('QR:',e);}
 }
@@ -583,12 +577,8 @@ window.toggleQR=()=>{
   qrOn=!qrOn;
   $('qrWrap').classList.toggle('on',qrOn);
   const btn=$('qrBtn');
-  if(qrOn){
-    btn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Masquer le QR Code';
-    generateQR();
-  }else{
-    btn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><line x1="14" y1="14" x2="14.01" y2="14"/><line x1="18" y1="14" x2="18.01" y2="14"/><line x1="14" y1="18" x2="14.01" y2="18"/><line x1="18" y1="18" x2="18.01" y2="18"/></svg> Afficher le QR Code';
-  }
+  if(qrOn){btn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Masquer le QR Code';generateQR();}
+  else btn.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><line x1="14" y1="14" x2="14.01" y2="14"/><line x1="18" y1="14" x2="18.01" y2="14"/><line x1="14" y1="18" x2="14.01" y2="18"/><line x1="18" y1="18" x2="18.01" y2="18"/></svg> Afficher le QR Code';
 };
 window.downloadQR=()=>{
   const canvas=$('qrCode').querySelector('canvas');
@@ -640,7 +630,7 @@ function renderAll(){
   });
   tw(list);
 }
-function mkEmpty(){const d=document.createElement('div');d.className='empty';const l={all:'Aucun message pour l\u2019instant',unread:'Aucun nouveau message',reacted:'Aucun message r\u00e9actionn\u00e9',today:"Aucun message aujourd\u2019hui"};d.innerHTML='<div class="empty-g">\ud83c\udfad</div><h3>'+( l[flt]||'Aucun message')+'</h3><p>Copie ton lien et partage-le pour commencer !</p>';tw(d);return d;}
+function mkEmpty(){const d=document.createElement('div');d.className='empty';const l={all:'Aucun message pour l\u2019instant',unread:'Aucun nouveau message',reacted:'Aucun message r\u00e9actionn\u00e9',today:"Aucun message aujourd\u2019hui"};d.innerHTML='<div class="empty-g">\ud83c\udfad</div><h3>'+(l[flt]||'Aucun message')+'</h3><p>Copie ton lien et partage-le pour commencer !</p>';tw(d);return d;}
 function mkCard(id,data){const div=document.createElement('div');div.className='mc'+(data.read?'':' unread');div.id='mc-'+id;div.innerHTML=buildHTML(id,data);if(!data.read)setTimeout(()=>{updateDoc(doc(db,'nglMsgs',me.uid,'msgs',id),{read:true}).catch(()=>{});div.classList.remove('unread');},2500);return div;}
 function buildHTML(id,data){
   const time=data.createdAt?new Date(data.createdAt.toMillis()).toLocaleString('fr-FR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'&#8212;';
@@ -648,7 +638,7 @@ function buildHTML(id,data){
   const rHtml=REACTS.map(em=>{const u=(data.reactions?.[em]||[]);if(!u.length)return'';const on=u.includes(me.uid);return'<div class="rc'+(on?' on':'')+'" onclick="togR(\''+id+'\',\''+em.replace(/'/g,'\\\'')+'\')">'+'<span>'+em+'</span><span class="rc-n">'+u.length+'</span></div>';}).join('');
   const noteHtml=data.myReply?'<div class="mc-note"><span class="mc-note-lbl">Note priv\u00e9e</span>'+esc(data.myReply)+'</div>':'';
   const moodHtml=data.mood&&MOOD_ICO[data.mood]?'<span class="mc-mood">'+MOOD_ICO[data.mood]+' '+data.mood+'</span>':'';
-  return'<div class="mc-top"><div class="mc-anon"><div class="mc-av">\ud83c\udfad</div><div><div class="mc-who">Anonyme</div><div class="mc-time">'+time+'</div></div></div><div style="display:flex;gap:5px;align-items:center">'+moodHtml+(!data.read?'<span class="ub">Nouveau</span>':'')+'</div></div><div class="mc-body">'+msg+'</div>'+noteHtml+(rHtml?'<div class="mc-rcts">'+rHtml+'</div>':'')+'<div class="mc-ft"><div class="mc-qr">'+REACTS.map(em=>'<button class="qbtn" onclick="togR(\''+id+'\',\''+em.replace(/'/g,'\\\'')+'\')" title="'+em+'">'+em+'</button>').join('')+'</div><div class="mc-acts"><button class="ab sh" onclick="openShr(\''+id+'\',\''+escA(data.message||'')+'\',\''+( data.mood||'')+'\')">'+'<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Partager</button><button class="ab nt" onclick="openNote(\''+id+'\',\''+escA(data.message||'')+'\')"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>Note</button><button class="ab dl" onclick="delMsg(\''+id+'\')"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button></div></div>';
+  return'<div class="mc-top"><div class="mc-anon"><div class="mc-av">\ud83c\udfad</div><div><div class="mc-who">Anonyme</div><div class="mc-time">'+time+'</div></div></div><div style="display:flex;gap:5px;align-items:center">'+moodHtml+(!data.read?'<span class="ub">Nouveau</span>':'')+'</div></div><div class="mc-body">'+msg+'</div>'+noteHtml+(rHtml?'<div class="mc-rcts">'+rHtml+'</div>':'')+'<div class="mc-ft"><div class="mc-qr">'+REACTS.map(em=>'<button class="qbtn" onclick="togR(\''+id+'\',\''+em.replace(/'/g,'\\\'')+'\')" title="'+em+'">'+em+'</button>').join('')+'</div><div class="mc-acts"><button class="ab sh" onclick="openShr(\''+id+'\',\''+escA(data.message||'')+'\',\''+(data.mood||'')+'\')">'+'<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Partager</button><button class="ab nt" onclick="openNote(\''+id+'\',\''+escA(data.message||'')+'\')"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>Note</button><button class="ab dl" onclick="delMsg(\''+id+'\')"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button></div></div>';
 }
 function updateStats(){const msgs=Object.values(allMsgs),today=new Date().toDateString();$('sTot').textContent=msgs.length;$('sDay').textContent=msgs.filter(m=>m.createdAt&&new Date(m.createdAt.toMillis()).toDateString()===today).length;$('sRct').textContent=msgs.reduce((a,m)=>{if(m.reactions)for(const v of Object.values(m.reactions))a+=v?.length||0;return a;},0);}
 
@@ -676,7 +666,7 @@ window.exportMsgs=()=>{
   if(!msgs.length){toast('Aucun message \u00e0 exporter','var(--warn)','\u26a0\ufe0f');return;}
   msgs.sort((a,b)=>(a.createdAt?.toMillis()||0)-(b.createdAt?.toMillis()||0));
   const lines=['\u2554'+'\u2550'.repeat(42)+'\u2557','\u2551   WebNote \u2014 Mes messages anonymes re\u00e7us  \u2551','\u255a'+'\u2550'.repeat(42)+'\u255d','Export\u00e9 le : '+new Date().toLocaleString('fr-FR'),'Total : '+msgs.length+' message(s)','\u2501'.repeat(44),''];
-  msgs.forEach((m,i)=>{const t=m.createdAt?new Date(m.createdAt.toMillis()).toLocaleString('fr-FR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'&#8212;';lines.push('['+( i+1)+'] '+t+(m.mood?' \u00b7 '+m.mood:''));lines.push('"'+m.message+'"');if(m.myReply)lines.push('\u2192 Note priv\u00e9e : '+m.myReply);lines.push('');});
+  msgs.forEach((m,i)=>{const t=m.createdAt?new Date(m.createdAt.toMillis()).toLocaleString('fr-FR',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'&#8212;';lines.push('['+(i+1)+'] '+t+(m.mood?' \u00b7 '+m.mood:''));lines.push('"'+m.message+'"');if(m.myReply)lines.push('\u2192 Note priv\u00e9e : '+m.myReply);lines.push('');});
   lines.push('\u2501'.repeat(44));lines.push('WebNote \u00b7 Messages anonymes');
   const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='webnote-messages-'+new Date().toISOString().slice(0,10)+'.txt';a.click();URL.revokeObjectURL(a.href);
@@ -717,4 +707,4 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 </script>
 </body>
-         </html>
+</html>

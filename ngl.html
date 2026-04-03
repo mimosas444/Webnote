@@ -6,61 +6,51 @@
     <title>WebNote - Mon Espace Privé</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; margin: 0; }
-        
-        /* Barre de Navigation */
         .nav-bar { display: flex; gap: 20px; padding: 15px 20px; background: #1e1e1e; border-bottom: 1px solid #333; }
         .nav-bar a { color: #bbb; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
         .nav-bar a:hover { color: #6366f1; }
-        .nav-bar .active { color: #6366f1; }
-
         .container { padding: 20px; max-width: 600px; margin: 0 auto; }
-        
         .card { background: #1e1e1e; padding: 20px; border-radius: 12px; border: 1px solid #333; margin-bottom: 25px; }
         .link-box { 
             background: #252525; padding: 12px; border-radius: 8px; color: #ec4899; 
             font-weight: bold; cursor: pointer; word-break: break-all; margin-top: 10px; border: 1px dashed #444;
         }
-
-        .msg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .msg-item { 
             background: #1e1e1e; padding: 15px; border-radius: 12px; border: 1px solid #333; 
-            margin-bottom: 12px; border-left: 5px solid #6366f1; animation: fadeIn 0.3s ease;
+            margin-bottom: 12px; border-left: 5px solid #6366f1; 
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
         .msg-date { font-size: 0.75rem; color: #666; margin-bottom: 5px; }
-        .msg-text { font-size: 1rem; line-height: 1.4; color: #eee; }
-        .empty-state { text-align: center; color: #555; margin-top: 40px; }
+        .msg-text { font-size: 1rem; color: #eee; }
+        .status-msg { text-align: center; color: #6366f1; font-size: 0.9rem; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <nav class="nav-bar">
     <a href="index.html">Accueil</a>
-    <a href="ngl.html" class="active">Espace Privé</a>
+    <a href="ngl.html" style="color: #6366f1;">Espace Privé</a>
     <a href="dashboard.html">Groupe</a>
 </nav>
 
 <div class="container">
+    <div id="auth-status" class="status-msg">Connexion à WebNote...</div>
+
     <div class="card">
-        <h3>Partage ton lien 🔗</h3>
-        <p style="font-size: 0.9rem; color: #aaa;">Copie ce lien et mets-le dans ta bio ou tes story pour recevoir des messages anonymes.</p>
-        <div class="link-box" id="shareLink" onclick="copyLink()">Chargement du lien...</div>
+        <h3>Ton lien de messages 🔗</h3>
+        <div class="link-box" id="shareLink" onclick="copyLink()">Génération du lien...</div>
+        <p style="font-size: 0.8rem; color: #555; margin-top: 10px;">Clique sur le lien pour le copier.</p>
     </div>
 
-    <div class="msg-header">
-        <h3>Messages reçus (<span id="msgCount">0</span>)</h3>
-    </div>
-
+    <h3>Tes Messages (<span id="msgCount">0</span>)</h3>
     <div id="list">
-        <p class="empty-state">Connexion à la base de données...</p>
+        <p style="text-align: center; color: #444;">Aucun message pour le moment.</p>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, query, orderBy, onSnapshot, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, collection, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
@@ -75,76 +65,67 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            initUser(user);
+    // MODIFICATION : Forcer la connexion anonyme au chargement
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            try {
+                await signInAnonymously(auth);
+            } catch (e) {
+                document.getElementById('auth-status').textContent = "Erreur d'authentification ❌";
+            }
         } else {
-            // Si pas connecté, redirection vers la page de login
-            window.location.href = "login.html"; 
+            document.getElementById('auth-status').textContent = "Connecté en tant que " + user.uid.substring(0,6);
+            setupUserProfile(user);
         }
     });
 
-    async function initUser(user) {
-        // 1. Créer/Mettre à jour le profil pour que send.html puisse l'identifier
-        const name = user.displayName || user.email.split('@')[0] || "Anonyme";
-        
+    async function setupUserProfile(user) {
+        // Force la création du document dans 'users'
         try {
             await setDoc(doc(db, "users", user.uid), {
-                name: name,
                 uid: user.uid,
-                lastSeen: serverTimestamp()
+                name: "Utilisateur_" + user.uid.substring(0,4),
+                lastActive: serverTimestamp()
             }, { merge: true });
 
-            // 2. Générer le lien de partage correct
-            const currentURL = window.location.href;
-            const baseURL = currentURL.substring(0, currentURL.lastIndexOf('/') + 1);
-            document.getElementById('shareLink').textContent = baseURL + "send.html?u=" + user.uid;
+            // Génération du lien
+            const link = window.location.origin + window.location.pathname.replace('ngl.html', 'send.html') + "?u=" + user.uid;
+            document.getElementById('shareLink').textContent = link;
 
-            // 3. Écouter les messages
-            listenMessages(user.uid);
+            // Charger les messages
+            loadMessages(user.uid);
         } catch (e) {
-            console.error("Erreur d'initialisation:", e);
+            console.error(e);
         }
     }
 
-    function listenMessages(uid) {
-        const q = query(
-            collection(db, "nglMsgs", uid, "msgs"), 
-            orderBy("createdAt", "desc")
-        );
-
+    function loadMessages(uid) {
+        const q = query(collection(db, "nglMsgs", uid, "msgs"), orderBy("createdAt", "desc"));
+        
         onSnapshot(q, (snapshot) => {
             const listDiv = document.getElementById('list');
             document.getElementById('msgCount').textContent = snapshot.size;
-
+            
             if (snapshot.empty) {
-                listDiv.innerHTML = '<p class="empty-state">Tu n\'as pas encore de messages. Partage ton lien ! 📢</p>';
+                listDiv.innerHTML = '<p style="text-align: center; color: #444;">Partage ton lien pour recevoir des messages !</p>';
                 return;
             }
 
             listDiv.innerHTML = "";
             snapshot.forEach((doc) => {
                 const data = doc.data();
-                const date = data.createdAt ? new Date(data.createdAt.toMillis()).toLocaleString('fr-FR', {
-                    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
-                }) : "À l'instant";
-
+                const date = data.createdAt ? new Date(data.createdAt.toMillis()).toLocaleString() : "À l'instant";
                 const div = document.createElement('div');
                 div.className = 'msg-item';
-                div.innerHTML = `
-                    <div class="msg-date">${date}</div>
-                    <div class="msg-text">${data.message}</div>
-                `;
+                div.innerHTML = `<div class="msg-date">${date}</div><div class="msg-text">${data.message}</div>`;
                 listDiv.appendChild(div);
             });
         });
     }
 
     window.copyLink = () => {
-        const link = document.getElementById('shareLink').textContent;
-        navigator.clipboard.writeText(link).then(() => {
-            alert("Lien copié ! Partage-le partout.");
-        });
+        const text = document.getElementById('shareLink').textContent;
+        navigator.clipboard.writeText(text).then(() => alert("Lien copié !"));
     };
 </script>
 </body>

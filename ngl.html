@@ -2,131 +2,150 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>WebNote - Espace Privé</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebNote - Mon Espace Privé</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; margin: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; margin: 0; }
+        
+        /* Barre de Navigation */
         .nav-bar { display: flex; gap: 20px; padding: 15px 20px; background: #1e1e1e; border-bottom: 1px solid #333; }
-        .nav-bar a { color: #fff; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        .nav-bar a { color: #bbb; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
         .nav-bar a:hover { color: #6366f1; }
-        .container { padding: 20px; max-width: 800px; margin: 0 auto; }
-        .card { background: #1e1e1e; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #333; }
-        .msg-list { margin-top: 20px; }
-        .msg-item { background: #252525; padding: 15px; border-left: 4px solid #6366f1; margin-bottom: 10px; border-radius: 4px; }
-        .link-box { color: #ec4899; font-weight: bold; cursor: pointer; word-break: break-all; display: inline-block; margin-top: 10px; }
-        .status { font-size: 0.8rem; color: #888; margin-bottom: 8px; }
+        .nav-bar .active { color: #6366f1; }
+
+        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
+        
+        .card { background: #1e1e1e; padding: 20px; border-radius: 12px; border: 1px solid #333; margin-bottom: 25px; }
+        .link-box { 
+            background: #252525; padding: 12px; border-radius: 8px; color: #ec4899; 
+            font-weight: bold; cursor: pointer; word-break: break-all; margin-top: 10px; border: 1px dashed #444;
+        }
+
+        .msg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .msg-item { 
+            background: #1e1e1e; padding: 15px; border-radius: 12px; border: 1px solid #333; 
+            margin-bottom: 12px; border-left: 5px solid #6366f1; animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .msg-date { font-size: 0.75rem; color: #666; margin-bottom: 5px; }
+        .msg-text { font-size: 1rem; line-height: 1.4; color: #eee; }
+        .empty-state { text-align: center; color: #555; margin-top: 40px; }
     </style>
 </head>
 <body>
 
-    <nav class="nav-bar">
-        <a href="ngl.html" style="color: #6366f1;">Espace Privé</a>
-        <a href="dashboard.html">Groupe</a>
-    </nav>
+<nav class="nav-bar">
+    <a href="index.html">Accueil</a>
+    <a href="ngl.html" class="active">Espace Privé</a>
+    <a href="dashboard.html">Groupe</a>
+</nav>
 
-    <div class="container">
-        <h2>Tableau de bord WebNote</h2>
-        
-        <div class="card">
-            <p><strong>Utilisateur :</strong> <span id="userName">Chargement...</span></p>
-            <p><strong>Lien de réception :</strong><br> <span class="link-box" id="shareLink" onclick="copyLink()">Chargement...</span></p>
-        </div>
-
-        <div class="msg-list" id="msgContainer">
-            <h3>Messages reçus (<span id="msgCount">0</span>)</h3>
-            <div id="list">En attente de connexion...</div>
-        </div>
+<div class="container">
+    <div class="card">
+        <h3>Partage ton lien 🔗</h3>
+        <p style="font-size: 0.9rem; color: #aaa;">Copie ce lien et mets-le dans ta bio ou tes story pour recevoir des messages anonymes.</p>
+        <div class="link-box" id="shareLink" onclick="copyLink()">Chargement du lien...</div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, query, orderBy, onSnapshot, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    <div class="msg-header">
+        <h3>Messages reçus (<span id="msgCount">0</span>)</h3>
+    </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
-            authDomain: "webnote-9ea1e.firebaseapp.com",
-            projectId: "webnote-9ea1e",
-            storageBucket: "webnote-9ea1e.firebasestorage.app",
-            messagingSenderId: "869875049003",
-            appId: "1:869875049003:web:0f7334733cb313e426406e"
-        };
+    <div id="list">
+        <p class="empty-state">Connexion à la base de données...</p>
+    </div>
+</div>
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        let currentUser = null;
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, query, orderBy, onSnapshot, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                initDashboard();
-            } else {
-                window.location.href = "index.html"; 
-            }
-        });
+    const firebaseConfig = {
+        apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
+        authDomain: "webnote-9ea1e.firebaseapp.com",
+        projectId: "webnote-9ea1e",
+        storageBucket: "webnote-9ea1e.firebasestorage.app",
+        messagingSenderId: "869875049003",
+        appId: "1:869875049003:web:0f7334733cb313e426406e"
+    };
 
-        async function initDashboard() {
-            const name = currentUser.displayName || currentUser.email.split('@')[0];
-            document.getElementById('userName').textContent = name;
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-            const currentPath = window.location.pathname;
-            const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
-            const url = window.location.origin + basePath + 'send.html?u=' + currentUser.uid;
-            
-            document.getElementById('shareLink').textContent = url;
-
-            try {
-                await setDoc(doc(db, "users", currentUser.uid), {
-                    name: name,
-                    uid: currentUser.uid,
-                    updatedAt: serverTimestamp()
-                }, { merge: true });
-            } catch (e) {
-                console.error("Erreur d'initialisation du profil :", e);
-            }
-
-            listenToMessages();
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            initUser(user);
+        } else {
+            // Si pas connecté, redirection vers la page de login
+            window.location.href = "login.html"; 
         }
+    });
 
-        function listenToMessages() {
-            const q = query(
-                collection(db, "nglMsgs", currentUser.uid, "msgs"), 
-                orderBy("createdAt", "desc")
-            );
+    async function initUser(user) {
+        // 1. Créer/Mettre à jour le profil pour que send.html puisse l'identifier
+        const name = user.displayName || user.email.split('@')[0] || "Anonyme";
+        
+        try {
+            await setDoc(doc(db, "users", user.uid), {
+                name: name,
+                uid: user.uid,
+                lastSeen: serverTimestamp()
+            }, { merge: true });
 
-            onSnapshot(q, (snapshot) => {
-                const listDiv = document.getElementById('list');
-                document.getElementById('msgCount').textContent = snapshot.size;
-                
-                if (snapshot.empty) {
-                    listDiv.innerHTML = "<p>Aucun message pour le moment.</p>";
-                    return;
-                }
+            // 2. Générer le lien de partage correct
+            const currentURL = window.location.href;
+            const baseURL = currentURL.substring(0, currentURL.lastIndexOf('/') + 1);
+            document.getElementById('shareLink').textContent = baseURL + "send.html?u=" + user.uid;
 
-                listDiv.innerHTML = "";
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const date = data.createdAt ? new Date(data.createdAt.toMillis()).toLocaleString('fr-FR') : "Date inconnue";
-                    
-                    const item = document.createElement('div');
-                    item.className = 'msg-item';
-                    item.innerHTML = `
-                        <div class="status">${date}</div>
-                        <div>${data.message}</div>
-                    `;
-                    listDiv.appendChild(item);
-                });
-            }, (error) => {
-                console.error("Erreur de lecture Firestore :", error);
-                document.getElementById('list').innerHTML = "<p style='color: #f87171;'>Erreur lors de la récupération des messages.</p>";
+            // 3. Écouter les messages
+            listenMessages(user.uid);
+        } catch (e) {
+            console.error("Erreur d'initialisation:", e);
+        }
+    }
+
+    function listenMessages(uid) {
+        const q = query(
+            collection(db, "nglMsgs", uid, "msgs"), 
+            orderBy("createdAt", "desc")
+        );
+
+        onSnapshot(q, (snapshot) => {
+            const listDiv = document.getElementById('list');
+            document.getElementById('msgCount').textContent = snapshot.size;
+
+            if (snapshot.empty) {
+                listDiv.innerHTML = '<p class="empty-state">Tu n\'as pas encore de messages. Partage ton lien ! 📢</p>';
+                return;
+            }
+
+            listDiv.innerHTML = "";
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const date = data.createdAt ? new Date(data.createdAt.toMillis()).toLocaleString('fr-FR', {
+                    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+                }) : "À l'instant";
+
+                const div = document.createElement('div');
+                div.className = 'msg-item';
+                div.innerHTML = `
+                    <div class="msg-date">${date}</div>
+                    <div class="msg-text">${data.message}</div>
+                `;
+                listDiv.appendChild(div);
             });
-        }
+        });
+    }
 
-        window.copyLink = () => {
-            const link = document.getElementById('shareLink').textContent;
-            navigator.clipboard.writeText(link);
-            alert("Lien copié dans le presse-papiers.");
-        };
-    </script>
+    window.copyLink = () => {
+        const link = document.getElementById('shareLink').textContent;
+        navigator.clipboard.writeText(link).then(() => {
+            alert("Lien copié ! Partage-le partout.");
+        });
+    };
+</script>
 </body>
 </html>

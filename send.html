@@ -2,23 +2,35 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Envoyer un message anonyme</title>
+    <title>WebNote - Envoyer un message</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        body { font-family: sans-serif; background: #121212; color: white; margin: 0; }
+        .nav-bar { display: flex; gap: 20px; padding: 15px 20px; background: #1e1e1e; border-bottom: 1px solid #333; }
+        .nav-bar a { color: #fff; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        .nav-bar a:hover { color: #6366f1; }
+        .container { display: flex; justify-content: center; padding-top: 50px; }
         .send-card { background: #1e1e1e; padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; border: 1px solid #333; }
-        textarea { width: 100%; background: #252525; border: 1px solid #444; color: white; padding: 10px; border-radius: 8px; resize: none; box-sizing: border-box; }
-        button { width: 100%; background: #6366f1; color: white; border: none; padding: 12px; border-radius: 8px; margin-top: 10px; cursor: pointer; font-weight: bold; }
+        textarea { width: 100%; background: #252525; border: 1px solid #444; color: white; padding: 10px; border-radius: 8px; resize: none; box-sizing: border-box; margin-bottom: 15px;}
+        button { width: 100%; background: #6366f1; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         button:disabled { background: #444; cursor: not-allowed; }
-        .dest { font-size: 0.9rem; color: #ec4899; margin-bottom: 10px; }
+        .dest { font-size: 0.9rem; color: #ec4899; margin-bottom: 15px; font-weight: bold; }
+        #status { font-size: 0.8rem; margin-top: 15px; text-align: center; word-break: break-all; }
     </style>
 </head>
 <body>
 
-<div class="send-card">
-    <div class="dest" id="destName">Chargement du profil...</div>
-    <textarea id="msgInput" rows="4" placeholder="Écris ton message anonyme ici..."></textarea>
-    <button id="sendBtn" onclick="sendMsg()">Envoyer le message</button>
-    <p id="status" style="font-size: 0.8rem; margin-top: 10px; text-align: center;"></p>
+<nav class="nav-bar">
+    <a href="ngl.html">Espace Privé</a>
+    <a href="dashboard.html">Groupe</a>
+</nav>
+
+<div class="container">
+    <div class="send-card">
+        <div class="dest" id="destName">Chargement du profil...</div>
+        <textarea id="msgInput" rows="4" placeholder="Écrire un message anonyme..."></textarea>
+        <button id="sendBtn" onclick="sendMsg()">Envoyer</button>
+        <p id="status"></p>
+    </div>
 </div>
 
 <script type="module">
@@ -37,27 +49,30 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // 1. Récupérer l'ID du destinataire dans l'URL (?u=ID)
     const params = new URLSearchParams(window.location.search);
     const recipientId = params.get('u');
 
     async function checkUser() {
         if (!recipientId) {
-            document.getElementById('destName').textContent = "Lien invalide ❌";
+            document.getElementById('destName').textContent = "Erreur : Aucun identifiant fourni dans l'URL.";
             document.getElementById('sendBtn').disabled = true;
             return;
         }
 
-        const userDoc = await getDoc(doc(db, "users", recipientId));
-        if (userDoc.exists()) {
-            document.getElementById('destName').textContent = "Envoyer à : " + userDoc.data().name;
-        } else {
-            document.getElementById('destName').textContent = "Utilisateur introuvable ❓";
-            document.getElementById('sendBtn').disabled = true;
+        try {
+            const userDoc = await getDoc(doc(db, "users", recipientId));
+            if (userDoc.exists()) {
+                document.getElementById('destName').textContent = "Destinataire : " + userDoc.data().name;
+            } else {
+                document.getElementById('destName').textContent = "Erreur : Utilisateur introuvable.";
+                document.getElementById('sendBtn').disabled = true;
+            }
+        } catch (error) {
+            document.getElementById('destName').textContent = "Erreur de connexion à la base de données.";
+            console.error(error);
         }
     }
 
-    // 2. Envoyer le message
     window.sendMsg = async () => {
         const text = document.getElementById('msgInput').value.trim();
         const btn = document.getElementById('sendBtn');
@@ -66,24 +81,25 @@
         if (!text) return;
 
         btn.disabled = true;
+        status.style.color = "#fff";
         status.textContent = "Envoi en cours...";
 
         try {
-            // On écrit dans la sous-collection du destinataire
             await addDoc(collection(db, "nglMsgs", recipientId, "msgs"), {
                 message: text,
                 createdAt: serverTimestamp(),
                 read: false,
-                mood: 'En direct'
+                mood: 'Standard'
             });
 
             status.style.color = "#4ade80";
-            status.textContent = "Message envoyé avec succès ! 🎉";
+            status.textContent = "Message envoyé avec succès.";
             document.getElementById('msgInput').value = "";
         } catch (e) {
             console.error(e);
             status.style.color = "#f87171";
-            status.textContent = "Erreur lors de l'envoi.";
+            // Affichage de l'erreur exacte pour faciliter le débogage
+            status.textContent = "Échec de l'envoi : " + e.message;
             btn.disabled = false;
         }
     };

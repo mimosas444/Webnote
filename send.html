@@ -3,137 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebNote - Envoyer un message anonyme</title>
+    <title>WebNote - Envoyer un message</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #121212; color: white; margin: 0; }
+        :root { --primary: #6366f1; --secondary: #ec4899; --bg: #0f172a; --card: #1e293b; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
         
-        /* Barre de Navigation */
-        .nav-bar { display: flex; gap: 20px; padding: 15px 20px; background: #1e1e1e; border-bottom: 1px solid #333; align-items: center; }
-        .nav-bar a { color: #bbb; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: 0.3s; }
-        .nav-bar a:hover { color: #6366f1; }
-        .nav-bar .active { color: #fff; border-bottom: 2px solid #6366f1; padding-bottom: 5px; }
-
-        .container { display: flex; justify-content: center; align-items: center; min-height: 80vh; padding: 20px; }
+        .send-card { background: var(--card); padding: 30px; border-radius: 24px; border: 1px solid #334155; width: 90%; max-width: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); text-align: center; }
         
-        .send-card { background: #1e1e1e; padding: 30px; border-radius: 16px; width: 100%; max-width: 400px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .dest-info { margin-bottom: 20px; text-align: center; }
-        .dest-info h2 { margin: 0; color: #ec4899; font-size: 1.2rem; }
-        .dest-info p { color: #888; font-size: 0.85rem; margin-top: 5px; }
+        .profile-badge { width: 70px; height: 70px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; border: 4px solid #0f172a; }
+        
+        h2 { margin: 10px 0; font-size: 1.2rem; color: #f1f5f9; }
+        p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 20px; }
 
-        textarea { width: 100%; background: #252525; border: 1px solid #444; color: white; padding: 15px; border-radius: 12px; resize: none; box-sizing: border-box; font-size: 1rem; margin-bottom: 15px; outline: none; }
-        textarea:focus { border-color: #6366f1; }
+        textarea { width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 12px; color: white; padding: 15px; box-sizing: border-box; resize: none; font-family: inherit; font-size: 1rem; outline: none; transition: 0.3s; }
+        textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); }
 
-        button { width: 100%; background: #6366f1; color: white; border: none; padding: 14px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s; }
-        button:hover { background: #4f46e5; transform: translateY(-2px); }
-        button:disabled { background: #444; cursor: not-allowed; transform: none; }
+        .btn-send { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 15px; transition: 0.3s; }
+        .btn-send:hover { background: #4f46e5; transform: translateY(-2px); }
+        .btn-send:active { transform: translateY(0); }
 
-        #status { margin-top: 15px; text-align: center; font-size: 0.9rem; min-height: 1.2rem; }
+        #status { margin-top: 15px; font-size: 0.85rem; }
+        .success { color: #4ade80; }
+        .error { color: #f87171; }
+
+        .footer { margin-top: 25px; font-size: 0.75rem; color: #475569; }
     </style>
 </head>
 <body>
 
-<nav class="nav-bar">
-    <a href="index.html">Accueil</a>
-    <a href="ngl.html">Espace Privé</a>
-    <a href="dashboard.html">Groupe</a> </nav>
+<div class="send-card">
+    <div class="profile-badge" id="avatar">?</div>
+    <h2 id="recipientName">Chargement...</h2>
+    <p>Envoie-moi un message anonyme !</p>
 
-<div class="container">
-    <div class="send-card">
-        <div class="dest-info">
-            <h2 id="destName">Vérification...</h2>
-            <p>Ton message sera 100% anonyme</p>
-        </div>
+    <textarea id="message" rows="4" placeholder="Écris quelque chose de sympa..."></textarea>
+    
+    <button class="btn-send" id="sendBtn" onclick="sendMessage()">Envoyer le WebNote</button>
+    
+    <div id="status"></div>
 
-        <textarea id="msgInput" rows="5" placeholder="Qu'as-tu sur le cœur ?"></textarea>
-        
-        <button id="sendBtn" onclick="sendMsg()">Envoyer le message</button>
-        
-        <div id="status"></div>
-    </div>
+    <div class="footer">Propulsé par <b>WebNote</b></div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, doc, getDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+    // TA CONFIGURATION RÉELLE
     const firebaseConfig = {
-        apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
-        authDomain: "webnote-9ea1e.firebaseapp.com",
-        projectId: "webnote-9ea1e",
-        storageBucket: "webnote-9ea1e.firebasestorage.app",
-        messagingSenderId: "869875049003",
-        appId: "1:869875049003:web:0f7334733cb313e426406e"
+      apiKey: "AIzaSyE6doCIM_IU-JnsTRYRaebberZpJpG9EtY",
+      authDomain: "testeur-1e462.firebaseapp.com",
+      projectId: "testeur-1e462",
+      storageBucket: "testeur-1e462.firebasestorage.app",
+      messagingSenderId: "67608194276",
+      appId: "1:67608194276:web:9ed96e88dff245fdc22671",
+      measurementId: "G-QD42L254N2"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Récupération de l'ID utilisateur dans l'URL (?u=ID)
-    const params = new URLSearchParams(window.location.search);
-    const recipientId = params.get('u');
+    // Récupérer l'ID utilisateur dans l'URL (?u=ID)
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('u');
+    const statusDiv = document.getElementById('status');
 
-    // Vérifier si le destinataire existe
+    if (!userId) {
+        document.body.innerHTML = "<div style='color:white; text-align:center;'>Lien invalide. ❌</div>";
+    } else {
+        checkUser();
+    }
+
     async function checkUser() {
-        if (!recipientId) {
-            document.getElementById('destName').textContent = "Lien invalide ❌";
-            document.getElementById('sendBtn').disabled = true;
-            return;
-        }
-
         try {
-            const userDoc = await getDoc(doc(db, "users", recipientId));
+            const userDoc = await getDoc(doc(db, "users", userId));
             if (userDoc.exists()) {
-                document.getElementById('destName').textContent = "Envoyer à : " + userDoc.data().name;
+                const name = userDoc.data().name || "Quelqu'un";
+                document.getElementById('recipientName').textContent = name;
+                document.getElementById('avatar').textContent = name.charAt(0).toUpperCase();
             } else {
-                document.getElementById('destName').textContent = "Profil introuvable 👤";
-                document.getElementById('sendBtn').disabled = true;
+                document.getElementById('recipientName').textContent = "Utilisateur inconnu";
             }
         } catch (e) {
             console.error(e);
-            document.getElementById('destName').textContent = "Erreur de connexion";
+            statusDiv.innerHTML = "<span class='error'>Erreur de connexion au profil.</span>";
         }
     }
 
-    // Fonction d'envoi
-    window.sendMsg = async () => {
-        const text = document.getElementById('msgInput').value.trim();
+    window.sendMessage = async () => {
+        const msgText = document.getElementById('message').value.trim();
         const btn = document.getElementById('sendBtn');
-        const status = document.getElementById('status');
 
-        if (!text) return;
+        if (!msgText) return;
 
         btn.disabled = true;
-        status.style.color = "#aaa";
-        status.textContent = "Envoi en cours...";
+        btn.textContent = "Envoi...";
 
         try {
-            // Chemin : nglMsgs > ID_DESTINATAIRE > msgs > DOCUMENT_MESSAGE
-            await addDoc(collection(db, "nglMsgs", recipientId, "msgs"), {
-                message: text,
-                createdAt: serverTimestamp(),
-                read: false
+            await addDoc(collection(db, "nglMsgs", userId, "msgs"), {
+                message: msgText,
+                createdAt: serverTimestamp()
             });
 
-            status.style.color = "#4ade80";
-            status.textContent = "Envoyé avec succès ! 🎉";
-            document.getElementById('msgInput').value = "";
-            
-            // Réactivation après 3 secondes pour un autre message
-            setTimeout(() => {
-                btn.disabled = false;
-                status.textContent = "";
-            }, 3000);
-
+            statusDiv.innerHTML = "<span class='success'>Message envoyé avec succès ! 🎉</span>";
+            document.getElementById('message').value = "";
+            btn.textContent = "Envoyé !";
         } catch (e) {
-            console.error("Erreur Firestore :", e);
-            status.style.color = "#f87171";
-            status.textContent = "Erreur : " + e.message;
+            console.error(e);
+            statusDiv.innerHTML = "<span class='error'>Échec de l'envoi. Réessaie.</span>";
             btn.disabled = false;
+            btn.textContent = "Réessayer";
         }
     };
-
-    checkUser();
 </script>
 
 </body>
-    </html>
+</html>

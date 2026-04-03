@@ -2,38 +2,46 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>WebNote - Dashboard Minimal</title>
+    <title>WebNote - Espace Privé</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; padding: 20px; }
-        .card { background: #1e1e1e; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333; }
+        body { font-family: sans-serif; background: #121212; color: white; margin: 0; }
+        .nav-bar { display: flex; gap: 20px; padding: 15px 20px; background: #1e1e1e; border-bottom: 1px solid #333; }
+        .nav-bar a { color: #fff; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        .nav-bar a:hover { color: #6366f1; }
+        .container { padding: 20px; max-width: 800px; margin: 0 auto; }
+        .card { background: #1e1e1e; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #333; }
         .msg-list { margin-top: 20px; }
-        .msg-item { background: #252525; padding: 10px; border-left: 4px solid #6366f1; margin-bottom: 10px; }
-        .link-box { color: #ec4899; font-weight: bold; cursor: pointer; word-break: break-all; }
-        .status { font-size: 0.8rem; color: #888; }
+        .msg-item { background: #252525; padding: 15px; border-left: 4px solid #6366f1; margin-bottom: 10px; border-radius: 4px; }
+        .link-box { color: #ec4899; font-weight: bold; cursor: pointer; word-break: break-all; display: inline-block; margin-top: 10px; }
+        .status { font-size: 0.8rem; color: #888; margin-bottom: 8px; }
     </style>
 </head>
 <body>
 
-    <h2>Tableau de bord WebNote</h2>
-    
-    <div class="card">
-        <p>Connecté en tant que : <span id="userName">Chargement...</span></p>
-        <p>Ton lien de partage : <br> <span class="link-box" id="shareLink" onclick="copyLink()">Chargement...</span></p>
-    </div>
+    <nav class="nav-bar">
+        <a href="ngl.html" style="color: #6366f1;">Espace Privé</a>
+        <a href="dashboard.html">Groupe</a>
+    </nav>
 
-    <div class="msg-list" id="msgContainer">
-        <h3>Messages reçus (<span id="msgCount">0</span>)</h3>
-        <div id="list">En attente de messages...</div>
+    <div class="container">
+        <h2>Tableau de bord WebNote</h2>
+        
+        <div class="card">
+            <p><strong>Utilisateur :</strong> <span id="userName">Chargement...</span></p>
+            <p><strong>Lien de réception :</strong><br> <span class="link-box" id="shareLink" onclick="copyLink()">Chargement...</span></p>
+        </div>
+
+        <div class="msg-list" id="msgContainer">
+            <h3>Messages reçus (<span id="msgCount">0</span>)</h3>
+            <div id="list">En attente de connexion...</div>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { 
-            getFirestore, collection, query, orderBy, onSnapshot, doc, setDoc, serverTimestamp 
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, query, orderBy, onSnapshot, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Ta configuration Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
             authDomain: "webnote-9ea1e.firebaseapp.com",
@@ -46,10 +54,8 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-
         let currentUser = null;
 
-        // 1. Surveillance de l'authentification
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
@@ -59,31 +65,29 @@
             }
         });
 
-        // 2. Initialisation et création du profil dans la DB
         async function initDashboard() {
             const name = currentUser.displayName || currentUser.email.split('@')[0];
             document.getElementById('userName').textContent = name;
 
-            // Construction du lien
-            const url = window.location.origin + window.location.pathname.replace('ngl.html', 'send.html') + '?u=' + currentUser.uid;
+            const currentPath = window.location.pathname;
+            const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+            const url = window.location.origin + basePath + 'send.html?u=' + currentUser.uid;
+            
             document.getElementById('shareLink').textContent = url;
 
-            // CRUCIAL : Création du document utilisateur pour que send.html le trouve
             try {
                 await setDoc(doc(db, "users", currentUser.uid), {
                     name: name,
                     uid: currentUser.uid,
                     updatedAt: serverTimestamp()
                 }, { merge: true });
-                console.log("Profil mis à jour");
             } catch (e) {
-                console.error("Erreur de mise à jour profil:", e);
+                console.error("Erreur d'initialisation du profil :", e);
             }
 
             listenToMessages();
         }
 
-        // 3. Ecoute des messages en temps réel
         function listenToMessages() {
             const q = query(
                 collection(db, "nglMsgs", currentUser.uid, "msgs"), 
@@ -95,14 +99,14 @@
                 document.getElementById('msgCount').textContent = snapshot.size;
                 
                 if (snapshot.empty) {
-                    listDiv.innerHTML = "Aucun message pour l'instant.";
+                    listDiv.innerHTML = "<p>Aucun message pour le moment.</p>";
                     return;
                 }
 
                 listDiv.innerHTML = "";
                 snapshot.forEach((doc) => {
                     const data = doc.data();
-                    const date = data.createdAt ? new Date(data.createdAt.toMillis()).toLocaleString() : "Date inconnue";
+                    const date = data.createdAt ? new Date(data.createdAt.toMillis()).toLocaleString('fr-FR') : "Date inconnue";
                     
                     const item = document.createElement('div');
                     item.className = 'msg-item';
@@ -112,14 +116,16 @@
                     `;
                     listDiv.appendChild(item);
                 });
+            }, (error) => {
+                console.error("Erreur de lecture Firestore :", error);
+                document.getElementById('list').innerHTML = "<p style='color: #f87171;'>Erreur lors de la récupération des messages.</p>";
             });
         }
 
-        // Utilitaire : Copier le lien
         window.copyLink = () => {
             const link = document.getElementById('shareLink').textContent;
             navigator.clipboard.writeText(link);
-            alert("Lien copié !");
+            alert("Lien copié dans le presse-papiers.");
         };
     </script>
 </body>

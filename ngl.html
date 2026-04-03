@@ -3,47 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebNote - Mon Espace Privé</title>
+    <title>WebNote - Mon Espace</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #121212; color: white; margin: 0; }
-        .nav-bar { display: flex; gap: 20px; padding: 15px 20px; background: #1e1e1e; border-bottom: 1px solid #333; }
-        .nav-bar a { color: #bbb; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
-        .nav-bar a:hover { color: #6366f1; }
-        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
-        .card { background: #1e1e1e; padding: 20px; border-radius: 12px; border: 1px solid #333; margin-bottom: 25px; }
+        :root { --primary: #6366f1; --secondary: #ec4899; --bg: #0f172a; --card: #1e293b; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: white; margin: 0; }
+        
+        .nav-bar { display: flex; gap: 20px; padding: 15px 25px; background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 100; }
+        .nav-bar a { color: #94a3b8; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
+        .nav-bar a:hover { color: var(--primary); }
+        .nav-bar .active { color: white; border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
+
+        .container { padding: 25px; max-width: 500px; margin: 0 auto; }
+        
+        .card { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid #334155; margin-bottom: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .card h3 { margin-top: 0; background: linear-gradient(to right, #818cf8, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
         .link-box { 
-            background: #252525; padding: 12px; border-radius: 8px; color: #ec4899; 
-            font-weight: bold; cursor: pointer; word-break: break-all; margin-top: 10px; border: 1px dashed #444;
+            background: #0f172a; padding: 15px; border-radius: 12px; color: var(--secondary); 
+            font-family: monospace; font-size: 0.85rem; cursor: pointer; word-break: break-all; 
+            margin-top: 15px; border: 1px solid #334155; transition: 0.2s;
         }
+        .link-box:active { transform: scale(0.98); background: #1e293b; }
+
         .msg-item { 
-            background: #1e1e1e; padding: 15px; border-radius: 12px; border: 1px solid #333; 
-            margin-bottom: 12px; border-left: 5px solid #6366f1; 
+            background: var(--card); padding: 18px; border-radius: 16px; border: 1px solid #334155; 
+            margin-bottom: 15px; position: relative; overflow: hidden;
         }
-        .msg-date { font-size: 0.75rem; color: #666; margin-bottom: 5px; }
-        .msg-text { font-size: 1rem; color: #eee; }
-        .status-msg { text-align: center; color: #6366f1; font-size: 0.9rem; margin-top: 10px; }
+        .msg-item::before { content: ""; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: var(--primary); }
+        .msg-date { font-size: 0.7rem; color: #64748b; margin-bottom: 8px; }
+        .msg-text { font-size: 1rem; line-height: 1.5; color: #f1f5f9; }
+        
+        #auth-status { text-align: center; font-size: 0.8rem; color: #4ade80; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <nav class="nav-bar">
     <a href="index.html">Accueil</a>
-    <a href="ngl.html" style="color: #6366f1;">Espace Privé</a>
+    <a href="ngl.html" class="active">Espace Privé</a>
     <a href="dashboard.html">Groupe</a>
 </nav>
 
 <div class="container">
-    <div id="auth-status" class="status-msg">Connexion à WebNote...</div>
+    <div id="auth-status">Connexion en cours...</div>
 
     <div class="card">
-        <h3>Ton lien de messages 🔗</h3>
+        <h3>Lien WebNote 🔗</h3>
+        <p style="font-size: 0.85rem; color: #94a3b8;">Partage ce lien pour recevoir des messages anonymes.</p>
         <div class="link-box" id="shareLink" onclick="copyLink()">Génération du lien...</div>
-        <p style="font-size: 0.8rem; color: #555; margin-top: 10px;">Clique sur le lien pour le copier.</p>
     </div>
 
-    <h3>Tes Messages (<span id="msgCount">0</span>)</h3>
+    <h3 style="display: flex; justify-content: space-between; align-items: center;">
+        Messages <span id="msgCount" style="background: var(--primary); font-size: 0.8rem; padding: 2px 10px; border-radius: 20px;">0</span>
+    </h3>
+    
     <div id="list">
-        <p style="text-align: center; color: #444;">Aucun message pour le moment.</p>
+        <p style="text-align: center; color: #475569; margin-top: 50px;">Aucun message reçu pour l'instant.</p>
     </div>
 </div>
 
@@ -52,35 +67,31 @@
     import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, collection, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+    // TA CONFIGURATION RÉELLE (D'APRÈS TA CAPTURE)
     const firebaseConfig = {
-        apiKey: "AIzaSyApC4T-WdDIFk3VuBGD_Zscz5X_lE6dFFs",
-        authDomain: "webnote-9ea1e.firebaseapp.com",
-        projectId: "webnote-9ea1e",
-        storageBucket: "webnote-9ea1e.firebasestorage.app",
-        messagingSenderId: "869875049003",
-        appId: "1:869875049003:web:0f7334733cb313e426406e"
+      apiKey: "AIzaSyE6doCIM_IU-JnsTRYRaebberZpJpG9EtY",
+      authDomain: "testeur-1e462.firebaseapp.com",
+      projectId: "testeur-1e462",
+      storageBucket: "testeur-1e462.firebasestorage.app",
+      messagingSenderId: "67608194276",
+      appId: "1:67608194276:web:9ed96e88dff245fdc22671",
+      measurementId: "G-QD42L254N2"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // MODIFICATION : Forcer la connexion anonyme au chargement
     onAuthStateChanged(auth, async (user) => {
         if (!user) {
-            try {
-                await signInAnonymously(auth);
-            } catch (e) {
-                document.getElementById('auth-status').textContent = "Erreur d'authentification ❌";
-            }
+            await signInAnonymously(auth);
         } else {
-            document.getElementById('auth-status').textContent = "Connecté en tant que " + user.uid.substring(0,6);
-            setupUserProfile(user);
+            document.getElementById('auth-status').textContent = "● Connecté (ID: " + user.uid.substring(0,6) + ")";
+            setupProfile(user);
         }
     });
 
-    async function setupUserProfile(user) {
-        // Force la création du document dans 'users'
+    async function setupProfile(user) {
         try {
             await setDoc(doc(db, "users", user.uid), {
                 uid: user.uid,
@@ -88,33 +99,24 @@
                 lastActive: serverTimestamp()
             }, { merge: true });
 
-            // Génération du lien
+            // On génère le lien proprement
             const link = window.location.origin + window.location.pathname.replace('ngl.html', 'send.html') + "?u=" + user.uid;
             document.getElementById('shareLink').textContent = link;
 
-            // Charger les messages
             loadMessages(user.uid);
-        } catch (e) {
-            console.error(e);
-        }
+        } catch (e) { console.error(e); }
     }
 
     function loadMessages(uid) {
         const q = query(collection(db, "nglMsgs", uid, "msgs"), orderBy("createdAt", "desc"));
-        
-        onSnapshot(q, (snapshot) => {
+        onSnapshot(q, (snap) => {
             const listDiv = document.getElementById('list');
-            document.getElementById('msgCount').textContent = snapshot.size;
-            
-            if (snapshot.empty) {
-                listDiv.innerHTML = '<p style="text-align: center; color: #444;">Partage ton lien pour recevoir des messages !</p>';
-                return;
-            }
-
+            document.getElementById('msgCount').textContent = snap.size;
+            if (snap.empty) return;
             listDiv.innerHTML = "";
-            snapshot.forEach((doc) => {
+            snap.forEach((doc) => {
                 const data = doc.data();
-                const date = data.createdAt ? new Date(data.createdAt.toMillis()).toLocaleString() : "À l'instant";
+                const date = data.createdAt ? new Date(data.createdAt.toMillis()).toLocaleString('fr-FR', {hour:'2-digit', minute:'2-digit', day:'numeric', month:'short'}) : "...";
                 const div = document.createElement('div');
                 div.className = 'msg-item';
                 div.innerHTML = `<div class="msg-date">${date}</div><div class="msg-text">${data.message}</div>`;
@@ -124,8 +126,8 @@
     }
 
     window.copyLink = () => {
-        const text = document.getElementById('shareLink').textContent;
-        navigator.clipboard.writeText(text).then(() => alert("Lien copié !"));
+        const link = document.getElementById('shareLink').textContent;
+        navigator.clipboard.writeText(link).then(() => alert("Lien copié ! Partage-le vite !"));
     };
 </script>
 </body>
